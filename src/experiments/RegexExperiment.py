@@ -5,7 +5,7 @@ import re
 
 
 
-class IRegexGenerator(ABC):
+class IRegexGenerator(ABC): #TODO:Rename it to Provider     #This should become a lang provider. So validate/compile/syntax chgecking etc. should be provided from langprovider.
 
     def __init__(self) -> None:
         super().__init__()
