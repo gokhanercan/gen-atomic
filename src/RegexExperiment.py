@@ -3,16 +3,6 @@
 from abc import ABC, abstractmethod
 import re
 
-class Field(object):
-
-    def __init__(self, name:str,desc:str,correctCases,incorrectCases):
-        self.Name = name
-        self.Description = desc
-        self.CorrectCases:[str] = correctCases
-        self.IncorrectCases:[str] = incorrectCases
-
-    def __str__(self) -> str:
-        return  self.Name
 
 
 class IRegexGenerator(ABC):
@@ -74,15 +64,6 @@ class RegexHost(object):        #TODO: Load ds here.
 
 if __name__ == '__main__':
     # from ds
-    fields = [
-        Field("Email","email address",
-              ["mail@gokhanercan.com","amojtehed@gmail.com"],
-              ["dsadsadasda","http://invalidaemail"]
-        ),
-        Field("PriceInTL","price formatted with thousands seperator in Turkish Lira currency",
-              ["1.550,5","100"],
-              ["090","0,23,34","12.11,23","aaaa","mail@gokhan.com"]
-        )
-    ]
+
     fixedRegex:str = """^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$"""
     RegexHost(StubRegexGenerator(fixedRegex)).Run(fields)
