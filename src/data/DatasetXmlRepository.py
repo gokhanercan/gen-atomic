@@ -39,7 +39,7 @@ class DatasetXmlRepository(object):
         print("Dataset has been persisted. Path: " + str(path))
 
 if __name__ == '__main__':
-    path = "..\\..\\data\\AtomicDataeset.csv"       #TODO: Create central path management
+    path = "..\\..\\data\\AtomicDataset.csv"       #TODO: Create central path management.
 
     #region Write Initial DS
     units = [
