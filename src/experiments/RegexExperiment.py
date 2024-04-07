@@ -23,6 +23,7 @@ class StubRegexGenerator(IRegexGenerator):
     def Generate(self, description: str) -> str:
         return self.Regex
 
+#TODO: Host(Model, Unit)
 class RegexHost(object):        #TODO: Load ds here.
 
     def __init__(self, regexGen:IRegexGenerator) -> None:
