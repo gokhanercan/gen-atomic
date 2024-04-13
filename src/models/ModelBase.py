@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 
+
 class ModelBase(ABC):
     def __init__(self) -> None:
         super().__init__()
