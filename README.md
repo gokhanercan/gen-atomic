@@ -18,7 +18,7 @@ https://pitch.com/v/gen-atomic-tyqhkw
    .\setup.sh
    ```
 
-# Run the Code
+## Run the Code
 
 1. Run main method of the file 'ExperimentHost.py'. You will see benchmark scores by defaults.
 
@@ -38,6 +38,6 @@ This project might depend on some certain LLM Hosts in the future, such as Ollam
 4. Make Changes: Write your code and test it thoroughly.
 5. Submit a Pull Request: Share your changes with us for review.
 
-## To DataSets
+## To Datasets
 
 Currently, datasets are version controlled. Please, send a pull request for now (see 'src/data folder). We are planning to use a ata versioning system for this.
