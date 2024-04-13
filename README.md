@@ -1,4 +1,5 @@
 # About gen-atomic
+[![Python application](https://github.com/gokhanercan/gen-atomic/actions/workflows/python-app.yml/badge.svg?branch=master)](https://github.com/gokhanercan/gen-atomic/actions/workflows/python-app.yml)
 
 LLM code <u>**gen**</u>eration and benchmarking framework aiming to support a wide range of <u>**atom**</U>ic artifacts, from compiled languages to semi-structured markups.
 
