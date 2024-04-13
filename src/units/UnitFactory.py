@@ -9,12 +9,7 @@ class UnitFactory(object):
         super().__init__()
 
     def Create(self,unitType:UnitType)->UnitBase:
-        units:UnitBase = None
-
-        #Unit Selection
         if unitType == UnitType.RegexVal:
-            unit = RegexVal(unitType)
+            return RegexVal(unitType)
         else:
             raise Exception(f"No provider found for the type '{self}'")
-
-        return unit

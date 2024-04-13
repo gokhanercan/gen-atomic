@@ -7,4 +7,4 @@ class ModelStub(ModelBase):
         self.StubUnit = stubUnit
 
     def Generate(self, description: str) -> str:
-        return self.StubUnit
+        return self.StubUnit  # type: ignore

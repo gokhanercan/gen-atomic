@@ -1,4 +1,5 @@
 from enum import unique, Enum
+from typing import List
 
 
 class Dataset(object):
@@ -30,13 +31,11 @@ class UnitType(Enum):
 
 class Unit(object):     #TODO: Find a better name for this. Field,Column,Case etc.
 
-    def __init__(self, name: str, desc: str, unitType: UnitType,
-                 correctCases, incorrectCases):
+    def __init__(self, name: str, desc: str, unitType: UnitType, correctCases, incorrectCases):
         self.Name = name
         self.Description = desc
-        self.CorrectCases: [
-            str] = correctCases  # TODO: Is this ds generalizable to other langs?     #TODO: We need additonal and optional case desc for this, for defining specific cases.
-        self.IncorrectCases: [str] = incorrectCases
+        self.CorrectCases:List[str] = correctCases  # TODO: Is this ds generalizable to other langs?     #TODO: We need additonal and optional case desc for this, for defining specific cases.
+        self.IncorrectCases:List[str] = incorrectCases
         self.UnitType: UnitType = unitType
 
     def __str__(self) -> str:

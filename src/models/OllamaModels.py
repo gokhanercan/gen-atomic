@@ -1,4 +1,4 @@
-from src.models.ModelBase import ModelBase
+from models.ModelBase import ModelBase
 
 
 class OllamaModels(ModelBase):

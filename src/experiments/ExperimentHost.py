@@ -1,7 +1,7 @@
 from data.Dataset import Dataset, UnitType
 from experiments.ExperimentFactory import Experiment, ExperimentFactory
-from pandas import DataFrame
-from tabulate import tabulate
+from pandas import DataFrame  # type: ignore
+from tabulate import tabulate  # type: ignore
 
 from utility.FormatHelper import FormatHelper
 
@@ -22,7 +22,7 @@ class ExperimentHost(
                 dfCases.at[caseIndex, "Type"] = f.UnitType.name
                 dfCases.at[caseIndex, "Name"] = f.Name
                 dfCases.at[caseIndex, "Case"] = "CC-> " + cc
-                passed: bool = exp.Unit.RunTest(generated, cc)
+                passed:bool = exp.Unit.RunTest(generated, cc)
                 dfCases.at[caseIndex, "Passed"] = "OK" if passed else "X"
                 dfCases.at[caseIndex, "Generated Code"] = FormatHelper.FormatCode(generated, 20)
                 if (passed): passedCaseCount = passedCaseCount + 1
@@ -33,7 +33,7 @@ class ExperimentHost(
                 dfCases.at[caseIndex, "Type"] = f.UnitType.name
                 dfCases.at[caseIndex, "Name"] = f.Name
                 dfCases.at[caseIndex, "Case"] = "IC-> " + icc
-                passed: bool = exp.Unit.RunTest(generated, icc)
+                passed:bool = exp.Unit.RunTest(generated, icc)  # type: ignore
                 dfCases.at[caseIndex, "Passed"] = "OK" if passed else "X"
                 dfCases.at[caseIndex, "Generated Code"] = FormatHelper.FormatCode(generated, 20)
                 if (passed): passedCaseCount = passedCaseCount + 1
@@ -56,6 +56,6 @@ if __name__ == '__main__':
 
     # stub
     fixedRegex: str = r"""^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$"""
-    exp.Model.StubUnit = fixedRegex
+    exp.Model.StubUnit = fixedRegex  # type: ignore
 
     ExperimentHost().Run(exp, ds.Units)

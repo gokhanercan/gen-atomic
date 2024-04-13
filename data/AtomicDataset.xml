@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <Units>
-   <Unit name="Email" desc="email address" type="RegexVal">
+   <Unit name="Email" desc="Generic email address" type="RegexVal">
       <CCases>
          <CCase val="mail@gokhanercan.com"/>
          <CCase val="amojtehed@gmail.com"/>
@@ -10,7 +10,7 @@
          <ICCase val="http://invalidaemail"/>
       </ICCases>
    </Unit>
-   <Unit name="PriceInTL" desc="price formatted with thousands seperator in Turkish Lira currency" type="RegexVal">
+   <Unit name="PriceInTurkishLira" desc="Price formatted with thousands seperator in Turkish Lira currency" type="RegexVal">
       <CCases>
          <CCase val="1.550,5"/>
          <CCase val="100"/>

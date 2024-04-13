@@ -1,4 +1,6 @@
-from src.data.Dataset import Dataset, Unit, UnitType
+from typing import List
+
+import src.data.Dataset
 import xml.etree.ElementTree as et
 
 
@@ -8,12 +10,12 @@ class DatasetXmlRepository(object):
         super().__init__()
 
     @staticmethod
-    def Load(self, path: str) -> Dataset:
+    def Load(self, path: str) -> src.data.Dataset.Dataset:
         pass
 
-    def Save(self, ds: Dataset, path: str):
+    def Save(self, ds: src.data.Dataset.Dataset, path: str):
         eUnits = et.Element('Units')  # root
-        units: [Unit] = ds.Units
+        units: List[src.data.Dataset.Unit] = ds.Units
         for u in units:
             eUnit = et.SubElement(eUnits, "Unit")
             eUnit.set("name", u.Name)
@@ -45,7 +47,7 @@ if __name__ == '__main__':
     path = "..\\..\\data\\AtomicDataset.xml"  # TODO: Create central path management.
 
     # region Write Initial DS
-    ds = Dataset.SampleRegexValDataset()
+    ds = src.data.Dataset.Dataset.SampleRegexValDataset()
     DatasetXmlRepository().Save(ds, path)
     exit(0)
     # endregion
