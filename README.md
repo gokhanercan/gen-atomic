@@ -13,14 +13,32 @@ https://pitch.com/v/gen-atomic-tyqhkw
 1. Extract project files to a folder
 2. Run the setup by typing
 
-
    ```
    .\setup.sh
    ```
 
 ## Run the Code
 
-1. Run main method of the file 'ExperimentHost.py'. You will see benchmark scores by defaults.
+1. Run main method of the file 'ExperimentHost.py'. You will see the default experiment/benchmark scores like the following:
+
+```
+-- CASE RESULTS --
++----+----------+--------------------+---------------------------+----------+---------------------------------------------------------------------+-------------------------------------------------------------------+
+|    | Type     | Name               | Case                      | Passed   | Generated Code                                                      | Desc                                                              |
+|----+----------+--------------------+---------------------------+----------+---------------------------------------------------------------------+-------------------------------------------------------------------|
+|  1 | RegexVal | Email              | CC-> mail@gokhanercan.com | OK       | [CODE] ^[a-zA-Z0-9.!#$%&'*+ ..[TRIM].. ,61}[a-zA-Z0-9])?)*$ [/CODE] | Generic email address                                             |
+|  2 | RegexVal | Email              | CC-> amojtehed@gmail.com  | OK       | [CODE] ^[a-zA-Z0-9.!#$%&'*+ ..[TRIM].. ,61}[a-zA-Z0-9])?)*$ [/CODE] | Generic email address                                             |
+|  3 | RegexVal | Email              | IC-> dsadsadasda          | X        | [CODE] ^[a-zA-Z0-9.!#$%&'*+ ..[TRIM].. ,61}[a-zA-Z0-9])?)*$ [/CODE] | Generic email address                                             |
+|  4 | RegexVal | Email              | IC-> http://invalidaemail | X        | [CODE] ^[a-zA-Z0-9.!#$%&'*+ ..[TRIM].. ,61}[a-zA-Z0-9])?)*$ [/CODE] | Generic email address                                             |
+|  5 | RegexVal | PriceInTurkishLira | CC-> 1.550,5              | X        | [CODE] ^[a-zA-Z0-9.!#$%&'*+ ..[TRIM].. ,61}[a-zA-Z0-9])?)*$ [/CODE] | Price formatted with thousands seperator in Turkish Lira currency |
+|  6 | RegexVal | PriceInTurkishLira | CC-> 100                  | X        | [CODE] ^[a-zA-Z0-9.!#$%&'*+ ..[TRIM].. ,61}[a-zA-Z0-9])?)*$ [/CODE] | Price formatted with thousands seperator in Turkish Lira currency |
+|  7 | RegexVal | PriceInTurkishLira | IC-> 090                  | X        | [CODE] ^[a-zA-Z0-9.!#$%&'*+ ..[TRIM].. ,61}[a-zA-Z0-9])?)*$ [/CODE] | Price formatted with thousands seperator in Turkish Lira currency |
+|  8 | RegexVal | PriceInTurkishLira | IC-> 0,23,34              | X        | [CODE] ^[a-zA-Z0-9.!#$%&'*+ ..[TRIM].. ,61}[a-zA-Z0-9])?)*$ [/CODE] | Price formatted with thousands seperator in Turkish Lira currency |
+|  9 | RegexVal | PriceInTurkishLira | IC-> 12.11,23             | X        | [CODE] ^[a-zA-Z0-9.!#$%&'*+ ..[TRIM].. ,61}[a-zA-Z0-9])?)*$ [/CODE] | Price formatted with thousands seperator in Turkish Lira currency |
+| 10 | RegexVal | PriceInTurkishLira | IC-> aaaa                 | X        | [CODE] ^[a-zA-Z0-9.!#$%&'*+ ..[TRIM].. ,61}[a-zA-Z0-9])?)*$ [/CODE] | Price formatted with thousands seperator in Turkish Lira currency |
+| 11 | RegexVal | PriceInTurkishLira | IC-> mail@gokhan.com      | OK       | [CODE] ^[a-zA-Z0-9.!#$%&'*+ ..[TRIM].. ,61}[a-zA-Z0-9])?)*$ [/CODE] | Price formatted with thousands seperator in Turkish Lira currency |
++----+----------+--------------------+---------------------------+----------+---------------------------------------------------------------------+-------------------------------------------------------------------+
+```
 
 # Dependencies
 
