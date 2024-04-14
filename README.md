@@ -1,5 +1,7 @@
 # About gen-atomic
+
 [![Python application](https://github.com/gokhanercan/gen-atomic/actions/workflows/python-app.yml/badge.svg?branch=master)](https://github.com/gokhanercan/gen-atomic/actions/workflows/python-app.yml)
+[![Demo](https://img.shields.io/badge/Streamlit_Demo-Visit-blue.svg)](https://gen-atomic.streamlit.app/)
 
 LLM code <u>**gen**</u>eration and benchmarking framework aiming to support a wide range of <u>**atom**</U>ic artifacts, from compiled languages to semi-structured markups.
 
@@ -8,6 +10,9 @@ Here is the initial sketch. More will be here...
 https://pitch.com/v/gen-atomic-tyqhkw
 
 # Getting Started
+
+## See the Demo
+Check out the [streamlit app](https://gen-atomic.streamlit.app/) to get an idea of what we are trying to accomplish. Sorry for the bad UX. We are new to streamlit.  
 
 ## Installing gen-atomic
 
@@ -52,18 +57,23 @@ https://pitch.com/v/gen-atomic-tyqhkw
 | 23 | RegexVal | LocalhostIPv4OrLocalText | IC-> 192.1.1.12           | X        | [CODE] ^[a-zA-Z0-9.!#$%&'*+ ..[TRIM].. ,61}[a-zA-Z0-9])?)*$ [/CODE] | Local IP address or 'localhost' text                              |
 +----+----------+--------------------------+---------------------------+----------+---------------------------------------------------------------------+-------------------------------------------------------------------+
 ```
-## Run the Tests
-In the project root directory, run 'pytest' to test integrations:
-   ```
-   pytest
-   ```
-   or
-   ```
-   .\pytest.sh
-   ```
-# Dependencies
 
-Python 3.8+ (currently)
+## Run the Tests
+
+In the project root directory, run 'pytest' to test integrations:
+
+```
+pytest
+```
+
+or
+
+```
+.\pytest.sh
+```
+
+# Dependencies
+Python 3.8+ 
 
 This project might depend on some certain LLM Hosts in the future, such as Ollama, LangChain, etc.
 
