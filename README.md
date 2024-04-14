@@ -47,9 +47,9 @@ https://pitch.com/v/gen-atomic-tyqhkw
 | 18 | RegexVal | IPAddressV4              | IC-> 12.11,23             | X        | [CODE] ^[a-zA-Z0-9.!#$%&'*+ ..[TRIM].. ,61}[a-zA-Z0-9])?)*$ [/CODE] | Generic IP address in IPv4 format, 4 blocks of numbers            |
 | 19 | RegexVal | IPAddressV4              | IC-> gokhan               | X        | [CODE] ^[a-zA-Z0-9.!#$%&'*+ ..[TRIM].. ,61}[a-zA-Z0-9])?)*$ [/CODE] | Generic IP address in IPv4 format, 4 blocks of numbers            |
 | 20 | RegexVal | IPAddressV4              | IC-> 2001:db8:1234::1     | X        | [CODE] ^[a-zA-Z0-9.!#$%&'*+ ..[TRIM].. ,61}[a-zA-Z0-9])?)*$ [/CODE] | Generic IP address in IPv4 format, 4 blocks of numbers            |
-| 21 | RegexVal | LocalhostIPv4OrLocalText | CC-> 127.0.0.1            | X        | [CODE] ^[a-zA-Z0-9.!#$%&'*+ ..[TRIM].. ,61}[a-zA-Z0-9])?)*$ [/CODE] | A local IP address that or 'localhost' text                       |
-| 22 | RegexVal | LocalhostIPv4OrLocalText | CC-> localhost            | X        | [CODE] ^[a-zA-Z0-9.!#$%&'*+ ..[TRIM].. ,61}[a-zA-Z0-9])?)*$ [/CODE] | A local IP address that or 'localhost' text                       |
-| 23 | RegexVal | LocalhostIPv4OrLocalText | IC-> 192.1.1.12           | X        | [CODE] ^[a-zA-Z0-9.!#$%&'*+ ..[TRIM].. ,61}[a-zA-Z0-9])?)*$ [/CODE] | A local IP address that or 'localhost' text                       |
+| 21 | RegexVal | LocalhostIPv4OrLocalText | CC-> 127.0.0.1            | X        | [CODE] ^[a-zA-Z0-9.!#$%&'*+ ..[TRIM].. ,61}[a-zA-Z0-9])?)*$ [/CODE] | Local IP address or 'localhost' text                              |
+| 22 | RegexVal | LocalhostIPv4OrLocalText | CC-> localhost            | X        | [CODE] ^[a-zA-Z0-9.!#$%&'*+ ..[TRIM].. ,61}[a-zA-Z0-9])?)*$ [/CODE] | Local IP address or 'localhost' text                              |
+| 23 | RegexVal | LocalhostIPv4OrLocalText | IC-> 192.1.1.12           | X        | [CODE] ^[a-zA-Z0-9.!#$%&'*+ ..[TRIM].. ,61}[a-zA-Z0-9])?)*$ [/CODE] | Local IP address or 'localhost' text                              |
 +----+----------+--------------------------+---------------------------+----------+---------------------------------------------------------------------+-------------------------------------------------------------------+
 ```
 ## Run the Tests

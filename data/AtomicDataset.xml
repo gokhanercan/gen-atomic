@@ -38,7 +38,7 @@
          <ICCase val="2001:db8:1234::1"/>
       </ICCases>
    </Unit>
-   <Unit name="LocalhostIPv4OrLocalText" desc="A local IP address that or 'localhost' text" type="RegexVal">
+   <Unit name="LocalhostIPv4OrLocalText" desc="Local IP address or 'localhost' text" type="RegexVal">
       <CCases>
          <CCase val="127.0.0.1"/>
          <CCase val="localhost"/>
