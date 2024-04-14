@@ -17,7 +17,7 @@ root = os.getcwd()       #tests folder
 #Dataset
 st.subheader("Dataset")
 ds = st.selectbox('Choose a dataset?',('AtomicDataset','Other'))
-dsPath = f"{root}\\data\\{ds}.xml"        #relation to project root. not src root.
+dsPath = f"{root}//data//{ds}.xml"        #relation to project root. not src root.
 #st.write("Dataset Path: ", dsPath)
 ds: Dataset = DatasetXmlRepository.Load(dsPath)
 #st.write(f'Number of Fields: {len(ds.Units)}')
