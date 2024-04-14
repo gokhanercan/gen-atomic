@@ -40,7 +40,15 @@ https://pitch.com/v/gen-atomic-tyqhkw
 | 11 | RegexVal | PriceInTurkishLira | IC-> mail@gokhan.com      | OK       | [CODE] ^[a-zA-Z0-9.!#$%&'*+ ..[TRIM].. ,61}[a-zA-Z0-9])?)*$ [/CODE] | Price formatted with thousands seperator in Turkish Lira currency |
 +----+----------+--------------------+---------------------------+----------+---------------------------------------------------------------------+-------------------------------------------------------------------+
 ```
-
+## Run the Tests
+In the project root directory, run 'pytest' to test integrations:
+   ```
+   pytest
+   ```
+   or
+   ```
+   .\pytest.sh
+   ```
 # Dependencies
 
 Python 3.6+ (currently)
