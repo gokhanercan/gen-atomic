@@ -8,4 +8,4 @@ class ModelStub(ModelBase):
         self.StubUnit = stubUnit
 
     def Generate(self, description: str) -> str:
-        return Coelesce(self.StubUnit,"stub code")  # type: ignore
+        return Coelesce(self.StubUnit,f"Stub code for description '{description}'")  # type: ignore

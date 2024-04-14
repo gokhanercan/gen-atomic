@@ -11,7 +11,7 @@ class Dataset(object):
 @unique
 class UnitType(Enum):
     RegexVal = 0  # RegexValidators
-
+    HTML = 1
 
 class Unit(object):     #TODO: Find a better name for this. Field,Column,Case etc.
 
@@ -30,8 +30,8 @@ class Unit(object):     #TODO: Find a better name for this. Field,Column,Case et
         return len(self.CorrectCases) + len(self.IncorrectCases)
 
     def __str__(self) -> str:
-        return f"{self.Name} ({self.TotalCases}) Cases"
+        return f"{self.Name} ({self.TotalCases} Cases)"
 
     def __repr__(self) -> str:
-        return f"{self.Name} ({self.TotalCases}) Cases"
+        return f"{self.Name} ({self.TotalCases} Cases)"
 

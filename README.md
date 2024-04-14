@@ -63,7 +63,7 @@ In the project root directory, run 'pytest' to test integrations:
    ```
 # Dependencies
 
-Python 3.6+ (currently)
+Python 3.8+ (currently)
 
 This project might depend on some certain LLM Hosts in the future, such as Ollama, LangChain, etc.
 
