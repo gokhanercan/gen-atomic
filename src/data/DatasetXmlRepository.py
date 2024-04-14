@@ -1,7 +1,8 @@
 from typing import List
 
-import src.data.Dataset
 import xml.etree.ElementTree as et
+
+from data.Dataset import Dataset, Unit, UnitType
 
 
 class DatasetXmlRepository(object):
@@ -10,12 +11,37 @@ class DatasetXmlRepository(object):
         super().__init__()
 
     @staticmethod
-    def Load(self, path: str) -> src.data.Dataset.Dataset:
-        pass
+    def Load(path: str) -> Dataset:
+        ds:Dataset = Dataset()
+        tree = et.parse(path)
+        root = tree.getroot()
+        units:List[Unit] = []
+        for eUnit in root:
+            name:str = eUnit.get("name")
+            desc:str = eUnit.get("desc")
+            type:UnitType = UnitType[eUnit.get("type")]
+            u:Unit = Unit(name,desc,type,None,None)
+            units.append(u)
+            #CC
+            eCCS = eUnit.find("CCases")
+            cCases:List[str] = []
+            for eCC in eCCS:
+                val:str = eCC.get("val")
+                cCases.append(val)
+            u.CorrectCases = cCases
+            #ICC
+            eICCS = eUnit.find("ICCases")
+            icCases: List[str] = []
+            for eICC in eICCS:
+                val: str = eICC.get("val")
+                icCases.append(val)
+            u.IncorrectCases = icCases
+        ds.Units = units
+        return ds
 
-    def Save(self, ds: src.data.Dataset.Dataset, path: str):
+    def Save(self, ds: Dataset, path: str):
         eUnits = et.Element('Units')  # root
-        units: List[src.data.Dataset.Unit] = ds.Units
+        units: List[Unit] = ds.Units
         for u in units:
             eUnit = et.SubElement(eUnits, "Unit")
             eUnit.set("name", u.Name)
@@ -46,11 +72,5 @@ class DatasetXmlRepository(object):
 if __name__ == '__main__':
     path = "..\\..\\data\\AtomicDataset.xml"  # TODO: Create central path management.
 
-    # region Write Initial DS
-    ds = src.data.Dataset.Dataset.SampleRegexValDataset()
-    DatasetXmlRepository().Save(ds, path)
-    exit(0)
-    # endregion
-
     # Read DS
-    # DatasetLoader.Load("")
+    ds:Dataset = DatasetXmlRepository.Load(path)

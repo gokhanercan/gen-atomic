@@ -5,23 +5,7 @@ from typing import List
 class Dataset(object):
     def __init__(self):
         super().__init__()
-        self.Units: [Unit] = []
-
-    @staticmethod
-    def SampleRegexValDataset():
-        ds = Dataset()
-        units = [
-            Unit("Email", "Generic email address", UnitType.RegexVal,
-                 ["mail@gokhanercan.com", "amojtehed@gmail.com"],
-                 ["dsadsadasda", "http://invalidaemail"]
-                 ),
-            Unit("PriceInTurkishLira", "Price formatted with thousands seperator in Turkish Lira currency", UnitType.RegexVal,
-                 ["1.550,5", "100"],
-                 ["090", "0,23,34", "12.11,23", "aaaa", "mail@gokhan.com"]
-                 )
-        ]
-        ds.Units = units
-        return ds
+        self.Units: List[Unit] = []
 
 
 @unique
@@ -31,12 +15,23 @@ class UnitType(Enum):
 
 class Unit(object):     #TODO: Find a better name for this. Field,Column,Case etc.
 
-    def __init__(self, name: str, desc: str, unitType: UnitType, correctCases, incorrectCases):
+    def __init__(self, name: str, desc: str, unitType: UnitType, correctCases=None, incorrectCases=None):
         self.Name = name
         self.Description = desc
-        self.CorrectCases:List[str] = correctCases  # TODO: Is this ds generalizable to other langs?     #TODO: We need additonal and optional case desc for this, for defining specific cases.
-        self.IncorrectCases:List[str] = incorrectCases
         self.UnitType: UnitType = unitType
+        #Cases
+        self.CorrectCases:List[str] = correctCases  # TODO: Is this ds generalizable to other langs?     #TODO: We need additonal and optional case desc for this, for defining specific cases.
+        if(self.CorrectCases is None): self.CorrectCases = []
+        self.IncorrectCases:List[str] = incorrectCases
+        if (self.IncorrectCases is None): self.IncorrectCases = []
+
+    @property
+    def TotalCases(self):
+        return len(self.CorrectCases) + len(self.IncorrectCases)
 
     def __str__(self) -> str:
-        return self.Name
+        return f"{self.Name} ({self.TotalCases}) Cases"
+
+    def __repr__(self) -> str:
+        return f"{self.Name} ({self.TotalCases}) Cases"
+

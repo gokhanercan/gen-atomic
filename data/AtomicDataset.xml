@@ -23,4 +23,28 @@
          <ICCase val="mail@gokhan.com"/>
       </ICCases>
    </Unit>
+   <Unit name="IPAddressV4" desc="Generic IP address in IPv4 format, 4 blocks of numbers" type="RegexVal">
+      <CCases>
+         <CCase val="127.0.0.1"/>
+         <CCase val="192.1.1.12"/>
+      </CCases>
+      <ICCases>
+         <CCase val="127,0,0,1"/>
+         <CCase val="127:0:0:1"/>
+         <ICCase val="1.0.0.0.0.0"/>
+         <ICCase val="0,23,34"/>
+         <ICCase val="12.11,23"/>
+         <ICCase val="gokhan"/>
+         <ICCase val="2001:db8:1234::1"/>
+      </ICCases>
+   </Unit>
+   <Unit name="LocalhostIPv4OrLocalText" desc="An IP address that represents localhost or 'localhost' text" type="RegexVal">
+      <CCases>
+         <CCase val="127.0.0.1"/>
+         <CCase val="localhost"/>
+      </CCases>
+       <ICCases>
+         <CCase val="192.1.1.12"/>
+      </ICCases>
+   </Unit>
 </Units>

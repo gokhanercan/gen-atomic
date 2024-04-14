@@ -1,4 +1,5 @@
 from data.Dataset import Dataset, UnitType
+from data.DatasetXmlRepository import DatasetXmlRepository
 from experiments.ExperimentFactory import Experiment, ExperimentFactory
 from pandas import DataFrame  # type: ignore
 from tabulate import tabulate  # type: ignore
@@ -51,7 +52,8 @@ class ExperimentHost(
 
 
 if __name__ == '__main__':
-    ds: Dataset = Dataset.SampleRegexValDataset()
+    path = "..\\..\\data\\AtomicDataset.xml"
+    ds: Dataset = DatasetXmlRepository.Load(path)
     exp: Experiment = ExperimentFactory().CreateExperiment(UnitType.RegexVal)
 
     # stub
