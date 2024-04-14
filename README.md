@@ -89,4 +89,4 @@ This project might depend on some certain LLM Hosts in the future, such as Ollam
 
 ## To Datasets
 
-Currently, datasets are version controlled. Please, send a pull request for now (see 'src/data folder). We are planning to use a ata versioning system for this.
+Currently, datasets are version controlled. Please, send a pull request for now (see 'src/data folder). We are planning to use a data versioning system for this.
