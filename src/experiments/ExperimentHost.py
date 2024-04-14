@@ -1,3 +1,5 @@
+from typing import Optional
+
 from data.Dataset import Dataset, UnitType
 from data.DatasetXmlRepository import DatasetXmlRepository
 from experiments.ExperimentFactory import Experiment, ExperimentFactory
@@ -7,8 +9,16 @@ from tabulate import tabulate  # type: ignore
 from utility.FormatHelper import FormatHelper
 
 
-class ExperimentHost(
-    object):  # TODO: Load ds here.https://github.com/users/gokhanercan/projects/3/views/1?pane=issue&itemId=58244903
+class ExperimentResults(object):
+
+    def __init__(self, **kwargs) -> None:
+        super().__init__()
+        self.OverallAccuracy:Optional[float] = None
+        for key, value in kwargs.items():
+            setattr(self, key, value)
+
+
+class ExperimentHost(object):  # TODO: Load ds here.https://github.com/users/gokhanercan/projects/3/views/1?pane=issue&itemId=58244903
 
     def Run(self, exp: Experiment, fields):
         dfCases: DataFrame = DataFrame()
@@ -48,7 +58,9 @@ class ExperimentHost(
 
         # TODO:Report confusion matrix.
         # TODO: Report accuracy by type and field also.
-        print("Overall accuracy:" + str((float(passedCaseCount) / float(totalCaseCount)) * 100))
+        overallAccuracy:float = (float(passedCaseCount) / float(totalCaseCount)) * 100
+        print("Overall accuracy:" + str(overallAccuracy))
+        return ExperimentResults(OverallAccuracy=overallAccuracy)
 
 
 if __name__ == '__main__':
@@ -60,4 +72,4 @@ if __name__ == '__main__':
     fixedRegex: str = r"""^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$"""
     exp.Model.StubUnit = fixedRegex  # type: ignore
 
-    ExperimentHost().Run(exp, ds.Units)
+    r:ExperimentResults = ExperimentHost().Run(exp, ds.Units)

@@ -1,4 +1,5 @@
 from models.ModelBase import ModelBase
+from utility.StringHelper import Coelesce
 
 
 class ModelStub(ModelBase):
@@ -7,4 +8,4 @@ class ModelStub(ModelBase):
         self.StubUnit = stubUnit
 
     def Generate(self, description: str) -> str:
-        return self.StubUnit  # type: ignore
+        return Coelesce(self.StubUnit,"stub code")  # type: ignore
