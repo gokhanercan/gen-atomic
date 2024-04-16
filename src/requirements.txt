@@ -1,4 +1,3 @@
 pandas
 tabulate
-mypy
 streamlit
