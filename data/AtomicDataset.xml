@@ -10,6 +10,18 @@
          <ICCase val="http://invalidaemail"/>
       </ICCases>
    </Unit>
+   <Unit name="EmailRFC5322" desc="General email regex compliant to RFC 5322 official standard" type="RegexVal">
+      <!--ref: https://www.regextester.com/115911-->
+      <CCases>
+         <CCase val="some+test@gmail.com"/>
+         <CCase val="_valid@mail.com"/>
+         <CCase val="stuart.sillitoe@prodirectsport.net"/>
+      </CCases>
+      <ICCases>
+         <ICCase val="invalidÂ£@domain.com"/>
+         <ICCase val="valid%$@domain.com"/>
+      </ICCases>
+   </Unit>
    <Unit name="PriceInTurkishLira" desc="Price formatted with thousands seperator in Turkish Lira currency" type="RegexVal">
       <CCases>
          <CCase val="1.550,5"/>
