@@ -30,33 +30,48 @@ Check out the [streamlit app](https://gen-atomic.streamlit.app/) to get an idea 
 
 ```
 -- CASE RESULTS --
-+----+----------+--------------------------+---------------------------+----------+---------------------------------------------------------------------+-------------------------------------------------------------------+
-|    | Type     | Name                     | Case                      | Passed   | Generated Code                                                      | Desc                                                              |
-|----+----------+--------------------------+---------------------------+----------+---------------------------------------------------------------------+-------------------------------------------------------------------|
-|  1 | RegexVal | Email                    | CC-> mail@gokhanercan.com | OK       | [CODE] ^[a-zA-Z0-9.!#$%&'*+ ..[TRIM].. ,61}[a-zA-Z0-9])?)*$ [/CODE] | Generic email address                                             |
-|  2 | RegexVal | Email                    | CC-> amojtehed@gmail.com  | OK       | [CODE] ^[a-zA-Z0-9.!#$%&'*+ ..[TRIM].. ,61}[a-zA-Z0-9])?)*$ [/CODE] | Generic email address                                             |
-|  3 | RegexVal | Email                    | IC-> dsadsadasda          | X        | [CODE] ^[a-zA-Z0-9.!#$%&'*+ ..[TRIM].. ,61}[a-zA-Z0-9])?)*$ [/CODE] | Generic email address                                             |
-|  4 | RegexVal | Email                    | IC-> http://invalidaemail | X        | [CODE] ^[a-zA-Z0-9.!#$%&'*+ ..[TRIM].. ,61}[a-zA-Z0-9])?)*$ [/CODE] | Generic email address                                             |
-|  5 | RegexVal | PriceInTurkishLira       | CC-> 1.550,5              | X        | [CODE] ^[a-zA-Z0-9.!#$%&'*+ ..[TRIM].. ,61}[a-zA-Z0-9])?)*$ [/CODE] | Price formatted with thousands seperator in Turkish Lira currency |
-|  6 | RegexVal | PriceInTurkishLira       | CC-> 100                  | X        | [CODE] ^[a-zA-Z0-9.!#$%&'*+ ..[TRIM].. ,61}[a-zA-Z0-9])?)*$ [/CODE] | Price formatted with thousands seperator in Turkish Lira currency |
-|  7 | RegexVal | PriceInTurkishLira       | IC-> 090                  | X        | [CODE] ^[a-zA-Z0-9.!#$%&'*+ ..[TRIM].. ,61}[a-zA-Z0-9])?)*$ [/CODE] | Price formatted with thousands seperator in Turkish Lira currency |
-|  8 | RegexVal | PriceInTurkishLira       | IC-> 0,23,34              | X        | [CODE] ^[a-zA-Z0-9.!#$%&'*+ ..[TRIM].. ,61}[a-zA-Z0-9])?)*$ [/CODE] | Price formatted with thousands seperator in Turkish Lira currency |
-|  9 | RegexVal | PriceInTurkishLira       | IC-> 12.11,23             | X        | [CODE] ^[a-zA-Z0-9.!#$%&'*+ ..[TRIM].. ,61}[a-zA-Z0-9])?)*$ [/CODE] | Price formatted with thousands seperator in Turkish Lira currency |
-| 10 | RegexVal | PriceInTurkishLira       | IC-> aaaa                 | X        | [CODE] ^[a-zA-Z0-9.!#$%&'*+ ..[TRIM].. ,61}[a-zA-Z0-9])?)*$ [/CODE] | Price formatted with thousands seperator in Turkish Lira currency |
-| 11 | RegexVal | PriceInTurkishLira       | IC-> mail@gokhan.com      | OK       | [CODE] ^[a-zA-Z0-9.!#$%&'*+ ..[TRIM].. ,61}[a-zA-Z0-9])?)*$ [/CODE] | Price formatted with thousands seperator in Turkish Lira currency |
-| 12 | RegexVal | IPAddressV4              | CC-> 127.0.0.1            | X        | [CODE] ^[a-zA-Z0-9.!#$%&'*+ ..[TRIM].. ,61}[a-zA-Z0-9])?)*$ [/CODE] | Generic IP address in IPv4 format, 4 blocks of numbers            |
-| 13 | RegexVal | IPAddressV4              | CC-> 192.1.1.12           | X        | [CODE] ^[a-zA-Z0-9.!#$%&'*+ ..[TRIM].. ,61}[a-zA-Z0-9])?)*$ [/CODE] | Generic IP address in IPv4 format, 4 blocks of numbers            |
-| 14 | RegexVal | IPAddressV4              | IC-> 127,0,0,1            | X        | [CODE] ^[a-zA-Z0-9.!#$%&'*+ ..[TRIM].. ,61}[a-zA-Z0-9])?)*$ [/CODE] | Generic IP address in IPv4 format, 4 blocks of numbers            |
-| 15 | RegexVal | IPAddressV4              | IC-> 127:0:0:1            | X        | [CODE] ^[a-zA-Z0-9.!#$%&'*+ ..[TRIM].. ,61}[a-zA-Z0-9])?)*$ [/CODE] | Generic IP address in IPv4 format, 4 blocks of numbers            |
-| 16 | RegexVal | IPAddressV4              | IC-> 1.0.0.0.0.0          | X        | [CODE] ^[a-zA-Z0-9.!#$%&'*+ ..[TRIM].. ,61}[a-zA-Z0-9])?)*$ [/CODE] | Generic IP address in IPv4 format, 4 blocks of numbers            |
-| 17 | RegexVal | IPAddressV4              | IC-> 0,23,34              | X        | [CODE] ^[a-zA-Z0-9.!#$%&'*+ ..[TRIM].. ,61}[a-zA-Z0-9])?)*$ [/CODE] | Generic IP address in IPv4 format, 4 blocks of numbers            |
-| 18 | RegexVal | IPAddressV4              | IC-> 12.11,23             | X        | [CODE] ^[a-zA-Z0-9.!#$%&'*+ ..[TRIM].. ,61}[a-zA-Z0-9])?)*$ [/CODE] | Generic IP address in IPv4 format, 4 blocks of numbers            |
-| 19 | RegexVal | IPAddressV4              | IC-> gokhan               | X        | [CODE] ^[a-zA-Z0-9.!#$%&'*+ ..[TRIM].. ,61}[a-zA-Z0-9])?)*$ [/CODE] | Generic IP address in IPv4 format, 4 blocks of numbers            |
-| 20 | RegexVal | IPAddressV4              | IC-> 2001:db8:1234::1     | X        | [CODE] ^[a-zA-Z0-9.!#$%&'*+ ..[TRIM].. ,61}[a-zA-Z0-9])?)*$ [/CODE] | Generic IP address in IPv4 format, 4 blocks of numbers            |
-| 21 | RegexVal | LocalhostIPv4OrLocalText | CC-> 127.0.0.1            | X        | [CODE] ^[a-zA-Z0-9.!#$%&'*+ ..[TRIM].. ,61}[a-zA-Z0-9])?)*$ [/CODE] | Local IP address or 'localhost' text                              |
-| 22 | RegexVal | LocalhostIPv4OrLocalText | CC-> localhost            | X        | [CODE] ^[a-zA-Z0-9.!#$%&'*+ ..[TRIM].. ,61}[a-zA-Z0-9])?)*$ [/CODE] | Local IP address or 'localhost' text                              |
-| 23 | RegexVal | LocalhostIPv4OrLocalText | IC-> 192.1.1.12           | X        | [CODE] ^[a-zA-Z0-9.!#$%&'*+ ..[TRIM].. ,61}[a-zA-Z0-9])?)*$ [/CODE] | Local IP address or 'localhost' text                              |
-+----+----------+--------------------------+---------------------------+----------+---------------------------------------------------------------------+-------------------------------------------------------------------+
++----+----------+--------------------------+-----------------------------------------+----------+---------------------------------------------------------------------+-------------------------------------------------------------------+
+|    | Type     | Name                     | Case                                    | Passed   | Generated Code                                                      | Desc                                                              |
+|----+----------+--------------------------+-----------------------------------------+----------+---------------------------------------------------------------------+-------------------------------------------------------------------|
+|  1 | RegexVal | Email                    | CC-> mail@gokhanercan.com               | OK       | [CODE] ^[a-zA-Z0-9.!#$%&'*+ ..[TRIM].. ,61}[a-zA-Z0-9])?)*$ [/CODE] | Generic email address                                             |
+|  2 | RegexVal | Email                    | CC-> amojtehed@gmail.com                | OK       | [CODE] ^[a-zA-Z0-9.!#$%&'*+ ..[TRIM].. ,61}[a-zA-Z0-9])?)*$ [/CODE] | Generic email address                                             |
+|  3 | RegexVal | Email                    | IC-> dsadsadasda                        | OK       | [CODE] ^[a-zA-Z0-9.!#$%&'*+ ..[TRIM].. ,61}[a-zA-Z0-9])?)*$ [/CODE] | Generic email address                                             |
+|  4 | RegexVal | Email                    | IC-> http://invalidaemail               | OK       | [CODE] ^[a-zA-Z0-9.!#$%&'*+ ..[TRIM].. ,61}[a-zA-Z0-9])?)*$ [/CODE] | Generic email address                                             |
+|  5 | RegexVal | EmailRFC5322             | CC-> some+test@gmail.com                | OK       | [CODE] ^[a-zA-Z0-9.!#$%&'*+ ..[TRIM].. ,61}[a-zA-Z0-9])?)*$ [/CODE] | General email regex compliant to RFC 5322 official standard       |
+|  6 | RegexVal | EmailRFC5322             | CC-> _valid@mail.com                    | OK       | [CODE] ^[a-zA-Z0-9.!#$%&'*+ ..[TRIM].. ,61}[a-zA-Z0-9])?)*$ [/CODE] | General email regex compliant to RFC 5322 official standard       |
+|  7 | RegexVal | EmailRFC5322             | CC-> stuart.sillitoe@prodirectsport.net | OK       | [CODE] ^[a-zA-Z0-9.!#$%&'*+ ..[TRIM].. ,61}[a-zA-Z0-9])?)*$ [/CODE] | General email regex compliant to RFC 5322 official standard       |
+|  8 | RegexVal | EmailRFC5322             | IC-> invalidÂ£@domain.com               | OK       | [CODE] ^[a-zA-Z0-9.!#$%&'*+ ..[TRIM].. ,61}[a-zA-Z0-9])?)*$ [/CODE] | General email regex compliant to RFC 5322 official standard       |
+|  9 | RegexVal | EmailRFC5322             | IC-> valid%$@domain.com                 | X        | [CODE] ^[a-zA-Z0-9.!#$%&'*+ ..[TRIM].. ,61}[a-zA-Z0-9])?)*$ [/CODE] | General email regex compliant to RFC 5322 official standard       |
+| 10 | RegexVal | PriceInTurkishLira       | CC-> 1.550,5                            | X        | [CODE] ^[a-zA-Z0-9.!#$%&'*+ ..[TRIM].. ,61}[a-zA-Z0-9])?)*$ [/CODE] | Price formatted with thousands seperator in Turkish Lira currency |
+| 11 | RegexVal | PriceInTurkishLira       | CC-> 100                                | X        | [CODE] ^[a-zA-Z0-9.!#$%&'*+ ..[TRIM].. ,61}[a-zA-Z0-9])?)*$ [/CODE] | Price formatted with thousands seperator in Turkish Lira currency |
+| 12 | RegexVal | PriceInTurkishLira       | IC-> 090                                | OK       | [CODE] ^[a-zA-Z0-9.!#$%&'*+ ..[TRIM].. ,61}[a-zA-Z0-9])?)*$ [/CODE] | Price formatted with thousands seperator in Turkish Lira currency |
+| 13 | RegexVal | PriceInTurkishLira       | IC-> 0,23,34                            | OK       | [CODE] ^[a-zA-Z0-9.!#$%&'*+ ..[TRIM].. ,61}[a-zA-Z0-9])?)*$ [/CODE] | Price formatted with thousands seperator in Turkish Lira currency |
+| 14 | RegexVal | PriceInTurkishLira       | IC-> 12.11,23                           | OK       | [CODE] ^[a-zA-Z0-9.!#$%&'*+ ..[TRIM].. ,61}[a-zA-Z0-9])?)*$ [/CODE] | Price formatted with thousands seperator in Turkish Lira currency |
+| 15 | RegexVal | PriceInTurkishLira       | IC-> aaaa                               | OK       | [CODE] ^[a-zA-Z0-9.!#$%&'*+ ..[TRIM].. ,61}[a-zA-Z0-9])?)*$ [/CODE] | Price formatted with thousands seperator in Turkish Lira currency |
+| 16 | RegexVal | PriceInTurkishLira       | IC-> mail@gokhan.com                    | X        | [CODE] ^[a-zA-Z0-9.!#$%&'*+ ..[TRIM].. ,61}[a-zA-Z0-9])?)*$ [/CODE] | Price formatted with thousands seperator in Turkish Lira currency |
+| 17 | RegexVal | IPAddressV4              | CC-> 127.0.0.1                          | X        | [CODE] ^[a-zA-Z0-9.!#$%&'*+ ..[TRIM].. ,61}[a-zA-Z0-9])?)*$ [/CODE] | Generic IP address in IPv4 format, 4 blocks of numbers            |
+| 18 | RegexVal | IPAddressV4              | CC-> 192.1.1.12                         | X        | [CODE] ^[a-zA-Z0-9.!#$%&'*+ ..[TRIM].. ,61}[a-zA-Z0-9])?)*$ [/CODE] | Generic IP address in IPv4 format, 4 blocks of numbers            |
+| 19 | RegexVal | IPAddressV4              | IC-> 127,0,0,1                          | OK       | [CODE] ^[a-zA-Z0-9.!#$%&'*+ ..[TRIM].. ,61}[a-zA-Z0-9])?)*$ [/CODE] | Generic IP address in IPv4 format, 4 blocks of numbers            |
+| 20 | RegexVal | IPAddressV4              | IC-> 127:0:0:1                          | OK       | [CODE] ^[a-zA-Z0-9.!#$%&'*+ ..[TRIM].. ,61}[a-zA-Z0-9])?)*$ [/CODE] | Generic IP address in IPv4 format, 4 blocks of numbers            |
+| 21 | RegexVal | IPAddressV4              | IC-> 1.0.0.0.0.0                        | OK       | [CODE] ^[a-zA-Z0-9.!#$%&'*+ ..[TRIM].. ,61}[a-zA-Z0-9])?)*$ [/CODE] | Generic IP address in IPv4 format, 4 blocks of numbers            |
+| 22 | RegexVal | IPAddressV4              | IC-> 0,23,34                            | OK       | [CODE] ^[a-zA-Z0-9.!#$%&'*+ ..[TRIM].. ,61}[a-zA-Z0-9])?)*$ [/CODE] | Generic IP address in IPv4 format, 4 blocks of numbers            |
+| 23 | RegexVal | IPAddressV4              | IC-> 12.11,23                           | OK       | [CODE] ^[a-zA-Z0-9.!#$%&'*+ ..[TRIM].. ,61}[a-zA-Z0-9])?)*$ [/CODE] | Generic IP address in IPv4 format, 4 blocks of numbers            |
+| 24 | RegexVal | IPAddressV4              | IC-> gokhan                             | OK       | [CODE] ^[a-zA-Z0-9.!#$%&'*+ ..[TRIM].. ,61}[a-zA-Z0-9])?)*$ [/CODE] | Generic IP address in IPv4 format, 4 blocks of numbers            |
+| 25 | RegexVal | IPAddressV4              | IC-> 2001:db8:1234::1                   | OK       | [CODE] ^[a-zA-Z0-9.!#$%&'*+ ..[TRIM].. ,61}[a-zA-Z0-9])?)*$ [/CODE] | Generic IP address in IPv4 format, 4 blocks of numbers            |
+| 26 | RegexVal | LocalhostIPv4OrLocalText | CC-> 127.0.0.1                          | X        | [CODE] ^[a-zA-Z0-9.!#$%&'*+ ..[TRIM].. ,61}[a-zA-Z0-9])?)*$ [/CODE] | Local IP address or 'localhost' text                              |
+| 27 | RegexVal | LocalhostIPv4OrLocalText | CC-> localhost                          | X        | [CODE] ^[a-zA-Z0-9.!#$%&'*+ ..[TRIM].. ,61}[a-zA-Z0-9])?)*$ [/CODE] | Local IP address or 'localhost' text                              |
+| 28 | RegexVal | LocalhostIPv4OrLocalText | IC-> 192.1.1.12                         | OK       | [CODE] ^[a-zA-Z0-9.!#$%&'*+ ..[TRIM].. ,61}[a-zA-Z0-9])?)*$ [/CODE] | Local IP address or 'localhost' text                              |
++----+----------+--------------------------+-----------------------------------------+----------+---------------------------------------------------------------------+-------------------------------------------------------------------+
++---------------+----------------+
+|               |   Accuracy (%) |
+|---------------+----------------|
+| CorrectCase   |          45.45 |
+| IncorrectCase |          88.24 |
+| Overall       |          71.43 |
++---------------+----------------+
+
+Process finished with exit code 0
+
 ```
 
 ## Run the Tests

@@ -18,7 +18,7 @@ class ExperimentResults(object):
             setattr(self, key, value)
 
 
-class ExperimentHost(object):  # TODO: Load ds here.https://github.com/users/gokhanercan/projects/3/views/1?pane=issue&itemId=58244903
+class ExperimentHost(object):
 
     def Run(self, exp: Experiment, fields):
         dfCases: DataFrame = DataFrame()
