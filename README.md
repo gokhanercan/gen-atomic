@@ -69,9 +69,6 @@ Check out the [streamlit app](https://gen-atomic.streamlit.app/) to get an idea 
 | IncorrectCase |          88.24 |
 | Overall       |          71.43 |
 +---------------+----------------+
-
-Process finished with exit code 0
-
 ```
 
 ## Run the Tests
