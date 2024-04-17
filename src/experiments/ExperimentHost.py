@@ -26,6 +26,10 @@ class ExperimentHost(object):  # TODO: Load ds here.https://github.com/users/gok
         caseIndex: int = 1
         passedCaseCount: int = 0
         totalCaseCount: int = 0
+        ccCount:int = 0
+        icCount:int = 0
+        ccPassed:int = 0
+        icPassed:int = 0
 
         for f in fields:
             generated: str = exp.Model.Generate(f.Description)
@@ -36,30 +40,48 @@ class ExperimentHost(object):  # TODO: Load ds here.https://github.com/users/gok
                 passed:bool = exp.Unit.RunTest(generated, cc)
                 dfCases.at[caseIndex, "Passed"] = "OK" if passed else "X"
                 dfCases.at[caseIndex, "Generated Code"] = FormatHelper.FormatCode(generated, 20)
-                if (passed): passedCaseCount = passedCaseCount + 1
+                if (passed):
+                    passedCaseCount = passedCaseCount + 1
+                    ccPassed = ccPassed + 1
                 dfCases.at[caseIndex, "Desc"] = f.Description
                 totalCaseCount = totalCaseCount + 1
+                ccCount = ccCount + 1
                 caseIndex += 1
             for icc in f.IncorrectCases:
                 dfCases.at[caseIndex, "Type"] = f.UnitType.name
                 dfCases.at[caseIndex, "Name"] = f.Name
                 dfCases.at[caseIndex, "Case"] = "IC-> " + icc
-                passed:bool = exp.Unit.RunTest(generated, icc)  # type: ignore
+                passed:bool = not exp.Unit.RunTest(generated, icc)  # type: ignore
                 dfCases.at[caseIndex, "Passed"] = "OK" if passed else "X"
                 dfCases.at[caseIndex, "Generated Code"] = FormatHelper.FormatCode(generated, 20)
-                if (passed): passedCaseCount = passedCaseCount + 1
+                if (passed):
+                    passedCaseCount = passedCaseCount + 1
+                    icPassed = icPassed + 1
                 dfCases.at[caseIndex, "Desc"] = f.Description
                 totalCaseCount = totalCaseCount + 1
+                icCount = icCount + 1
                 caseIndex += 1
             fieldIndex += 1
 
         print("\n-- CASE RESULTS --")
         print(tabulate(dfCases, headers="keys", tablefmt='psql', floatfmt=".2f"))
 
+        #region Aggr Reports
         # TODO:Report confusion matrix.
         # TODO: Report accuracy by type and field also.
+        dfAggr = DataFrame()
+        ccAccuracy: float = (float(ccPassed) / float(ccCount)) * 100
+        dfAggr.at["CorrectCase","Accuracy (%)"] = ccAccuracy
+
+        icAccuracy: float = (float(icPassed) / float(icCount)) * 100
+        dfAggr.at["IncorrectCase", "Accuracy (%)"] = icAccuracy
+
         overallAccuracy:float = (float(passedCaseCount) / float(totalCaseCount)) * 100
-        print("Overall accuracy:" + str(overallAccuracy))
+        dfAggr.at["Overall", "Accuracy (%)"] = overallAccuracy
+
+        print(tabulate(dfAggr, headers="keys", tablefmt='psql', floatfmt=".2f"))
+        #endregion
+
         return ExperimentResults(OverallAccuracy=overallAccuracy)
 
 
