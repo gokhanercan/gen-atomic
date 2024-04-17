@@ -70,14 +70,15 @@ class ExperimentHost(object):
         # TODO:Report confusion matrix.
         # TODO: Report accuracy by type and field also.
         dfAggr = DataFrame()
+        stubAccuracyName = f"{exp.Model.ModelName()} (%)"
         ccAccuracy: float = (float(ccPassed) / float(ccCount)) * 100
-        dfAggr.at["CorrectCase","Accuracy (%)"] = ccAccuracy
+        dfAggr.at["CorrectCase",stubAccuracyName] = ccAccuracy
 
         icAccuracy: float = (float(icPassed) / float(icCount)) * 100
-        dfAggr.at["IncorrectCase", "Accuracy (%)"] = icAccuracy
+        dfAggr.at["IncorrectCase",stubAccuracyName] = icAccuracy
 
         overallAccuracy:float = (float(passedCaseCount) / float(totalCaseCount)) * 100
-        dfAggr.at["Overall", "Accuracy (%)"] = overallAccuracy
+        dfAggr.at["Overall",stubAccuracyName] = overallAccuracy
 
         print(tabulate(dfAggr, headers="keys", tablefmt='psql', floatfmt=".2f"))
         #endregion
@@ -88,10 +89,11 @@ class ExperimentHost(object):
 if __name__ == '__main__':
     path = "..\\..\\data\\AtomicDataset.xml"
     ds: Dataset = DatasetXmlRepository.Load(path)
-    exp: Experiment = ExperimentFactory().CreateExperiment(UnitType.RegexVal)
+    exp: Experiment = ExperimentFactory().CreateExperiment(UnitType.RegexVal)           #TODO: Create multiple models here https://github.com/users/gokhanercan/projects/3/views/1?pane=issue&itemId=60108556
 
     # stub
     fixedRegex: str = r"""^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$"""
     exp.Model.StubUnit = fixedRegex  # type: ignore
+    exp.Model.StubName = "EmailStub"
 
     r:ExperimentResults = ExperimentHost().Run(exp, ds.Units)

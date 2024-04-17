@@ -6,5 +6,9 @@ class ModelBase(ABC):
         super().__init__()
 
     @abstractmethod
+    def ModelName(self):
+        pass
+
+    @abstractmethod
     def Generate(self, description: str) -> str:  # desc: price for TK
         pass
