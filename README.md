@@ -29,7 +29,7 @@ Check out the [streamlit app](https://gen-atomic.streamlit.app/) to get an idea 
 1. Run main method of the file 'ExperimentHost.py'. You will see the default experiment/benchmark scores like the following:
 
 ```
--- CASE RESULTS --
+-- EMAILSTUB MODEL RESULTS --
 +----+----------+--------------------------+-----------------------------------------+----------+---------------------------------------------------------------------+-------------------------------------------------------------------+
 |    | Type     | Name                     | Case                                    | Passed   | Generated Code                                                      | Desc                                                              |
 |----+----------+--------------------------+-----------------------------------------+----------+---------------------------------------------------------------------+-------------------------------------------------------------------|
@@ -62,13 +62,14 @@ Check out the [streamlit app](https://gen-atomic.streamlit.app/) to get an idea 
 | 27 | RegexVal | LocalhostIPv4OrLocalText | CC-> localhost                          | X        | [CODE] ^[a-zA-Z0-9.!#$%&'*+ ..[TRIM].. ,61}[a-zA-Z0-9])?)*$ [/CODE] | Local IP address or 'localhost' text                              |
 | 28 | RegexVal | LocalhostIPv4OrLocalText | IC-> 192.1.1.12                         | OK       | [CODE] ^[a-zA-Z0-9.!#$%&'*+ ..[TRIM].. ,61}[a-zA-Z0-9])?)*$ [/CODE] | Local IP address or 'localhost' text                              |
 +----+----------+--------------------------+-----------------------------------------+----------+---------------------------------------------------------------------+-------------------------------------------------------------------+
-+---------------+----------------+
-|               |   Accuracy (%) |
-|---------------+----------------|
-| CorrectCase   |          45.45 |
-| IncorrectCase |          88.24 |
-| Overall       |          71.43 |
-+---------------+----------------+
+-- REGEXVAL EXPERIMENT --
++---------------+-----------------+--------------+
+|               |   EmailStub (%) |   Random (%) |
+|---------------+-----------------+--------------|
+| CorrectCase   |           45.45 |         0.00 |
+| IncorrectCase |           88.24 |       100.00 |
+| Overall       |           71.43 |        60.71 |
++---------------+-----------------+--------------+
 ```
 
 ## Run the Tests

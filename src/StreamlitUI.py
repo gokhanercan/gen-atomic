@@ -33,7 +33,7 @@ icase = st.selectbox('Choose an inccorrect case?',field.IncorrectCases)
 #Model
 st.subheader("Model")
 modelName = st.selectbox('Choose a model?',ModelFactory().ListModelNames())
-model:ModelBase = ModelFactory.Create(modelName)
+model:ModelBase = ModelFactory().Create(modelName)
 model.StubUnit = r"""^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$"""
 st.write("Model: " + modelName)
 

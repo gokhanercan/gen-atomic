@@ -3,7 +3,7 @@ from unittest import TestCase
 
 from data.Dataset import Dataset, UnitType
 from data.DatasetXmlRepository import DatasetXmlRepository
-from experiments.ExperimentFactory import Experiment, ExperimentFactory
+from experiments.Experiment import Experiment, ExperimentFactory
 from experiments.ExperimentHost import ExperimentHost, ExperimentResults
 
 
@@ -21,10 +21,17 @@ class ExperimentsIntegrationTest(TestCase):
 
         path = "data\\AtomicDataset.xml"        #relation to project root. not src root.
         ds: Dataset = DatasetXmlRepository.Load(path)
-        exp:Experiment = ExperimentFactory().CreateExperiment(UnitType.RegexVal)
-        exp.Model.StubUnit = r"""^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$"""
+        exp:Experiment = ExperimentFactory().CreateExperimentWithAllModels(UnitType.RegexVal)
+
+        # customize stub
+        stubModel = [item for item in exp.Models if item.ModelName().__contains__("Stub")][0]
+        fixedRegex: str = r"""^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$"""
+        stubModel.StubUnit = fixedRegex  # type: ignore
+        stubModel.StubName = "EmailStub"
+
         r:ExperimentResults = host.Run(exp,ds.Units)
-        self.assertTrue(0 <= r.OverallAccuracy <= 100)
+
+        self.assertTrue(0 <= r.OverallAccuracy[0] <= 100)
 
 if __name__ == "__main__":
     unittest.main()
