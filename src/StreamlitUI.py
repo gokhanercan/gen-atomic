@@ -22,7 +22,7 @@ bar.write("Root Path: ", root)
 #Dataset
 bar.subheader("Dataset")
 ds = bar.selectbox('Choose a dataset?',('AtomicDataset','Other'))
-dsPath = f"{root}\\data\\{ds}.xml"        #relation to project root. not src root.
+dsPath = f"{root}//data//{ds}.xml"        #relation to project root. not src root.
 bar.write("Dataset Path: ", dsPath)
 ds: Dataset = DatasetXmlRepository.Load(dsPath)
 bar.write(f'Number of Fields: {len(ds.Units)}')
