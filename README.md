@@ -3,8 +3,8 @@
 [![Python application](https://github.com/gokhanercan/gen-atomic/actions/workflows/python-app.yml/badge.svg?branch=master)](https://github.com/gokhanercan/gen-atomic/actions/workflows/python-app.yml)
 [![Demo](https://img.shields.io/badge/Streamlit_Demo-Visit-blue.svg)](https://gen-atomic.streamlit.app/)
 
-An LLM code <u>**gen**</u>eration and benchmarking framework aiming to support a wide range of <u>**atom**</U>ic _language units_, from compiled to semi-structured markups.
-Please refer to the [Project Glossary on the Documentation page](DOC.md) for clarification.  
+An LLM code **gen**eration and benchmarking framework aiming to support a wide range of **atom**ic _language units_, from compiled to semi-structured markups.
+Please refer to the [Project Glossary on the Documentation page](DOC.md) for clarification. 
 
 Here is the initial sketch. We will share more about the theoretical foundation and goals of the project. Some hints: Atomic Design, Flow Engineering, Specification-by-example.
 ![image](https://github.com/gokhanercan/gen-atomic/assets/1479777/912bada9-f907-4a4a-9ea7-341d3da60403)
