@@ -3,6 +3,7 @@ from typing import List
 import xml.etree.ElementTree as et
 
 from data.Dataset import Dataset, Unit, UnitType
+from utility.PathHelper import PathHelper
 
 
 class DatasetXmlRepository(object):
@@ -70,7 +71,7 @@ class DatasetXmlRepository(object):
 
 
 if __name__ == '__main__':
-    path = "..\\..\\data\\AtomicDataset.xml"  # TODO: Create central path management.
+    path = PathHelper().GetDataset("AtomicDataset")
 
     # Read DS
     ds:Dataset = DatasetXmlRepository.Load(path)
