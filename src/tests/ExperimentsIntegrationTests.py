@@ -5,21 +5,14 @@ from data.Dataset import Dataset, UnitType
 from data.DatasetXmlRepository import DatasetXmlRepository
 from experiments.Experiment import Experiment, ExperimentFactory
 from experiments.ExperimentHost import ExperimentHost, ExperimentResults
+from utility.PathHelper import PathHelper
 
 
 class ExperimentsIntegrationTest(TestCase):
     def test_ExperimentHost_AtomicDataset_RunExperiment(self):
         host:ExperimentHost = ExperimentHost()
 
-        #region Relative Path
-        # TODO: Make it accessible from every context. Currently it is optimized for running through pytest form the outer scope. https://github.com/users/gokhanercan/projects/3/views/1?pane=issue&itemId=59674842
-        #import os
-        #cwd = os.getcwd()       #tests folder
-        #parent = os.path.dirname(os.path.dirname(cwd))  #two parents
-        #path = parent + "\\" + "data\\AtomicDataset.xml"
-        #endregion
-
-        path = "data\\AtomicDataset.xml"        #relation to project root. not src root.
+        path:str = PathHelper().GetDataset("AtomicDataset")
         ds: Dataset = DatasetXmlRepository.Load(path)
         exp:Experiment = ExperimentFactory().CreateExperimentWithAllModels(UnitType.RegexVal)
 

@@ -10,19 +10,16 @@ from models.ModelBase import ModelBase
 from models.ModelFactory import ModelFactory
 from units.UnitBase import UnitBase
 from units.UnitFactory import UnitFactory
-
-root = os.getcwd()       #tests folder
-#root = "L:\Projects\gen-atomic"
+from utility.PathHelper import PathHelper
 
 #region Sidebar
 st.sidebar.header("My Sidebar")         #ref: https://docs.streamlit.io/get-started/tutorials/create-a-multipage-app
 bar = st.sidebar
-bar.write("Root Path: ", root)
 
 #Dataset
 bar.subheader("Dataset")
 ds = bar.selectbox('Choose a dataset?',('AtomicDataset','Other'))
-dsPath = f"{root}//data//{ds}.xml"        #relation to project root. not src root.
+dsPath = PathHelper().GetDataset("AtomicDataset")
 bar.write("Dataset Path: ", dsPath)
 ds: Dataset = DatasetXmlRepository.Load(dsPath)
 bar.write(f'Number of Fields: {len(ds.Units)}')
