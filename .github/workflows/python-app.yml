@@ -36,7 +36,7 @@ jobs:
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: Test with pytest
       run: |
-        pytest --continue-on-collection-errors -10 --junitxml=test-results.xml
+        pytest --continue-on-collection-errors -x --junitxml=test-results.xml
     - name: Display test-results.xml
       run: cat test-results.xml
     - name: Install xmlstarlet
