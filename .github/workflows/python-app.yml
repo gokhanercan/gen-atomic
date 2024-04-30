@@ -36,4 +36,12 @@ jobs:
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: Test with pytest
       run: |
-        pytest --collect-only
+        pytest --continue-on-collection-errors -10 --junitxml=test-results.xml
+    - name: Display test-results.xml
+      run: cat test-results.xml
+    - name: Install xmlstarlet
+      run: sudo apt-get update && sudo apt-get install -y xmlstarlet
+    - name: Parse test results
+      run: |
+        passing_tests=$(xmlstarlet sel -t -v "count(//testsuite/testcase[@status='passed'])" test-results.xml)
+        echo "Number of passing tests: $passing_tests"
