@@ -46,6 +46,6 @@ jobs:
         test_failures=$(xmlstarlet sel -t -v "//testsuites/testsuite/@failures" test-results.xml)
         test_errors=$(xmlstarlet sel -t -v "//testsuites/testsuite/@errors" test-results.xml)
         test_total=$(xmlstarlet sel -t -v "//testsuites/testsuite/@tests" test-results.xml)
-        echo "Number of test fails: $test_fails"
+        echo "Number of test fails: $test_failures"
         echo "Number of test errors: $test_errors"
         echo "Number of tests: $test_total"
