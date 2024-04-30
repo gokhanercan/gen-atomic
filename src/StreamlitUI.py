@@ -1,9 +1,7 @@
 #Run the following command:
     #streamlit run L:\Projects\gen-atomic\src\StreamlitUI.py
-from typing import Optional
 
 import streamlit as st
-import os
 from data.Dataset import Dataset, Unit
 from data.DatasetXmlRepository import DatasetXmlRepository
 from models.ModelBase import ModelBase
