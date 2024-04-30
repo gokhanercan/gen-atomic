@@ -37,3 +37,7 @@ jobs:
     - name: Test with pytest
       run: |
         pytest --collect-only --junitxml=test-results.xml
+    - name: Parse test results
+      run: |
+        passing_tests=$(xmlstarlet sel -t -v "count(//testsuite/testcase[@status='passed'])" test-results.xml)
+        echo "Number of passing tests: $passing_tests"
