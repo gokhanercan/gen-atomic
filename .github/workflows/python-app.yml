@@ -49,3 +49,6 @@ jobs:
         echo "Number of test fails: $test_failures"
         echo "Number of test errors: $test_errors"
         echo "Number of tests: $test_total"
+    - name: Flag process as failed if any error or failure
+      if: ${{ $test_failures > 0 }}
+      run: exit 1
