@@ -41,7 +41,7 @@ jobs:
       run: cat test-results.xml
     - name: Install xmlstarlet
       run: sudo apt-get update && sudo apt-get install -y xmlstarlet
-    - name: Parse test results
+    - name: ParseTestResults
       run: |
         test_failures=$(xmlstarlet sel -t -v "//testsuites/testsuite/@failures" test-results.xml)
         test_errors=$(xmlstarlet sel -t -v "//testsuites/testsuite/@errors" test-results.xml)
