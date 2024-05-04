@@ -40,16 +40,20 @@ jobs:
     - name: Display test-results.xml
       run: cat test-results.xml
     - name: Upload test results
-      uses: actions/upload-artifact@v2
+      id: Upload
+      uses: actions/upload-artifact@v4
       with:
-        name: test-results.xml
-        path: test-results.xml
-        archive-format: none
-    - name: Public URL of uploaded artifact textresults.xml
-      id: PublicTestResults
+        name: test-results
+        path: path/to/artifact/test-results.xml
+    - name: Get artifact URL
       run: |
-        ARTIFACT_URL="https://github.com/${{ github.repository }}/runs/${{ github.run_id }}/artifacts/test-results.xml"
-        echo "Public URL of uploaded artifact: $ARTIFACT_URL"
+        ARTIFACT_URL="${{ steps.upload.outputs.artifact_url }}"
+        echo "Artifact URL: $ARTIFACT_URL"
+    # - name: Public URL of uploaded artifact textresults.xml
+    #   id: PublicTestResults
+    #   run: |
+    #     ARTIFACT_URL="https://github.com/${{ github.repository }}/runs/${{ github.run_id }}/artifacts/test-results.xml"
+    #     echo "Public URL of uploaded artifact: $ARTIFACT_URL"
     - name: Install xmlstarlet
       run: sudo apt-get update && sudo apt-get install -y xmlstarlet
     - name: ParseTestResults
