@@ -44,6 +44,7 @@ jobs:
       with:
         name: test-results.xml
         path: test-results.xml
+        unzip: false
     - name: Public URL of uploaded artifact textresults.xml
       id: PublicTestResults
       run: |
