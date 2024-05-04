@@ -42,9 +42,13 @@ jobs:
     - name: Upload test results
       uses: actions/upload-artifact@v2
       with:
-        name: test-results
+        name: test-results.xml
         path: test-results.xml
-
+    - name: Public URL of uploaded artifact textresults.xml
+    - id: PublicTestResults
+      run: |
+        ARTIFACT_URL="https://github.com/${{ github.repository }}/runs/${{ github.run_id }}/artifacts/test-results.xml"
+        echo "Public URL of uploaded artifact: $ARTIFACT_URL"
     - name: Install xmlstarlet
       run: sudo apt-get update && sudo apt-get install -y xmlstarlet
     - name: ParseTestResults
