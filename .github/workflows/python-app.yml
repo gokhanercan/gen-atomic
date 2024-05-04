@@ -70,16 +70,23 @@ jobs:
     # - name: Get latest run status
     #   run: echo "::set-env name=LATEST_RUN_STATUS::${{ steps.ParseTestResults.outputs.test_failures }}"
 
-    - name: Update badge file
-      run: echo "[![Latest Run Status](https://img.shields.io/badge/Latest_Run-$(steps.ParseTestResults.outputs.test_failures)-blue)](https://gokhanercan.github.io/gen-atomic/badge.md)" > badge.md
+    # - name: Update badge file
+    #   run: echo "[![Latest Run Status](https://img.shields.io/badge/Latest_Run-$(steps.ParseTestResults.outputs.test_failures)-blue)](https://gokhanercan.github.io/gen-atomic/badge.md)" > badge.md
 
-    - name: Commit badge file
-      run: |
-        git config --global user.email "gokhanercan@gmail.com"
-        git config --global user.name "gokhanercan"
-        # git add badge.md
-        git commit -am "Update badge"
-        git push
+    # - name: Commit badge file
+    #   run: |
+    #     git config --global user.email "gokhanercan@gmail.com"
+    #     git config --global user.name "gokhanercan"
+    #     # git add badge.md
+    #     git commit -am "Update badge"
+    #     git push
+
+    - name: Publish Test Results
+      uses: EnricoMi/publish-unit-test-result-action@v2
+      if: always()
+      with:
+        files: |
+          test-results/**/*.xml
     
     - name: Flag process as failed if any error or failure
       if: ${{ steps.ParseTestResults.outputs.test_failures!='0' || steps.ParseTestResults.outputs.test_errors!='0'}}
