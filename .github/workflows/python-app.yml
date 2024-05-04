@@ -45,6 +45,8 @@ jobs:
       with:
         name: test-results
         path: test-results.xml
+        compression-level: 0 # no compression- https://github.com/actions/upload-artifact?tab=readme-ov-file#upload-an-individual-file
+        if-no-files-found: error # 'warn' or 'ignore' are also available, defaults to `warn`
     - name: Get artifact URL
       run: |
         ARTIFACT_URL="${{ steps.upload.outputs.artifact-url }}"
