@@ -45,7 +45,7 @@ jobs:
         name: test-results.xml
         path: test-results.xml
     - name: Public URL of uploaded artifact textresults.xml
-    - id: PublicTestResults
+      id: PublicTestResults
       run: |
         ARTIFACT_URL="https://github.com/${{ github.repository }}/runs/${{ github.run_id }}/artifacts/test-results.xml"
         echo "Public URL of uploaded artifact: $ARTIFACT_URL"
