@@ -51,4 +51,6 @@ jobs:
         echo "Number of tests: $test_total"
     - name: Flag process as failed if any error or failure
       if: ${{ steps.ParseTestResults.outputs.test_failures!="0" || steps.ParseTestResults.outputs.test_errors!="0"}}
-      run: exit 1
+      run: | 
+        echo "Some tests are failing."
+        exit 1
