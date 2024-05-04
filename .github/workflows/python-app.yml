@@ -40,15 +40,18 @@ jobs:
     - name: Display test-results.xml
       run: cat test-results.xml
     - name: Upload test results
-      id: Upload
+      id: upload
       uses: actions/upload-artifact@v4
       with:
         name: test-results
         path: path/to/artifact/test-results.xml
     - name: Get artifact URL
       run: |
-        ARTIFACT_URL="${{ steps.upload.outputs.artifact_url }}"
+        ARTIFACT_URL="${{ steps.upload.outputs.artifact-url }}"
         echo "Artifact URL: $ARTIFACT_URL"
+        echo 'Artifact ID is ${{ steps.upload.outputs.artifact-id }}'
+        echo 'Artifact URL is ${{ steps.upload.outputs.artifact-url }}'
+  
     # - name: Public URL of uploaded artifact textresults.xml
     #   id: PublicTestResults
     #   run: |
