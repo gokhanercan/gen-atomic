@@ -66,6 +66,21 @@ jobs:
         echo "Number of tests: $test_total"
         echo "::set-output name=test_failures::$test_failures"
         echo "::set-output name=test_errors::$test_errors"
+
+    - name: Get latest run status
+      run: echo "::set-env name=LATEST_RUN_STATUS::${{ "GOKHAN TEST" }}"
+
+    - name: Update badge file
+      run: echo "[![Latest Run Status](https://img.shields.io/badge/Latest_Run-$(LATEST_RUN_STATUS)-blue)](https://gokhanercan.github.io/gen-atomic/badge.md)" > badge.md
+
+    - name: Commit badge file
+      run: |
+        git config --global user.email "gokhanercan@github.com"
+        git config --global user.name "gokhanercan"
+        git add badge.md
+        git commit -m "Update badge"
+        git push
+    
     - name: Flag process as failed if any error or failure
       if: ${{ steps.ParseTestResults.outputs.test_failures!='0' || steps.ParseTestResults.outputs.test_errors!='0'}}
       run: | 
