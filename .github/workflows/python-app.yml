@@ -67,11 +67,11 @@ jobs:
         echo "::set-output name=test_failures::$test_failures"
         echo "::set-output name=test_errors::$test_errors"
 
-    - name: Get latest run status
-      run: echo "::set-env name=LATEST_RUN_STATUS::${{ steps.ParseTestResults.outputs.test_failures }}"
+    # - name: Get latest run status
+    #   run: echo "::set-env name=LATEST_RUN_STATUS::${{ steps.ParseTestResults.outputs.test_failures }}"
 
     - name: Update badge file
-      run: echo "[![Latest Run Status](https://img.shields.io/badge/Latest_Run-$(LATEST_RUN_STATUS)-blue)](https://gokhanercan.github.io/gen-atomic/badge.md)" > badge.md
+      run: echo "[![Latest Run Status](https://img.shields.io/badge/Latest_Run-$(steps.ParseTestResults.outputs.test_failures)-blue)](https://gokhanercan.github.io/gen-atomic/badge.md)" > badge.md
 
     - name: Commit badge file
       run: |
