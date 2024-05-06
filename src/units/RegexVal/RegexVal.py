@@ -23,7 +23,8 @@ class RegexVal(UnitBase):
                 return True
             else:
                 return False
-        except re.error:
+        # except re.error:
+        except:
             print("Invalid regular expression pattern.")  # TODO: Handle that error well. Reflection.
             return False
     # endregion

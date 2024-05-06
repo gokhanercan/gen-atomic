@@ -5,6 +5,7 @@ class ModelBase(ABC):
     def __init__(self) -> None:
         super().__init__()
 
+
     def ModelName(self):
         return str(type(self).__name__).replace("Model","")
 

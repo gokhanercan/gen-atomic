@@ -95,12 +95,13 @@ class ExperimentHost(object):
 if __name__ == '__main__':
     path = Paths().GetDataset("AtomicDataset")
     ds: Dataset = DatasetXmlRepository.Load(path)
-    exp: Experiment = ExperimentFactory.CreateExperimentWithAllModels(UnitType.RegexVal)
+    exp: Experiment = ExperimentFactory.CreateSingleModelExperiment (UnitType.RegexVal,"CodeLLaMa-v2")
+    #exp: Experiment = ExperimentFactory.CreateExperimentWithAllModels(UnitType.RegexVal)
 
     # customize stub
-    stubModel = [item for item in exp.Models if item.ModelName().__contains__("Stub")][0]
-    fixedRegex: str = r"""^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$"""
-    stubModel.StubUnit = fixedRegex  # type: ignore
-    stubModel.StubName = "EmailStub"
+    # stubModel = [item for item in exp.Models if item.ModelName().__contains__("Stub")][0]
+    # fixedRegex: str = r"""^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$"""
+    # stubModel.StubUnit = fixedRegex  # type: ignore
+    # stubModel.StubName = "EmailStub"
 
     r:ExperimentResults = ExperimentHost().Run(exp, ds.Units)

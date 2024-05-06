@@ -1,6 +1,7 @@
 import streamlit as st
 
 from models.ModelBase import ModelBase
+from models.OllamaModels import OllamaModels
 from models.RandomModel import RandomModel
 from models.CodeLlamaModel import CodeLlamaModel
 from models.StubModel import StubModel
@@ -38,5 +39,7 @@ class ModelFactory(object):
             return RandomModel()
         elif (modelName == "CodeLlama"):
             return CodeLlamaModel()
+        elif (modelName == "CodeLLaMa-v2"):
+            return OllamaModels("CodeLLaMa-v2")     #TODO:
         else:
             raise Exception("no provider!")

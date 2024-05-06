@@ -1,7 +1,5 @@
 pandas
 tabulate
 streamlit
-subprocess
-ollama
-time
 patch
+ollama
