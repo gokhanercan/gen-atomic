@@ -7,7 +7,7 @@ from pandas import DataFrame  # type: ignore
 from tabulate import tabulate  # type: ignore
 
 from utility.FormatHelper import FormatHelper
-from utility.PathHelper import PathHelper
+from utility.Paths import Paths
 
 
 class ExperimentResults(object):
@@ -93,7 +93,7 @@ class ExperimentHost(object):
 
 
 if __name__ == '__main__':
-    path = PathHelper().GetDataset("AtomicDataset")
+    path = Paths().GetDataset("AtomicDataset")
     ds: Dataset = DatasetXmlRepository.Load(path)
     exp: Experiment = ExperimentFactory.CreateExperimentWithAllModels(UnitType.RegexVal)
 

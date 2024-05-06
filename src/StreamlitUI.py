@@ -1,16 +1,14 @@
 #Run the following command:
     #streamlit run L:\Projects\gen-atomic\src\StreamlitUI.py
-from typing import Optional
 
 import streamlit as st
-import os
 from data.Dataset import Dataset, Unit
 from data.DatasetXmlRepository import DatasetXmlRepository
 from models.ModelBase import ModelBase
 from models.ModelFactory import ModelFactory
 from units.UnitBase import UnitBase
 from units.UnitFactory import UnitFactory
-from utility.PathHelper import PathHelper
+from utility.Paths import Paths
 
 #region Sidebar
 st.sidebar.header("My Sidebar")         #ref: https://docs.streamlit.io/get-started/tutorials/create-a-multipage-app
@@ -19,7 +17,7 @@ bar = st.sidebar
 #Dataset
 bar.subheader("Dataset")
 ds = bar.selectbox('Choose a dataset?',('AtomicDataset','Other'))
-dsPath = PathHelper().GetDataset("AtomicDataset")
+dsPath = Paths().GetDataset("AtomicDataset")
 bar.write("Dataset Path: ", dsPath)
 ds: Dataset = DatasetXmlRepository.Load(dsPath)
 bar.write(f'Number of Fields: {len(ds.Units)}')

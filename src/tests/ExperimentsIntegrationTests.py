@@ -5,14 +5,14 @@ from data.Dataset import Dataset, UnitType
 from data.DatasetXmlRepository import DatasetXmlRepository
 from experiments.Experiment import Experiment, ExperimentFactory
 from experiments.ExperimentHost import ExperimentHost, ExperimentResults
-from utility.PathHelper import PathHelper
+from utility.Paths import Paths
 
 
 class ExperimentsIntegrationTest(TestCase):
     def test_ExperimentHost_AtomicDataset_RunExperiment(self):
         host:ExperimentHost = ExperimentHost()
 
-        path:str = PathHelper().GetDataset("AtomicDataset")
+        path:str = Paths().GetDataset("AtomicDataset")
         ds: Dataset = DatasetXmlRepository.Load(path)
         exp:Experiment = ExperimentFactory().CreateExperimentWithAllModels(UnitType.RegexVal)
 

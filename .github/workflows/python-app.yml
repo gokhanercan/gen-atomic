@@ -11,6 +11,8 @@ on:
 
 permissions:
   contents: read
+  checks: write
+  pull-requests: write
 
 jobs:
   build:
@@ -36,4 +38,60 @@ jobs:
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: Test with pytest
       run: |
-        pytest --collect-only
+        pytest --continue-on-collection-errors --maxfail=5 --junitxml=test-results.xml || true
+    - name: Display test-results.xml
+      run: cat test-results.xml
+    - name: Upload test results
+      id: upload
+      uses: actions/upload-artifact@v4
+      with:
+        name: test-results
+        path: test-results.xml
+        compression-level: 0 # no compression- https://github.com/actions/upload-artifact?tab=readme-ov-file#upload-an-individual-file
+        if-no-files-found: error # 'warn' or 'ignore' are also available, defaults to `warn`
+    - name: Get artifact URL
+      run: |
+        ARTIFACT_URL="${{ steps.upload.outputs.artifact-url }}"
+        echo "Artifact URL: $ARTIFACT_URL"
+        echo 'Artifact ID is ${{ steps.upload.outputs.artifact-id }}'
+        echo 'Artifact URL is ${{ steps.upload.outputs.artifact-url }}'
+    - name: Install xmlstarlet
+      run: sudo apt-get update && sudo apt-get install -y xmlstarlet
+    - name: ParseTestResults
+      id: ParseTestResults
+      run: |
+        test_failures=$(xmlstarlet sel -t -v "//testsuites/testsuite/@failures" test-results.xml)
+        test_errors=$(xmlstarlet sel -t -v "//testsuites/testsuite/@errors" test-results.xml)
+        test_total=$(xmlstarlet sel -t -v "//testsuites/testsuite/@tests" test-results.xml)
+        echo "Number of test fails: $test_failures"
+        echo "Number of test errors: $test_errors"
+        echo "Number of tests: $test_total"
+        echo "::set-output name=test_failures::$test_failures"
+        echo "::set-output name=test_errors::$test_errors"
+
+    # - name: Get latest run status
+    #   run: echo "::set-env name=LATEST_RUN_STATUS::${{ steps.ParseTestResults.outputs.test_failures }}"
+
+    # - name: Update badge file
+    #   run: echo "[![Latest Run Status](https://img.shields.io/badge/Latest_Run-$(steps.ParseTestResults.outputs.test_failures)-blue)](https://gokhanercan.github.io/gen-atomic/badge.md)" > badge.md
+
+    # - name: Commit badge file
+    #   run: |
+    #     git config --global user.email "gokhanercan@gmail.com"
+    #     git config --global user.name "gokhanercan"
+    #     # git add badge.md
+    #     git commit -am "Update badge"
+    #     git push
+
+    - name: Publish Test Results
+      uses: EnricoMi/publish-unit-test-result-action@v2
+      if: always()
+      with:
+        files: |
+          test-results/**/*.xml
+    
+    - name: Flag process as failed if any error or failure
+      if: ${{ steps.ParseTestResults.outputs.test_failures!='0' || steps.ParseTestResults.outputs.test_errors!='0'}}
+      run: | 
+        echo "Some tests are failing."
+        exit 1
