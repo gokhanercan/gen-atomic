@@ -32,26 +32,34 @@ icase = bar.selectbox('Choose an inccorrect case?',field.IncorrectCases)
 
 #Model
 bar.subheader("Model")
-modelName:str = bar.selectbox('Choose a model?',ModelFactory().ListModelNames())
-model:ModelBase = ModelFactory().Create(modelName)
+modelName: str = bar.selectbox('Choose a model?', ModelFactory().ListModelNames())
+model: ModelBase = ModelFactory().Create(modelName) #inja
 model.StubUnit = r"""^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$"""
-bar.write(f"<b>Model:</b> {modelName}",unsafe_allow_html=True)      #TODO: We need components to provide commonly used functionality like bolds, text colors etc.
+bar.write(f"<b>Model:</b> {modelName}", unsafe_allow_html=True)      #TODO: We need components to provide commonly used functionality like bolds, text colors etc.
 # bar.write("<span style='color:red'>This text is red!</span>", unsafe_allow_html=True)
 
 #endregion
 
 #TRY
 st.subheader("Configuration")
-st.write(f"<b>Model:</b> {modelName}",unsafe_allow_html=True)
-st.write(f"<b>LangUnit:</b> {field.UnitType.name}",unsafe_allow_html=True)
+st.write(f"<b>Model:</b> {modelName}", unsafe_allow_html=True)
+st.write(f"<b>LangUnit:</b> {field.UnitType.name}", unsafe_allow_html=True)
 
 st.subheader("Try")
 sampleText:str = st.text_input("Sample Text",ccase)
 userDesc:str = st.text_input("Description",field.Description)
 #generated = st.text_input("Generated Unit","")
-unit:UnitBase = UnitFactory().Create(field.UnitType)
+#unit:UnitBase = UnitFactory().Create(field.UnitType)
+def stream_parser(generated):
+    for chunk in generated:
+        yield chunk['message']['content']
+
+
 if st.button("Generate"):
-    generated = model.Generate(userDesc)
-    st.text_area("Generated Unit", generated)
-    passed: bool = unit.RunTest(generated, sampleText)
-    st.write("Evaluation Result:", passed)
+    generated = model.Generate(userDesc)  #inja 2
+    stream_output = st.write_stream(stream_parser(generated))
+    st.text_area("Generated Unit", stream_output)
+
+
+
+
