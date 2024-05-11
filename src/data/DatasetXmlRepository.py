@@ -1,9 +1,11 @@
 from typing import List
+from pathlib import Path
 
 import xml.etree.ElementTree as et
 
 from data.Dataset import Dataset, Unit, UnitType
 from utility.Paths import Paths
+from utility.StringHelper import IsNullOrEmpty
 
 
 class DatasetXmlRepository(object):
@@ -13,7 +15,9 @@ class DatasetXmlRepository(object):
 
     @staticmethod
     def Load(path: str) -> Dataset:
-        ds:Dataset = Dataset()
+        if(IsNullOrEmpty(path)): raise Exception("Path should be provided.")
+        name:str = Path(path).stem
+        ds:Dataset = Dataset(name)
         tree = et.parse(path)
         root = tree.getroot()
         units:List[Unit] = []

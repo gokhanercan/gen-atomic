@@ -3,9 +3,10 @@ from typing import List
 
 
 class Dataset(object):
-    def __init__(self):
+    def __init__(self, name:str):
         super().__init__()
         self.Units: List[Unit] = []
+        self.Name = name
 
 
 @unique

@@ -1,5 +1,5 @@
 import time
-from typing import Optional, List
+from typing import Optional, List, Dict
 
 from data.Dataset import Dataset, UnitType
 from data.DatasetXmlRepository import DatasetXmlRepository
@@ -13,21 +13,39 @@ from utility.Paths import Paths
 
 class ExperimentResults(object):
 
-    def __init__(self, **kwargs) -> None:
+    def __init__(self, experimentName:str, **kwargs) -> None:
         super().__init__()
-        self.OverallAccuracy:List = None
+        self.ExperimentName:str = experimentName
+        self.ModelResults:Dict[str,DataFrame] = {}
+        self.Results:DataFrame = Optional[DataFrame]
+        self.OverallAccuracy:List = Optional[List]
         for key, value in kwargs.items():
             setattr(self, key, value)
+
+    def Print(self):
+        if(self.ModelResults is not None):
+            for modelConf,df in self.ModelResults.items():
+                print(f"\n-- {modelConf.upper()} MODEL RESULTS --")
+                print(tabulate(df, headers="keys", tablefmt='grid', floatfmt=".2f"))
+        if(self.Results is not None):
+            experimentHeader = f"-- {self.ExperimentName.upper()} EXPERIMENT --"
+            print("\n" + experimentHeader)
+            print(tabulate(self.Results, headers="keys", tablefmt='psql', floatfmt=".2f"))
 
 
 class ExperimentHost(object):
 
-    def Run(self, exp: Experiment, fields, formatCode:bool = True):
+    def Run(self, exp: Experiment, ds:Dataset, formatCode:bool = True):
         start_time = time.time()
-        print("Running experiment...")
+        print(f"Running experiment on {ds.Name} dataset with {str(len(exp.Models))} model configuration(s) ...")
+
+        modelResults:Dict[str,DataFrame] = {}
 
         dfAggr = DataFrame()
         for model in exp.Models:
+            modelConf: str = model.ModelName()
+            model_start_time = time.time()
+            print(f"\tRunning model {modelConf} on {ds.Name} dataset ...")
             dfCases: DataFrame = DataFrame()
             fieldIndex: int = 1
             caseIndex: int = 1
@@ -38,7 +56,7 @@ class ExperimentHost(object):
             ccPassed: int = 0
             icPassed: int = 0
 
-            for f in fields:
+            for f in ds.Units:
                 generated: str = model.Generate(f.Description)
                 for cc in f.CorrectCases:
                     dfCases.at[caseIndex, "Type"] = f.UnitType.name
@@ -70,20 +88,11 @@ class ExperimentHost(object):
                     caseIndex += 1
                 fieldIndex += 1
 
-            def format_time(seconds):
-                hours, remainder = divmod(seconds, 3600)
-                minutes, seconds = divmod(remainder, 60)
-                return "{:02}:{:02}:{:02}".format(int(hours), int(minutes), int(seconds))
-            end_time = time.time()
-            elapsed_time = end_time - start_time
-            print(f"Experiment completed in {format_time(elapsed_time)} seconds.", )
 
-            print(f"\n-- {model.ModelName().upper()} MODEL RESULTS --")
-            print(tabulate(dfCases, headers="keys", tablefmt='grid', floatfmt=".2f"))
-
-            # region Aggr Reports
-            # TODO:Report confusion matrix for binary schemas
-            # TODO:Report accuracy by type and field also.
+            model_end_time = time.time()
+            model_elapsed_time = model_end_time - model_start_time
+            print(f"\tExperiment for model {modelConf} is completed in {self.format_time(model_elapsed_time)} seconds.", )
+            modelResults[modelConf] = dfCases
 
             accuracyColName = f"{model.ModelName()} (%)"
             ccAccuracy: float = (float(ccPassed) / float(ccCount)) * 100
@@ -96,14 +105,21 @@ class ExperimentHost(object):
             dfAggr.at["Overall", accuracyColName] = overallAccuracy
             # endregion
 
-        experimentHeader = f"-- {exp.GetName().upper()} EXPERIMENT --"
-        print("\n" + experimentHeader)
-        print(tabulate(dfAggr, headers="keys", tablefmt='psql', floatfmt=".2f"))
-        overallAccuracy:List = dfAggr.iloc[-1]
-        return ExperimentResults(OverallAccuracy=overallAccuracy)
+        end_time = time.time()
+        elapsed_time = end_time - start_time
+        print(f"Experiment is completed in {self.format_time(elapsed_time)} seconds.", )
 
-    def Plot(self):
-        pass
+        overallAccuracy:List = dfAggr.iloc[-1]
+
+        r = ExperimentResults(exp.GetName(), OverallAccuracy=overallAccuracy)
+        r.ModelResults = modelResults
+        r.Results = dfAggr
+        return r
+
+    def format_time(self,seconds):
+        hours, remainder = divmod(seconds, 3600)
+        minutes, seconds = divmod(remainder, 60)
+        return "{:02}:{:02}:{:02}".format(int(hours), int(minutes), int(seconds))
 
 if __name__ == '__main__':
     path = Paths().GetDataset("AtomicDataset")
@@ -119,4 +135,5 @@ if __name__ == '__main__':
     # stubModel.StubName = "EmailStub"
     #endregion
 
-    r:ExperimentResults = ExperimentHost().Run(exp, ds.Units, formatCode=False)
+    r:ExperimentResults = ExperimentHost().Run(exp, ds, formatCode=False)
+    r.Print()
