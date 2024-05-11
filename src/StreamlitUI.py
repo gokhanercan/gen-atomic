@@ -1,14 +1,16 @@
 #Run the following command:
     #streamlit run L:\Projects\gen-atomic\src\StreamlitUI.py
 
+import sys
 import streamlit as st
+
 from data.Dataset import Dataset, Unit
 from data.DatasetXmlRepository import DatasetXmlRepository
 from models.ModelBase import ModelBase
 from models.ModelFactory import ModelFactory
-from units.UnitBase import UnitBase
-from units.UnitFactory import UnitFactory
 from utility.Paths import Paths
+
+print(sys.version)
 
 #region Sidebar
 st.sidebar.header("My Sidebar")         #ref: https://docs.streamlit.io/get-started/tutorials/create-a-multipage-app

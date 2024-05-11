@@ -23,7 +23,7 @@ class ExperimentsIntegrationTest(TestCase):
         stubModel.StubName = "EmailStub"
 
         r:ExperimentResults = host.Run(exp,ds)
-        r.Print()
+        r.Print(False)
         self.assertTrue(0 <= r.OverallAccuracy[0] <= 100)
 
 if __name__ == "__main__":
