@@ -1,5 +1,3 @@
-import streamlit as st
-
 from models.ModelBase import ModelBase
 from models.OllamaModels import OllamaModels
 from models.RandomModel import RandomModel
@@ -7,12 +5,11 @@ from models.CodeLlamaModel import CodeLlamaModel
 from models.StubModel import StubModel
 
 
-
 class ModelFactory(object):
 
     def __init__(self) -> None:
         super().__init__()
-        self.st = st
+
 
     def ListModelNames(self):
         """
@@ -53,7 +50,7 @@ class ModelFactory(object):
             return RandomModel()
         elif (modelName == "CodeLlama"):
             return CodeLlamaModel()
-        elif (modelName == "CodeLLaMa-v2"):
-            return OllamaModels("CodeLLaMa-v2")     #TODO:
+        elif (modelName == "CodeLLaMa-v2"):         #TODO:Merge ollama models.
+            return OllamaModels("CodeLLaMa-v2")
         else:
-            raise Exception("no provider!")
+            raise Exception(f"No model implementation found for '{modelName}'.")
