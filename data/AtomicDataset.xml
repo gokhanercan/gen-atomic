@@ -105,7 +105,7 @@
          <ICCase val="AB"/>
       </ICCases>
    </Unit>
-   <Unit name="ISBN-13" desc="13 digit ISBN formatted without any separator" type="RegexVal">
+   <Unit name="ISBN-13" desc="13 digit ISBN number formatted without any separator" type="RegexVal">
       <CCases>
          <CCase val="9781861978769"/>     <!--Dash formattings vary. Prefix should begin either with 978 or 979 -->
          <CCase val="9781449373320"/>     <!--Martin Kleppmanns's book -->
