@@ -24,8 +24,8 @@ class OllamaModels(ModelBase):
         #time.sleep(2)  # Adjust delay as needed
 
         client = ollama.Client('http://localhost:11434')  # Specify full URL with port
-        instruction:str = "Do not give me an explanation, only give me a regex expression. Do not add any additional characters."
-        prompt:str = f"Generate a regular expression (regex) that validates {description}. {instruction}"
+        instruction:str = "Consider yourself a function that takes the input of asked regex statement, and your output is '''Regex: {created regex}''' Do not give me an explanation, only give me a regex expression. Do not add any additional characters."
+        prompt:str = f"{instruction}\nAsked regex statement: {description}."
         print("\n" + prompt)
         response = client.generate(model="codellama", prompt=prompt)
         answer = response['response']
