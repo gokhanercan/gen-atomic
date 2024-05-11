@@ -27,7 +27,7 @@ class OllamaModels(ModelBase):
         instruction:str = "Consider yourself a function that takes the input of asked validation regex statement, and your output is '''Regex: {created regex}''' Do not give me an explanation, only give me a regex expression. Do not add any additional characters."
         prompt:str = f"{instruction}\nAsked regex statement: {description}."
         print("\nP: " + prompt)
-        response = client.generate(model="codellama", prompt=prompt)
+        response = client.generate(model="codellama", prompt=prompt)        #phi3,llama2,llama3,deepseek-coder,codegemma,starcoder2  ref:https://ollama.com/library?sort=popular
         answer = response['response']
 
         ollama_server_process.terminate()       #TODO: Manage the connecion. Do not terminate on every call.
