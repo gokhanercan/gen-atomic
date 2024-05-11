@@ -23,9 +23,13 @@ class ExperimentResults(object):
         for key, value in kwargs.items():
             setattr(self, key, value)
 
-    def Print(self):
+    def Print(self, ignoreFakeModelReports = True):
         if(self.ModelResults is not None):
+            fakeModelNames = ModelFactory().ListFakeModelNames()
             for modelConf,df in self.ModelResults.items():
+                if(ignoreFakeModelReports):
+                    if(fakeModelNames.__contains__(modelConf)): continue
+                    if(modelConf.__contains__("Stub")): continue
                 print(f"\n-- {modelConf.upper()} MODEL RESULTS --")
                 print(tabulate(df, headers="keys", tablefmt='grid', floatfmt=".2f"))
         if(self.Results is not None):
