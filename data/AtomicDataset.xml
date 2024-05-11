@@ -1,219 +1,235 @@
 <?xml version="1.0" ?>
 <Units>
-   <Unit name="Email" desc="Generic email address" type="RegexVal">
+<!--   <Unit name="Email" desc="Generic email address" type="RegexVal">-->
+<!--      <CCases>-->
+<!--         <CCase val="mail@gokhanercan.com"/>-->
+<!--         <CCase val="amojtehed@gmail.com"/>-->
+<!--      </CCases>-->
+<!--      <ICCases>-->
+<!--         <ICCase val="dsadsadasda"/>-->
+<!--         <ICCase val="http://invalidaemail"/>-->
+<!--      </ICCases>-->
+<!--   </Unit>-->
+<!--   <Unit name="EmailRFC5322" desc="General email compliant to RFC 5322 official standard" type="RegexVal">-->
+<!--      &lt;!&ndash;ref: https://www.regextester.com/115911&ndash;&gt;-->
+<!--      <CCases>-->
+<!--         <CCase val="some+test@gmail.com"/>-->
+<!--         <CCase val="_valid@mail.com"/>-->
+<!--         <CCase val="stuart.sillitoe@prodirectsport.net"/>-->
+<!--      </CCases>-->
+<!--      <ICCases>-->
+<!--         <ICCase val="invalidÂ£@domain.com"/>-->
+<!--         <ICCase val="valid%$@domain.com"/>-->
+<!--      </ICCases>-->
+<!--   </Unit>-->
+<!--   <Unit name="PriceWithThousandSeparators" desc="Price value formatted with thousands separator when necessary" type="RegexVal">-->
+<!--      <CCases>-->
+<!--         <CCase val="1.550,5"/>-->
+<!--         <CCase val="1.000.302,9"/>-->
+<!--         <CCase val="100"/>-->
+<!--      </CCases>-->
+<!--      <ICCases>-->
+<!--         <ICCase val="090"/>-->
+<!--         <ICCase val="0,23,34"/>-->
+<!--         <ICCase val="12.11,23"/>-->
+<!--         <ICCase val="aaaa"/>-->
+<!--         <ICCase val="mail@gokhan.com"/>-->
+<!--      </ICCases>-->
+<!--   </Unit>-->
+<!--   <Unit name="IPAddressV4" desc="Generic IP address in IPv4 format, 4 blocks of numbers" type="RegexVal">-->
+<!--      <CCases>-->
+<!--         <CCase val="127.0.0.1"/>-->
+<!--         <CCase val="192.1.1.12"/>-->
+<!--      </CCases>-->
+<!--      <ICCases>-->
+<!--         <CCase val="127,0,0,1"/>-->
+<!--         <CCase val="127:0:0:1"/>-->
+<!--         <ICCase val="1.0.0.0.0.0"/>-->
+<!--         <ICCase val="0,23,34"/>-->
+<!--         <ICCase val="12.11,23"/>-->
+<!--         <ICCase val="gokhan"/>-->
+<!--         <ICCase val="2001:db8:1234::1"/>-->
+<!--      </ICCases>-->
+<!--   </Unit>-->
+<!--   <Unit name="IPAddressV6" desc="Generic IP address in IPv6 format" type="RegexVal">-->
+<!--      <CCases>-->
+<!--         <CCase val="2001:0000:130F:0000:0000:09C0:876A:130B"/>-->
+<!--      </CCases>-->
+<!--      <ICCases>-->
+<!--         <ICCase val="127.0.0.1"/>-->
+<!--      </ICCases>-->
+<!--   </Unit>-->
+<!--   <Unit name="LocalhostIPv4OrLocalText" desc="Local IP address or 'localhost' text" type="RegexVal">-->
+<!--      <CCases>-->
+<!--         <CCase val="127.0.0.1"/>-->
+<!--         <CCase val="localhost"/>-->
+<!--      </CCases>-->
+<!--       <ICCases>-->
+<!--         <ICCase val="192.1.1.12"/>-->
+<!--      </ICCases>-->
+<!--   </Unit>-->
+<!--   <Unit name="SecureWebsite" desc="Full internet website address supporting SSL protocol" type="RegexVal">-->
+<!--      <CCases>-->
+<!--         <CCase val="https://www.gokhanercan.com"/>-->
+<!--         <CCase val="https://www.gokhanercan.com/"/>-->
+<!--      </CCases>-->
+<!--      <ICCases>-->
+<!--         <ICCase val="http://www.gokhanercan.com"/>-->
+<!--         <ICCase val="gokhanercan.com"/>-->
+<!--         <ICCase val="ftps://www.gokhanercan.com"/>-->
+<!--      </ICCases>-->
+<!--   </Unit>-->
+<!--   <Unit name="AdultAge" desc="Age of an adult person in integer form, higher than or equal to the 'age of majority' threshold declared in law in most countries" type="RegexVal">-->
+<!--      <CCases>-->
+<!--         <CCase val="18"/>-->
+<!--         <CCase val="81"/>-->
+<!--      </CCases>-->
+<!--      <ICCases>-->
+<!--         <ICCase val="17"/>-->
+<!--         <ICCase val="-10"/>-->
+<!--      </ICCases>-->
+<!--   </Unit>-->
+<!--   <Unit name="CountryISO3166-1-alpha2" desc="Country codes based on ISO 3166-1 alpha-2 standard" type="RegexVal">-->
+<!--      <CCases>-->
+<!--         <CCase val="TR"/>-->
+<!--         <CCase val="US"/>-->
+<!--      </CCases>-->
+<!--      <ICCases>-->
+<!--         <ICCase val="TUR"/>-->
+<!--         <ICCase val="tr-TR"/>-->
+<!--         <ICCase val="Turkey"/>-->
+<!--         <ICCase val="USA"/>-->
+<!--         <ICCase val="tr-TR"/>-->
+<!--         <ICCase val="United States"/>-->
+<!--         <ICCase val="ZZ"/>-->
+<!--         <ICCase val="AB"/>-->
+<!--      </ICCases>-->
+<!--   </Unit>-->
+<!--   <Unit name="ISBN-13" desc="13 digit ISBN number formatted without any separator" type="RegexVal">-->
+<!--      <CCases>-->
+<!--         <CCase val="9781861978769"/>     &lt;!&ndash;Dash formattings vary. Prefix should begin either with 978 or 979 &ndash;&gt;-->
+<!--         <CCase val="9781449373320"/>     &lt;!&ndash;Martin Kleppmanns's book &ndash;&gt;-->
+<!--      </CCases>-->
+<!--      <ICCases>-->
+<!--         <ICCase val="978-1861978769"/>-->
+<!--         <ICCase val="978-1-449-37332-0"/>-->
+<!--         <ICCase val="1112222233333"/>-->
+<!--         <ICCase val="111-2222233333"/>-->
+<!--      </ICCases>-->
+<!--   </Unit>-->
+<!--   <Unit name="WindowsOSFolder" desc="Windows operation system folder path" type="RegexVal">-->
+<!--      <CCases>-->
+<!--         <CCase val="C:\Projects\gen-atomic\"/>-->
+<!--         <CCase val="C:\Projects\gen-atomic"/>-->
+<!--      </CCases>-->
+<!--      <ICCases>-->
+<!--         <ICCase val="C:\Projects\gen-atomic\text.txt"/>-->
+<!--      </ICCases>-->
+<!--   </Unit>-->
+<!--   <Unit name="WindowsOSFile" desc="Windows operation system file path" type="RegexVal">-->
+<!--      <CCases>-->
+<!--         <CCase val="C:\Projects\gen-atomic\text.txt"/>-->
+<!--      </CCases>-->
+<!--      <ICCases>-->
+<!--         <ICCase val="C:\Projects\gen-atomic"/>-->
+<!--      </ICCases>-->
+<!--   </Unit>-->
+<!--   <Unit name="ImageFileExtensions" desc="Common internet image file extensions without a dot" type="RegexVal">-->
+<!--      <CCases>-->
+<!--         <CCase val="jpg"/>-->
+<!--         <CCase val="jpeg"/>-->
+<!--         <CCase val="png"/>-->
+<!--      </CCases>-->
+<!--      <ICCases>-->
+<!--         <ICCase val="txt"/>-->
+<!--         <ICCase val="doc"/>-->
+<!--         <ICCase val="ini"/>-->
+<!--      </ICCases>-->
+<!--   </Unit>-->
+<!--   <Unit name="ImageFileExtensions" desc="Common internet image file extensions with dot" type="RegexVal">-->
+<!--      <CCases>-->
+<!--         <CCase val=".jpg"/>-->
+<!--         <CCase val=".jpeg"/>-->
+<!--         <CCase val=".png"/>-->
+<!--      </CCases>-->
+<!--      <ICCases>-->
+<!--         <ICCase val=".txt"/>-->
+<!--         <ICCase val=".doc"/>-->
+<!--         <ICCase val=".ini"/>-->
+<!--      </ICCases>-->
+<!--   </Unit>-->
+<!--   <Unit name="VisaMasterCreditCard" desc="Visa or Master credit card number with dash/hypens separators adhering Luhn algorithm" type="RegexVal">-->
+<!--      <CCases>-->
+<!--         <CCase val="4111-1111-1111-1111"/>-->
+<!--      </CCases>-->
+<!--      <ICCases>-->
+<!--         <ICCase val="1111-1111-1111-1111"/>-->
+<!--         <ICCase val="1111-1111-1111"/>-->
+<!--         <ICCase val="4111111111111111"/>-->
+<!--      </ICCases>-->
+<!--   </Unit>-->
+<!--   <Unit name="Year" desc="Year in four digits" type="RegexVal">-->
+<!--      <CCases>-->
+<!--         <CCase val="2024"/>-->
+<!--         <CCase val="1983"/>-->
+<!--         <CCase val="-2024"/>-->
+<!--      </CCases>-->
+<!--      <ICCases>-->
+<!--         <ICCase val="-224"/>-->
+<!--      </ICCases>-->
+<!--   </Unit>-->
+<!--   <Unit name="YearThousands" desc="4 digit year in two thousands" type="RegexVal">-->
+<!--      <CCases>-->
+<!--         <CCase val="2024"/>-->
+<!--         <CCase val="2099"/>-->
+<!--      </CCases>-->
+<!--      <ICCases>-->
+<!--         <ICCase val="1999"/>-->
+<!--         <ICCase val="0"/>-->
+<!--         <ICCase val="-199"/>-->
+<!--      </ICCases>-->
+<!--   </Unit>-->
+<!--   <Unit name="HexColorCode" desc="Hexadecimal color code" type="RegexVal">-->
+<!--      <CCases>-->
+<!--         <CCase val="#FF5733"/>-->
+<!--      </CCases>-->
+<!--      <ICCases>-->
+<!--         <ICCase val="#Z11733"/>-->
+<!--         <ICCase val="1Z11733"/>-->
+<!--      </ICCases>-->
+<!--   </Unit>-->
+<!--   <Unit name="HexColorCodeWithoutSharp" desc="Hexadecimal color code without sharp" type="RegexVal">-->
+<!--      <CCases>-->
+<!--         <CCase val="FF5733"/>-->
+<!--      </CCases>-->
+<!--      <ICCases>-->
+<!--         <ICCase val="Z11733"/>-->
+<!--         <ICCase val="#FF5733"/>-->
+<!--      </ICCases>-->
+<!--   </Unit>-->
+<!--   <Unit name="HexWhiteOrBlackColorCode" desc="Hexadecimal color code of pure white or pure black" type="RegexVal">-->
+<!--      <CCases>-->
+<!--         <CCase val="#FFFFFF"/>-->
+<!--         <CCase val="#000000"/>-->
+<!--      </CCases>-->
+<!--      <ICCases>-->
+<!--         <ICCase val="#FF5733"/>-->
+<!--      </ICCases>-->
+<!--   </Unit>-->
+   <Unit name="Username" desc="Lowercased username without special characters but underscore char and numbers, between 3 and 20 characters lenght" type="RegexVal">
       <CCases>
-         <CCase val="mail@gokhanercan.com"/>
-         <CCase val="amojtehed@gmail.com"/>
+         <CCase val="gokhanercan"/>
+         <CCase val="gokhan123"/>
+         <CCase val="gokhan_ercan"/>
       </CCases>
       <ICCases>
-         <ICCase val="dsadsadasda"/>
-         <ICCase val="http://invalidaemail"/>
-      </ICCases>
-   </Unit>
-   <Unit name="EmailRFC5322" desc="General email compliant to RFC 5322 official standard" type="RegexVal">
-      <!--ref: https://www.regextester.com/115911-->
-      <CCases>
-         <CCase val="some+test@gmail.com"/>
-         <CCase val="_valid@mail.com"/>
-         <CCase val="stuart.sillitoe@prodirectsport.net"/>
-      </CCases>
-      <ICCases>
-         <ICCase val="invalidÂ£@domain.com"/>
-         <ICCase val="valid%$@domain.com"/>
-      </ICCases>
-   </Unit>
-   <Unit name="PriceWithThousandSeparators" desc="Price value formatted with thousands separator when necessary" type="RegexVal">
-      <CCases>
-         <CCase val="1.550,5"/>
-         <CCase val="1.000.302,9"/>
-         <CCase val="100"/>
-      </CCases>
-      <ICCases>
-         <ICCase val="090"/>
-         <ICCase val="0,23,34"/>
-         <ICCase val="12.11,23"/>
-         <ICCase val="aaaa"/>
-         <ICCase val="mail@gokhan.com"/>
-      </ICCases>
-   </Unit>
-   <Unit name="IPAddressV4" desc="Generic IP address in IPv4 format, 4 blocks of numbers" type="RegexVal">
-      <CCases>
-         <CCase val="127.0.0.1"/>
-         <CCase val="192.1.1.12"/>
-      </CCases>
-      <ICCases>
-         <CCase val="127,0,0,1"/>
-         <CCase val="127:0:0:1"/>
-         <ICCase val="1.0.0.0.0.0"/>
-         <ICCase val="0,23,34"/>
-         <ICCase val="12.11,23"/>
-         <ICCase val="gokhan"/>
-         <ICCase val="2001:db8:1234::1"/>
-      </ICCases>
-   </Unit>
-   <Unit name="IPAddressV6" desc="Generic IP address in IPv6 format" type="RegexVal">
-      <CCases>
-         <CCase val="2001:0000:130F:0000:0000:09C0:876A:130B"/>
-      </CCases>
-      <ICCases>
-         <ICCase val="127.0.0.1"/>
-      </ICCases>
-   </Unit>
-   <Unit name="LocalhostIPv4OrLocalText" desc="Local IP address or 'localhost' text" type="RegexVal">
-      <CCases>
-         <CCase val="127.0.0.1"/>
-         <CCase val="localhost"/>
-      </CCases>
-       <ICCases>
-         <ICCase val="192.1.1.12"/>
-      </ICCases>
-   </Unit>
-   <Unit name="SecureWebsite" desc="Full internet website address supporting SSL protocol" type="RegexVal">
-      <CCases>
-         <CCase val="https://www.gokhanercan.com"/>
-         <CCase val="https://www.gokhanercan.com/"/>
-      </CCases>
-      <ICCases>
-         <ICCase val="http://www.gokhanercan.com"/>
-         <ICCase val="gokhanercan.com"/>
-         <ICCase val="ftps://www.gokhanercan.com"/>
-      </ICCases>
-   </Unit>
-   <Unit name="AdultAge" desc="Age of an adult person in integer form, higher than or equal to the 'age of majority' threshold declared in law in most countries" type="RegexVal">
-      <CCases>
-         <CCase val="18"/>
-         <CCase val="81"/>
-      </CCases>
-      <ICCases>
-         <ICCase val="17"/>
-         <ICCase val="-10"/>
-      </ICCases>
-   </Unit>
-   <Unit name="CountryISO3166-1-alpha2" desc="Country codes based on ISO 3166-1 alpha-2 standard" type="RegexVal">
-      <CCases>
-         <CCase val="TR"/>
-         <CCase val="US"/>
-      </CCases>
-      <ICCases>
-         <ICCase val="TUR"/>
-         <ICCase val="tr-TR"/>
-         <ICCase val="Turkey"/>
-         <ICCase val="USA"/>
-         <ICCase val="tr-TR"/>
-         <ICCase val="United States"/>
-         <ICCase val="ZZ"/>
-         <ICCase val="AB"/>
-      </ICCases>
-   </Unit>
-   <Unit name="ISBN-13" desc="13 digit ISBN number formatted without any separator" type="RegexVal">
-      <CCases>
-         <CCase val="9781861978769"/>     <!--Dash formattings vary. Prefix should begin either with 978 or 979 -->
-         <CCase val="9781449373320"/>     <!--Martin Kleppmanns's book -->
-      </CCases>
-      <ICCases>
-         <ICCase val="978-1861978769"/>
-         <ICCase val="978-1-449-37332-0"/>
-         <ICCase val="1112222233333"/>
-         <ICCase val="111-2222233333"/>
-      </ICCases>
-   </Unit>
-   <Unit name="WindowsOSFolder" desc="Windows operation system folder path" type="RegexVal">
-      <CCases>
-         <CCase val="C:\Projects\gen-atomic\"/>
-         <CCase val="C:\Projects\gen-atomic"/>
-      </CCases>
-      <ICCases>
-         <ICCase val="C:\Projects\gen-atomic\text.txt"/>
-      </ICCases>
-   </Unit>
-   <Unit name="WindowsOSFile" desc="Windows operation system file path" type="RegexVal">
-      <CCases>
-         <CCase val="C:\Projects\gen-atomic\text.txt"/>
-      </CCases>
-      <ICCases>
-         <ICCase val="C:\Projects\gen-atomic"/>
-      </ICCases>
-   </Unit>
-   <Unit name="ImageFileExtensions" desc="Common internet image file extensions without a dot" type="RegexVal">
-      <CCases>
-         <CCase val="jpg"/>
-         <CCase val="jpeg"/>
-         <CCase val="png"/>
-      </CCases>
-      <ICCases>
-         <ICCase val="txt"/>
-         <ICCase val="doc"/>
-         <ICCase val="ini"/>
-      </ICCases>
-   </Unit>
-   <Unit name="ImageFileExtensions" desc="Common internet image file extensions with dot" type="RegexVal">
-      <CCases>
-         <CCase val=".jpg"/>
-         <CCase val=".jpeg"/>
-         <CCase val=".png"/>
-      </CCases>
-      <ICCases>
-         <ICCase val=".txt"/>
-         <ICCase val=".doc"/>
-         <ICCase val=".ini"/>
-      </ICCases>
-   </Unit>
-   <Unit name="VisaMasterCreditCard" desc="Visa or Master credit card number with dash/hypens separators adhering Luhn algorithm" type="RegexVal">
-      <CCases>
-         <CCase val="4111-1111-1111-1111"/>
-      </CCases>
-      <ICCases>
-         <ICCase val="1111-1111-1111-1111"/>
-         <ICCase val="1111-1111-1111"/>
-         <ICCase val="4111111111111111"/>
-      </ICCases>
-   </Unit>
-   <Unit name="Year" desc="Year in four digits" type="RegexVal">
-      <CCases>
-         <CCase val="2024"/>
-         <CCase val="1983"/>
-         <CCase val="-2024"/>
-      </CCases>
-      <ICCases>
-         <ICCase val="-224"/>
-      </ICCases>
-   </Unit>
-   <Unit name="YearThousands" desc="4 digit year in two thousands" type="RegexVal">
-      <CCases>
-         <CCase val="2024"/>
-         <CCase val="2099"/>
-      </CCases>
-      <ICCases>
-         <ICCase val="1999"/>
-         <ICCase val="0"/>
-         <ICCase val="-199"/>
-      </ICCases>
-   </Unit>
-   <Unit name="HexColorCode" desc="Hexadecimal color code" type="RegexVal">
-      <CCases>
-         <CCase val="#FF5733"/>
-      </CCases>
-      <ICCases>
-         <ICCase val="#Z11733"/>
-         <ICCase val="1Z11733"/>
-      </ICCases>
-   </Unit>
-   <Unit name="HexColorCodeWithoutSharp" desc="Hexadecimal color code without sharp" type="RegexVal">
-      <CCases>
-         <CCase val="FF5733"/>
-      </CCases>
-      <ICCases>
-         <ICCase val="Z11733"/>
-         <ICCase val="#FF5733"/>
-      </ICCases>
-   </Unit>
-   <Unit name="HexWhiteOrBlackColorCode" desc="Hexadecimal color code of pure white or pure black" type="RegexVal">
-      <CCases>
-         <CCase val="#FFFFFF"/>
-         <CCase val="#000000"/>
-      </CCases>
-      <ICCases>
-         <ICCase val="#FF5733"/>
+         <ICCase val="gokhanercan234567890a"/>
+         <ICCase val="first@lastname.com"/>
+         <ICCase val="1234"/>
+         <ICCase val="ab"/>
+         <ICCase val="****"/>
+         <ICCase val="gokhan-ercan"/>
+         <ICCase val="gokhan ercan"/>
       </ICCases>
    </Unit>
 </Units>
