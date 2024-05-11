@@ -31,7 +31,7 @@ class ExperimentFactory(object):
         return exp
 
     @staticmethod
-    def CreateSingleModelExperiment(unitType: UnitType, modelName:ModelBase) -> Experiment:
+    def CreateSingleModelExperiment(unitType: UnitType, modelName:str) -> Experiment:
         unit = UnitFactory().Create(unitType)
         model: ModelBase = ModelFactory().Create(modelName)
         exp: Experiment = Experiment(unit, [model])

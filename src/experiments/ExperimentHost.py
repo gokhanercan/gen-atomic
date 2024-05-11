@@ -1,3 +1,4 @@
+import time
 from typing import Optional, List
 
 from data.Dataset import Dataset, UnitType
@@ -21,7 +22,9 @@ class ExperimentResults(object):
 
 class ExperimentHost(object):
 
-    def Run(self, exp: Experiment, fields):
+    def Run(self, exp: Experiment, fields, formatCode:bool = True):
+        start_time = time.time()
+        print("Running experiment...")
 
         dfAggr = DataFrame()
         for model in exp.Models:
@@ -43,7 +46,7 @@ class ExperimentHost(object):
                     dfCases.at[caseIndex, "Case"] = "CC-> " + cc
                     passed:bool = exp.Unit.RunTest(generated, cc)
                     dfCases.at[caseIndex, "Passed"] = "OK" if passed else "X"
-                    dfCases.at[caseIndex, "Generated Code"] = FormatHelper.FormatCode(generated, 20)
+                    dfCases.at[caseIndex, "Generated Code"] = FormatHelper.ShortenCode(generated, 20) if formatCode else generated
                     if (passed):
                         passedCaseCount = passedCaseCount + 1
                         ccPassed = ccPassed + 1
@@ -57,7 +60,7 @@ class ExperimentHost(object):
                     dfCases.at[caseIndex, "Case"] = "IC-> " + icc
                     passed:bool = not exp.Unit.RunTest(generated, icc)  # type: ignore
                     dfCases.at[caseIndex, "Passed"] = "OK" if passed else "X"
-                    dfCases.at[caseIndex, "Generated Code"] = FormatHelper.FormatCode(generated, 20)
+                    dfCases.at[caseIndex, "Generated Code"] = FormatHelper.ShortenCode(generated, 20) if formatCode else generated
                     if (passed):
                         passedCaseCount = passedCaseCount + 1
                         icPassed = icPassed + 1
@@ -67,8 +70,16 @@ class ExperimentHost(object):
                     caseIndex += 1
                 fieldIndex += 1
 
+            def format_time(seconds):
+                hours, remainder = divmod(seconds, 3600)
+                minutes, seconds = divmod(remainder, 60)
+                return "{:02}:{:02}:{:02}".format(int(hours), int(minutes), int(seconds))
+            end_time = time.time()
+            elapsed_time = end_time - start_time
+            print(f"Experiment completed in {format_time(elapsed_time)} seconds.", )
+
             print(f"\n-- {model.ModelName().upper()} MODEL RESULTS --")
-            print(tabulate(dfCases, headers="keys", tablefmt='psql', floatfmt=".2f"))
+            print(tabulate(dfCases, headers="keys", tablefmt='grid', floatfmt=".2f"))
 
             # region Aggr Reports
             # TODO:Report confusion matrix for binary schemas
@@ -91,6 +102,8 @@ class ExperimentHost(object):
         overallAccuracy:List = dfAggr.iloc[-1]
         return ExperimentResults(OverallAccuracy=overallAccuracy)
 
+    def Plot(self):
+        pass
 
 if __name__ == '__main__':
     path = Paths().GetDataset("AtomicDataset")
@@ -98,10 +111,12 @@ if __name__ == '__main__':
     exp: Experiment = ExperimentFactory.CreateSingleModelExperiment (UnitType.RegexVal,"CodeLLaMa-v2")
     #exp: Experiment = ExperimentFactory.CreateExperimentWithAllModels(UnitType.RegexVal)
 
+    #region Stub Model
     # customize stub
     # stubModel = [item for item in exp.Models if item.ModelName().__contains__("Stub")][0]
     # fixedRegex: str = r"""^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$"""
     # stubModel.StubUnit = fixedRegex  # type: ignore
     # stubModel.StubName = "EmailStub"
+    #endregion
 
-    r:ExperimentResults = ExperimentHost().Run(exp, ds.Units)
+    r:ExperimentResults = ExperimentHost().Run(exp, ds.Units, formatCode=False)
