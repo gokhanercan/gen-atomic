@@ -35,7 +35,7 @@ class ExperimentResults(object):
 
 class ExperimentHost(object):
 
-    def Run(self, exp: Experiment, ds:Dataset, formatCode:bool = True):
+    def Run(self, exp: Experiment, ds:Dataset, formatCode:bool = False):
         start_time = time.time()
         print(f"Running experiment on {ds.Name} dataset with {str(len(exp.Models))} model configuration(s) ...")
 

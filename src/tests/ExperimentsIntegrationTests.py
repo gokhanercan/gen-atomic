@@ -14,7 +14,7 @@ class ExperimentsIntegrationTest(TestCase):
 
         path:str = Paths().GetDataset("AtomicDataset")
         ds: Dataset = DatasetXmlRepository.Load(path)
-        exp:Experiment = ExperimentFactory().CreateExperimentWithAllModels(UnitType.RegexVal)
+        exp:Experiment = ExperimentFactory().CreateExperimentWithFakeModels(UnitType.RegexVal)
 
         # customize stub
         stubModel = [item for item in exp.Models if item.ModelName().__contains__("Stub")][0]
@@ -22,8 +22,8 @@ class ExperimentsIntegrationTest(TestCase):
         stubModel.StubUnit = fixedRegex  # type: ignore
         stubModel.StubName = "EmailStub"
 
-        r:ExperimentResults = host.Run(exp,ds.Units)
-
+        r:ExperimentResults = host.Run(exp,ds)
+        r.Print()
         self.assertTrue(0 <= r.OverallAccuracy[0] <= 100)
 
 if __name__ == "__main__":

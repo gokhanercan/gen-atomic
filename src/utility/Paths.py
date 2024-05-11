@@ -37,7 +37,7 @@ class Paths(object):
                 part = cursor.parts[-1]
                 if (part == "src"):
                     isSrc = True
-                    srcRoot = cursor
+                    srcRoot = str(cursor)
         elif (path.__contains__("\\src")):
             srcRoot = path
         else:

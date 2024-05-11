@@ -31,6 +31,13 @@ class ExperimentFactory(object):
         return exp
 
     @staticmethod
+    def CreateExperimentWithFakeModels(unitType:UnitType)->Experiment:
+        unit = UnitFactory().Create(unitType)
+        models:List[ModelBase] = ModelFactory().CreateFakeModels()
+        exp:Experiment = Experiment(unit,models)
+        return exp
+
+    @staticmethod
     def CreateSingleModelExperiment(unitType: UnitType, modelName:str) -> Experiment:
         unit = UnitFactory().Create(unitType)
         model: ModelBase = ModelFactory().Create(modelName)

@@ -19,7 +19,21 @@ class ModelFactory(object):
         Lists all available model names
         :return:
         """
-        return ["Stub","Random","CodeLlama"]
+        return ["CodeLlama","CodeLLaMa-v2"]
+
+    def ListFakeModelNames(self):
+        """
+        Lists all available fake model names
+        :return:
+        """
+        return ["Stub","Random"]
+
+    def CreateFakeModels(self):
+        models = []
+        for modelName in self.ListFakeModelNames():
+            m: ModelBase = self.Create(modelName)
+            models.append(m)
+        return models
 
     def CreateAllModels(self):
         """
@@ -27,7 +41,7 @@ class ModelFactory(object):
         :return:
         """
         models = []
-        for modelName in self.ListModelNames():
+        for modelName in self.ListModelNames() + self.ListFakeModelNames():
             m: ModelBase = self.Create(modelName)
             models.append(m)
         return models
