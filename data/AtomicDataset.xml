@@ -10,7 +10,7 @@
          <ICCase val="http://invalidaemail"/>
       </ICCases>
    </Unit>
-   <Unit name="EmailRFC5322" desc="General email regex compliant to RFC 5322 official standard" type="RegexVal">
+   <Unit name="EmailRFC5322" desc="General email compliant to RFC 5322 official standard" type="RegexVal">
       <!--ref: https://www.regextester.com/115911-->
       <CCases>
          <CCase val="some+test@gmail.com"/>
@@ -22,9 +22,10 @@
          <ICCase val="valid%$@domain.com"/>
       </ICCases>
    </Unit>
-   <Unit name="PriceInTurkishLira" desc="Price formatted with thousands seperator in Turkish Lira currency" type="RegexVal">
+   <Unit name="PriceWithThousandSeparators" desc="Price value formatted with thousands separator when necessary" type="RegexVal">
       <CCases>
          <CCase val="1.550,5"/>
+         <CCase val="1.000.302,9"/>
          <CCase val="100"/>
       </CCases>
       <ICCases>
@@ -50,13 +51,58 @@
          <ICCase val="2001:db8:1234::1"/>
       </ICCases>
    </Unit>
+   <Unit name="IPAddressV6" desc="Generic IP address in IPv6 format" type="RegexVal">
+      <CCases>
+         <CCase val="2001:0000:130F:0000:0000:09C0:876A:130B"/>
+      </CCases>
+      <ICCases>
+         <ICCase val="127.0.0.1"/>
+      </ICCases>
+   </Unit>
    <Unit name="LocalhostIPv4OrLocalText" desc="Local IP address or 'localhost' text" type="RegexVal">
       <CCases>
          <CCase val="127.0.0.1"/>
          <CCase val="localhost"/>
       </CCases>
        <ICCases>
-         <CCase val="192.1.1.12"/>
+         <ICCase val="192.1.1.12"/>
       </ICCases>
    </Unit>
+   <Unit name="SecureWebsite" desc="Full internet website address supporting SSL protocol" type="RegexVal">
+      <CCases>
+         <CCase val="https://www.gokhanercan.com"/>
+         <CCase val="https://www.gokhanercan.com/"/>
+      </CCases>
+      <ICCases>
+         <ICCase val="http://www.gokhanercan.com"/>
+         <ICCase val="gokhanercan.com"/>
+         <ICCase val="ftps://www.gokhanercan.com"/>
+      </ICCases>
+   </Unit>
+   <Unit name="AdultAge" desc="Age of an adult person in integer form, higher than or equal to the 'age of majority' threshold declared in law in most countries" type="RegexVal">
+      <CCases>
+         <CCase val="18"/>
+         <CCase val="81"/>
+      </CCases>
+      <ICCases>
+         <ICCase val="17"/>
+         <ICCase val="-10"/>
+      </ICCases>
+   </Unit>
+      <Unit name="CountryISO3166-1-alpha2" desc="Country codes based on ISO 3166-1 alpha-2 standard" type="RegexVal">
+         <CCases>
+            <CCase val="TR"/>
+            <CCase val="US"/>
+         </CCases>
+         <ICCases>
+            <ICCase val="TUR"/>
+            <ICCase val="tr-TR"/>
+            <ICCase val="Turkey"/>
+            <ICCase val="USA"/>
+            <ICCase val="tr-TR"/>
+            <ICCase val="United States"/>
+            <ICCase val="ZZ"/>
+            <ICCase val="AB"/>
+         </ICCases>
+      </Unit>
 </Units>
