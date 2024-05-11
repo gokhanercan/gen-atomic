@@ -26,14 +26,14 @@ class OllamaModels(ModelBase):
         client = ollama.Client('http://localhost:11434')  # Specify full URL with port
         instruction:str = "Consider yourself a function that takes the input of asked regex statement, and your output is '''Regex: {created regex}''' Do not give me an explanation, only give me a regex expression. Do not add any additional characters."
         prompt:str = f"{instruction}\nAsked regex statement: {description}."
-        print("\n" + prompt)
+        print("\nP: " + prompt)
         response = client.generate(model="codellama", prompt=prompt)
         answer = response['response']
 
         ollama_server_process.terminate()       #TODO: Manage the connecion. Do not terminate on every call.
 
         gencode:str = str(answer).strip().replace("Regex: ","").replace("```","").replace("`","")      #TODO: Output parsers here please!
-        print(gencode)
+        print("A: " + gencode)
         return gencode
 
 if __name__ == "__main__":
