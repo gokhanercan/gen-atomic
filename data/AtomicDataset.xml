@@ -89,20 +89,30 @@
          <ICCase val="-10"/>
       </ICCases>
    </Unit>
-      <Unit name="CountryISO3166-1-alpha2" desc="Country codes based on ISO 3166-1 alpha-2 standard" type="RegexVal">
-         <CCases>
-            <CCase val="TR"/>
-            <CCase val="US"/>
-         </CCases>
-         <ICCases>
-            <ICCase val="TUR"/>
-            <ICCase val="tr-TR"/>
-            <ICCase val="Turkey"/>
-            <ICCase val="USA"/>
-            <ICCase val="tr-TR"/>
-            <ICCase val="United States"/>
-            <ICCase val="ZZ"/>
-            <ICCase val="AB"/>
-         </ICCases>
-      </Unit>
+   <Unit name="CountryISO3166-1-alpha2" desc="Country codes based on ISO 3166-1 alpha-2 standard" type="RegexVal">
+      <CCases>
+         <CCase val="TR"/>
+         <CCase val="US"/>
+      </CCases>
+      <ICCases>
+         <ICCase val="TUR"/>
+         <ICCase val="tr-TR"/>
+         <ICCase val="Turkey"/>
+         <ICCase val="USA"/>
+         <ICCase val="tr-TR"/>
+         <ICCase val="United States"/>
+         <ICCase val="ZZ"/>
+         <ICCase val="AB"/>
+      </ICCases>
+   </Unit>
+   <Unit name="ISBN-13" desc="13 digit ISBN formatted without any separator" type="RegexVal">
+      <CCases>
+         <CCase val="9781861978769"/>     <!--Dash formattings vary. Prefix should begin either with 978 or 979 -->
+         <ICCase val="1112222233333"/>
+      </CCases>
+      <ICCases>
+         <CCase val="9781861978769"/>
+         <ICCase val="111-2222233333"/>
+      </ICCases>
+   </Unit>
 </Units>
