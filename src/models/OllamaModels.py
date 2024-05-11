@@ -18,24 +18,23 @@ class OllamaModels(ModelBase):
         process.communicate()
         return process
 
-    # def ModelName(self)->str:
-    #     return "CodeLLaMa-v2"
-
     def Generate(self, description: str) -> str:
 
         ollama_server_process = self.start_ollama_server()
         #time.sleep(2)  # Adjust delay as needed
 
         client = ollama.Client('http://localhost:11434')  # Specify full URL with port
-        instruction:str = "do not give me an explanation, only give me regex, do not add any additional characters."
-        prompt:str = f"generate me a regex for {description},{instruction}."
+        instruction:str = "Do not give me an explanation, only give me a regex expression. Do not add any additional characters."
+        prompt:str = f"Generate a regular expression (regex) that validates {description}. {instruction}"
+        print("\n" + prompt)
         response = client.generate(model="codellama", prompt=prompt)
         answer = response['response']
 
-        ollama_server_process.terminate()
+        ollama_server_process.terminate()       #TODO: Manage the connecion. Do not terminate on every call.
 
-        return str(answer).replace("Regex: ","").replace("```","").replace("`","")
-        #raise Exception("TODO: not implemented. https://github.com/users/gokhanercan/projects/3/views/1?pane=issue&itemId=58245008")
+        gencode:str = str(answer).strip().replace("Regex: ","").replace("```","").replace("`","")      #TODO: Output parsers here please!
+        print(gencode)
+        return gencode
 
 if __name__ == "__main__":
     answer = OllamaModels(modelName='CodeLLaMa-v2').Generate("generate me an email regex, do not give me an explanation")
