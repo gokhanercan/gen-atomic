@@ -117,4 +117,103 @@
          <ICCase val="111-2222233333"/>
       </ICCases>
    </Unit>
+   <Unit name="WindowsOSFolder" desc="Windows operation system folder path" type="RegexVal">
+      <CCases>
+         <CCase val="C:\Projects\gen-atomic\"/>
+         <CCase val="C:\Projects\gen-atomic"/>
+      </CCases>
+      <ICCases>
+         <ICCase val="C:\Projects\gen-atomic\text.txt"/>
+      </ICCases>
+   </Unit>
+   <Unit name="WindowsOSFile" desc="Windows operation system file path" type="RegexVal">
+      <CCases>
+         <CCase val="C:\Projects\gen-atomic\text.txt"/>
+      </CCases>
+      <ICCases>
+         <ICCase val="C:\Projects\gen-atomic"/>
+      </ICCases>
+   </Unit>
+   <Unit name="ImageFileExtensions" desc="Common internet image file extensions without a dot" type="RegexVal">
+      <CCases>
+         <CCase val="jpg"/>
+         <CCase val="jpeg"/>
+         <CCase val="png"/>
+      </CCases>
+      <ICCases>
+         <ICCase val="txt"/>
+         <ICCase val="doc"/>
+         <ICCase val="ini"/>
+      </ICCases>
+   </Unit>
+   <Unit name="ImageFileExtensions" desc="Common internet image file extensions with dot" type="RegexVal">
+      <CCases>
+         <CCase val=".jpg"/>
+         <CCase val=".jpeg"/>
+         <CCase val=".png"/>
+      </CCases>
+      <ICCases>
+         <ICCase val=".txt"/>
+         <ICCase val=".doc"/>
+         <ICCase val=".ini"/>
+      </ICCases>
+   </Unit>
+   <Unit name="VisaMasterCreditCard" desc="Visa or Master credit card number with dash/hypens separators adhering Luhn algorithm" type="RegexVal">
+      <CCases>
+         <CCase val="4111-1111-1111-1111"/>
+      </CCases>
+      <ICCases>
+         <ICCase val="1111-1111-1111-1111"/>
+         <ICCase val="1111-1111-1111"/>
+         <ICCase val="4111111111111111"/>
+      </ICCases>
+   </Unit>
+   <Unit name="Year" desc="Year in four digits" type="RegexVal">
+      <CCases>
+         <CCase val="2024"/>
+         <CCase val="1983"/>
+         <CCase val="-2024"/>
+      </CCases>
+      <ICCases>
+         <ICCase val="-224"/>
+      </ICCases>
+   </Unit>
+   <Unit name="YearThousands" desc="4 digit year in two thousands" type="RegexVal">
+      <CCases>
+         <CCase val="2024"/>
+         <CCase val="2099"/>
+      </CCases>
+      <ICCases>
+         <ICCase val="1999"/>
+         <ICCase val="0"/>
+         <ICCase val="-199"/>
+      </ICCases>
+   </Unit>
+   <Unit name="HexColorCode" desc="Hexadecimal color code" type="RegexVal">
+      <CCases>
+         <CCase val="#FF5733"/>
+      </CCases>
+      <ICCases>
+         <ICCase val="#Z11733"/>
+         <ICCase val="1Z11733"/>
+      </ICCases>
+   </Unit>
+   <Unit name="HexColorCodeWithoutSharp" desc="Hexadecimal color code without sharp" type="RegexVal">
+      <CCases>
+         <CCase val="FF5733"/>
+      </CCases>
+      <ICCases>
+         <ICCase val="Z11733"/>
+         <ICCase val="#FF5733"/>
+      </ICCases>
+   </Unit>
+   <Unit name="HexWhiteOrBlackColorCode" desc="Hexadecimal color code of pure white or pure black" type="RegexVal">
+      <CCases>
+         <CCase val="#FFFFFF"/>
+         <CCase val="#000000"/>
+      </CCases>
+      <ICCases>
+         <ICCase val="#FF5733"/>
+      </ICCases>
+   </Unit>
 </Units>
