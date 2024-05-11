@@ -61,7 +61,7 @@ class PathsTest(TestCase):
                          Paths()._FindProjectRoot("C:\\Projects\\gen-atomic\\src\\StreamlitUI.py"))
 
     def test_FindProjectRoot_SrcFolderPath_ReturnParent(self):
-        self.assertEqual("C:\\Projects\\gen-atomic", Paths()._FindProjectRoot("C:\\Projects\\gen-atomic\\src"))
+        self.assertEqual(str(Path("C:\\Projects\\gen-atomic")), Paths()._FindProjectRoot("C:\\Projects\\gen-atomic\\src"))
 
     def test_FindProjectRoot_ProjectFolderPath_ReturnParent(self):
         paths = Paths()
