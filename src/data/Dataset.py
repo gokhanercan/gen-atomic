@@ -14,7 +14,7 @@ class Dataset(object):
     def Print(self):
         ccCount:int = 0
         icCount:int = 0
-        print(f"-- {self.Name} Dataset --")
+        print(f"-- {self.Name.upper()} DATASET --")
         for u in self.Units:
             ccCount = ccCount + len(u.CorrectCases)
             icCount = icCount + len(u.IncorrectCases)
