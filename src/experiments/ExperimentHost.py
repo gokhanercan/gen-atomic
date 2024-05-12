@@ -1,14 +1,12 @@
 import time
 from typing import Optional, List, Dict
 
-from colorama import Fore
-
 from data.Dataset import Dataset, UnitType
 from data.DatasetXmlRepository import DatasetXmlRepository
 from experiments.Experiment import Experiment, ExperimentFactory
 from pandas import DataFrame  # type: ignore
 from tabulate import tabulate  # type: ignore
-from termcolor import colored
+from colorama import Fore
 
 from models.ModelFactory import ModelFactory
 from utility.FormatHelper import FormatHelper
