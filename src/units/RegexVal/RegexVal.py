@@ -1,3 +1,5 @@
+from colorama import Fore
+
 from units.UnitBase import UnitBase
 import re
 
@@ -25,6 +27,6 @@ class RegexVal(UnitBase):
                 return False
         # except re.error:
         except:
-            print("Invalid regular expression pattern.")  # TODO: Handle that error well. Reflection.
+            print(f"{Fore.RED}Invalid regular expression pattern.{Fore.RESET}")  # TODO: Handle that error well. Reflection.
             return False
     # endregion

@@ -105,7 +105,6 @@ class ExperimentHost(object):
                     caseIndex += 1
                 fieldIndex += 1
 
-
             model_end_time = time.time()
             model_elapsed_time = model_end_time - model_start_time
             print(f"\tExperiment for model {modelConf} is completed in {self.format_time(model_elapsed_time)} seconds.", )
@@ -156,3 +155,5 @@ if __name__ == '__main__':
 
     r:ExperimentResults = ExperimentHost().Run(exp, ds, formatCode=False)
     r.Print()
+    ds.Print()
+

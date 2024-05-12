@@ -1,6 +1,9 @@
 from enum import unique, Enum
 from typing import List
 
+from pandas import DataFrame
+from tabulate import tabulate
+
 
 class Dataset(object):
     def __init__(self, name:str):
@@ -8,7 +11,22 @@ class Dataset(object):
         self.Units: List[Unit] = []
         self.Name = name
 
-
+    def Print(self):
+        ccCount:int = 0
+        icCount:int = 0
+        print(f"-- {self.Name} Dataset --")
+        for u in self.Units:
+            ccCount = ccCount + len(u.CorrectCases)
+            icCount = icCount + len(u.IncorrectCases)
+        overall:int = ccCount + icCount
+        df: DataFrame = DataFrame()
+        df.at["Count",    "CorrectCase"] = str(ccCount)
+        df.at["Count",    "IncorrectCase"] = str(icCount)
+        df.at["Count",    "Overall"] = str(overall)
+        df.at["Perc (%)", "CorrectCase"] = str(float(ccCount) / overall * 100)
+        df.at["Perc (%)", "IncorrectCase"] = str(float(icCount) / overall * 100)
+        df.at["Perc (%)", "Overall"] = str(100)
+        print(tabulate(df, headers="keys", tablefmt='psql', floatfmt=".2f"))
 @unique
 class UnitType(Enum):
     RegexVal = 0  # RegexValidators
