@@ -2,7 +2,7 @@ import time
 from models.ModelBase import ModelBase
 import subprocess
 import ollama
-
+from colorama import init, Fore, Back, Style
 
 class OllamaModels(ModelBase):
 
@@ -10,9 +10,13 @@ class OllamaModels(ModelBase):
         super().__init__()
         #self._ModelName = modelName
 
-    def start_ollama_server(self):      #client examples: https://github.com/ollama/ollama-python/tree/main/examples
+    def start_ollama_server(self):
+        """
+        #client examples: https://github.com/ollama/ollama-python/tree/main/examples
         # Use WSL command to launch Ollama on localhost (accessible from Windows)
-
+        # For Win, Set env variable OLLAMA_MODELS for root models dir ref:https://github.com/ollama/ollama/blob/main/docs/faq.md#where-are-models-stored
+        :return:
+        """
         process = subprocess.Popen(["wsl", "--user", "root", "--", "ollama run", "codellama"], stdout=subprocess.PIPE,
                                     stderr=subprocess.PIPE)
         process.communicate()
@@ -25,15 +29,17 @@ class OllamaModels(ModelBase):
 
         client = ollama.Client('http://localhost:11434')  # Specify full URL with port
         instruction:str = "Consider yourself a function that takes the input of asked validation regex statement, and your output is '''Regex: {created regex}''' Do not give me an explanation, only give me a regex expression. Do not add any additional characters."
-        prompt:str = f"{instruction}\nAsked regex statement: {description}."
-        print("\nP: " + prompt)
+        prompt:str =         f"{instruction}\nAsked regex statement: {description}."
+        promptColored: str = f"{instruction}\nAsked regex statement: {Fore.BLUE}{description}{Fore.RESET}."
+        print(f"\nP:{promptColored}")
+        print(Fore.RESET)
         response = client.generate(model="codellama", prompt=prompt)        #phi3,llama2,llama3,deepseek-coder,codegemma,starcoder2  ref:https://ollama.com/library?sort=popular
         answer = response['response']
 
         ollama_server_process.terminate()       #TODO: Manage the connecion. Do not terminate on every call.
 
         gencode:str = str(answer).strip().replace("Regex: ","").replace("```","").replace("`","")      #TODO: Output parsers here please!
-        print("A: " + gencode)
+        print(f"A: {Fore.CYAN}{gencode}{Fore.RESET}")
         return gencode
 
 if __name__ == "__main__":

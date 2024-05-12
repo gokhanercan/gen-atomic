@@ -79,3 +79,4 @@ class PathsTest(TestCase):
 
 if __name__ == "__main__":
     print("root: ", Paths().GetProjectRoot())
+

@@ -1,11 +1,14 @@
 import time
 from typing import Optional, List, Dict
 
+from colorama import Fore
+
 from data.Dataset import Dataset, UnitType
 from data.DatasetXmlRepository import DatasetXmlRepository
 from experiments.Experiment import Experiment, ExperimentFactory
 from pandas import DataFrame  # type: ignore
 from tabulate import tabulate  # type: ignore
+from termcolor import colored
 
 from models.ModelFactory import ModelFactory
 from utility.FormatHelper import FormatHelper
@@ -31,6 +34,15 @@ class ExperimentResults(object):
                     if(fakeModelNames.__contains__(modelConf)): continue
                     if(modelConf.__contains__("Stub")): continue
                 print(f"\n-- {modelConf.upper()} MODEL RESULTS --")
+                #region styling
+                for index, row in df.iterrows():
+                    if row['Passed'] == "OK":
+                        df.at[index, 'Passed'] = f"{Fore.GREEN}OK{Fore.RESET}"
+                        df.at[index, 'Case'] = f"{Fore.GREEN}{row['Case']}{Fore.RESET}"
+                    if row['Passed'] == "X":
+                        df.at[index, 'Passed'] = f"{Fore.RED}X{Fore.RESET}"
+                        df.at[index, 'Case'] = f"{Fore.RED}{row['Case']}{Fore.RESET}"
+                #endregion
                 print(tabulate(df, headers="keys", tablefmt='grid', floatfmt=".2f"))
         if(self.Results is not None):
             experimentHeader = f"-- {self.ExperimentName.upper()} EXPERIMENT --"
