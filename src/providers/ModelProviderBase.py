@@ -15,6 +15,10 @@ class ModelProviderBase(ABC):
         pass
 
     @abstractmethod
+    def ProviderAbbreviation(self):
+        pass
+
+    @abstractmethod
     def Generate(self, description: str) -> str:
         pass
 

@@ -12,7 +12,7 @@ class ProviderFactory(object):
 
     def CreateModelConfiguration(self, providerName:str)->List[ModelBase]:
         if(providerName == "ollama"):
-            modelconfs:List[str] = OllamaModelProvider.ModelConfigurations()
+            modelconfs:List[str] = OllamaModelProvider.ModelConfigurationsList()
             models:List[ModelBase] = []
             for modelconf in modelconfs:
                 m:ModelBase = OllamaModelProvider(modelconf)

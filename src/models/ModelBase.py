@@ -5,14 +5,19 @@ class ModelBase(ABC):
     def __init__(self) -> None:
         super().__init__()
 
-
-    def ModelName(self):
+    def ModelName(self):        #TODO: delete
         return str(type(self).__name__).replace("Model","")
 
     #@abstractmethod
-    def ProviderName(self):
+    def ProviderName(self)->str:
+        return "NoProvider"
+
+    def ProviderAbbreviation(self)->str:
         return "NP"
 
+    def ModelConfAbbr(self)->str:
+        return f"{self.ProviderAbbreviation()}-{self.ModelName()}"
+
     @abstractmethod
-    def Generate(self, description: str) -> str:  # desc: price for TK
+    def Generate(self, description: str) -> str:
         pass

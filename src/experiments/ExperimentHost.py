@@ -31,6 +31,7 @@ class ExperimentResults(object):
                 if(ignoreFakeModelReports):
                     if(fakeModelNames.__contains__(modelConf)): continue
                     if(modelConf.__contains__("Stub")): continue
+                    if(modelConf.__contains__("Random")): continue
                 print(f"\n-- {modelConf.upper()} MODEL RESULTS --")
                 #region styling
                 for index, row in df.iterrows():
@@ -58,8 +59,7 @@ class ExperimentHost(object):
 
         dfAggr = DataFrame()
         for model in exp.Models:
-            prov:str = model.ProviderName()
-            modelConf: str = f"{prov}-{model.ModelName()}"
+            modelConf: str = f"{model.ProviderName()}-{model.ModelName()}"
             model_start_time = time.time()
             print(f"\tRunning model {modelConf} on {ds.Name} dataset ...")
             dfCases: DataFrame = DataFrame()
@@ -109,7 +109,8 @@ class ExperimentHost(object):
             print(f"\tExperiment for model {modelConf} is completed in {self.format_time(model_elapsed_time)} seconds.", )
             modelResults[modelConf] = dfCases
 
-            accuracyColName = f"{model.ModelName()} (%)"
+            modelConf:str = model.ModelConfAbbr()
+            accuracyColName = f"{modelConf} (%)"
             ccAccuracy: float = (float(ccPassed) / float(ccCount)) * 100
             dfAggr.at["CorrectCase", accuracyColName] = ccAccuracy
 
@@ -147,10 +148,10 @@ if __name__ == '__main__':
 
     #region Stub Model
     # customize stub
-    # stubModel = [item for item in exp.Models if item.ModelName().__contains__("Stub")][0]
-    # fixedRegex: str = r"""^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$"""
-    # stubModel.StubUnit = fixedRegex  # type: ignore
-    # stubModel.StubName = "EmailStub"
+    stubModel = [item for item in exp.Models if item.ModelName().__contains__("Stub")][0]
+    fixedRegex: str = r"""^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$"""
+    stubModel.StubUnit = fixedRegex  # type: ignore
+    stubModel.StubName = "EmailStub"
     #endregion
 
     r:ExperimentResults = ExperimentHost().Run(exp, ds, formatCode=False)

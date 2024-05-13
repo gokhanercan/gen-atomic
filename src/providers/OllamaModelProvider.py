@@ -27,14 +27,18 @@ class OllamaModelProvider(ModelProviderBase, ModelBase):
 
     def ProviderName(self):
         return "ollama"
+    def ProviderAbbreviation(self):
+        return "ol"
 
     def ModelName(self):
         return self.ModelConfiguration
 
     @staticmethod
-    def ModelConfigurations()->List[str]:
+    def ModelConfigurationsList()->List[str]:
         return ["codellama:7b","phi3"]     #? :
         #return ["codellama:7b", "codellama:70b", "phi3", "llama3:7b", "llama2"]  # ? :
+    def ModelConfigurations(self):
+        return OllamaModelProvider.ModelConfigurationsList()
 
     def start_ollama_server(self):
         """
