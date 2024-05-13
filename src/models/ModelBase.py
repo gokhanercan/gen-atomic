@@ -13,10 +13,10 @@ class ModelBase(ABC):
         return "NoProvider"
 
     def ProviderAbbreviation(self)->str:
-        return "NP"
+        return "np"
 
     def ModelConfAbbr(self)->str:
-        return f"{self.ProviderAbbreviation()}-{self.ModelName()}"
+        return f"{self.ProviderAbbreviation().lower()}-{self.ModelName().lower()}"
 
     @abstractmethod
     def Generate(self, description: str) -> str:
