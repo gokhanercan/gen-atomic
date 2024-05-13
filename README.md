@@ -56,17 +56,16 @@ or
 .\pytest.sh
 ```
 
-# Dependencies
+# Key Dependencies
 
-Python 3.8+
-
-This project might depend on some certain LLM Hosts in the future, such as Ollama, LangChain, etc.
+Python 3.8+, Ollama
+This project might depend on some certain LLM Hosts and AI frameworks in the future, such as LlamaIndex, LangChain, Pytorch etc.
 
 # Contribute
 
 ## To Project
 
-You can attend one of our remote meetings. We read papers and share ideas. Feel free to drop us a line.
+You can attend one of our remote meetings. We read papers and share ideas. Feel free to drop us a line.~~
 
 ## To Code
 
