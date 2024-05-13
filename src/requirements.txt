@@ -3,3 +3,4 @@ tabulate
 streamlit
 patch
 ollama
+colorama

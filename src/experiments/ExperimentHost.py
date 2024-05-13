@@ -58,7 +58,8 @@ class ExperimentHost(object):
 
         dfAggr = DataFrame()
         for model in exp.Models:
-            modelConf: str = model.ModelName()
+            prov:str = model.ProviderName()
+            modelConf: str = f"{prov}-{model.ModelName()}"
             model_start_time = time.time()
             print(f"\tRunning model {modelConf} on {ds.Name} dataset ...")
             dfCases: DataFrame = DataFrame()
@@ -138,17 +139,18 @@ class ExperimentHost(object):
 if __name__ == '__main__':
     path = Paths().GetDataset("AtomicDataset")
     ds: Dataset = DatasetXmlRepository.Load(path)
-    exp: Experiment = ExperimentFactory.CreateSingleModelExperiment (UnitType.RegexVal,"CodeLLaMa-v2")
+    #exp: Experiment = ExperimentFactory.CreateSingleModelExperiment (UnitType.RegexVal,"ollama","codellama:7b")
+    exp = ExperimentFactory().CreateProviderExperiment(UnitType.RegexVal,"ollama")
     fakeModels = ModelFactory().CreateFakeModels()
     exp.Models = exp.Models + fakeModels
     #exp: Experiment = ExperimentFactory.CreateExperimentWithAllModels(UnitType.RegexVal)
 
     #region Stub Model
     # customize stub
-    stubModel = [item for item in exp.Models if item.ModelName().__contains__("Stub")][0]
-    fixedRegex: str = r"""^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$"""
-    stubModel.StubUnit = fixedRegex  # type: ignore
-    stubModel.StubName = "EmailStub"
+    # stubModel = [item for item in exp.Models if item.ModelName().__contains__("Stub")][0]
+    # fixedRegex: str = r"""^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$"""
+    # stubModel.StubUnit = fixedRegex  # type: ignore
+    # stubModel.StubName = "EmailStub"
     #endregion
 
     r:ExperimentResults = ExperimentHost().Run(exp, ds, formatCode=False)

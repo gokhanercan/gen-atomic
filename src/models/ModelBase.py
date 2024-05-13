@@ -9,6 +9,10 @@ class ModelBase(ABC):
     def ModelName(self):
         return str(type(self).__name__).replace("Model","")
 
+    #@abstractmethod
+    def ProviderName(self):
+        return "NP"
+
     @abstractmethod
     def Generate(self, description: str) -> str:  # desc: price for TK
         pass

@@ -3,6 +3,7 @@ from typing import List, Optional
 from data.Dataset import UnitType
 from models.ModelBase import ModelBase
 from models.ModelFactory import ModelFactory
+from providers.ProviderFactory import ProviderFactory
 from units.UnitBase import UnitBase
 from units.UnitFactory import UnitFactory
 from utility import StringHelper
@@ -38,8 +39,15 @@ class ExperimentFactory(object):
         return exp
 
     @staticmethod
-    def CreateSingleModelExperiment(unitType: UnitType, modelName:str) -> Experiment:
+    def CreateSingleModelExperiment(unitType: UnitType, providerName:str, modelConf:str) -> Experiment:
         unit = UnitFactory().Create(unitType)
-        model: ModelBase = ModelFactory().Create(modelName)
+        model: ModelBase = ModelFactory().Create(providerName,modelConf)
         exp: Experiment = Experiment(unit, [model])
+        return exp
+
+    @staticmethod
+    def CreateProviderExperiment(unitType: UnitType, providerName:str) -> Experiment:
+        unit = UnitFactory().Create(unitType)
+        models: List[ModelBase] = ProviderFactory().CreateModelConfiguration(providerName)
+        exp: Experiment = Experiment(unit,models)
         return exp

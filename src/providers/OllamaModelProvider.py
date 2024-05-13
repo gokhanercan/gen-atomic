@@ -1,14 +1,40 @@
 import time
+from typing import List
+
 from models.ModelBase import ModelBase
 import subprocess
 import ollama
 from colorama import init, Fore, Back, Style
 
-class OllamaModels(ModelBase):
+from providers.ModelProviderBase import ModelProviderBase
 
-    def __init__(self, modelName:str) -> None:
+
+class OllamaModelProvider(ModelProviderBase, ModelBase):
+
+    def __init__(self, modelConfiguration:str) -> None:
         super().__init__()
-        #self._ModelName = modelName
+        ModelBase.__init__(self)
+        self.ModelConfiguration = modelConfiguration     #TODO: add to params. model:70b
+
+        #EXPERIMENT <MODELCONFIG | DATASET>
+        #MODELCONFIG <PROVIDER | MODEL | FLOW | PROMPT>
+        #MODEL CONF: Exp4029-MFTSG#12-win5-dim100-ns5-hs0-del0-mean1-iter2-root0-inf0-seg3-lang=tr-ngr[no]__TRCorpora2LCNPS2SH-TR2022_MM_NLPTPPRJ1_der0comp0frg0st2.vec
+        #ModelProvider[p1:p2]-Model[p1:p2]--Flow[p1:p2]--Prompt[p1:p2]
+        #Ollama-codellama:7b -noflow-p1
+        #Ollama-codellama:70b-noflow-p1
+        #Ollama-phi3:7b-noflow-p1
+        #Ollama-phi3:7b-simple:r3-p1
+
+    def ProviderName(self):
+        return "ollama"
+
+    def ModelName(self):
+        return self.ModelConfiguration
+
+    @staticmethod
+    def ModelConfigurations()->List[str]:
+        return ["codellama:7b","phi3"]     #? :
+        #return ["codellama:7b", "codellama:70b", "phi3", "llama3:7b", "llama2"]  # ? :
 
     def start_ollama_server(self):
         """
@@ -43,5 +69,5 @@ class OllamaModels(ModelBase):
         return gencode
 
 if __name__ == "__main__":
-    answer = OllamaModels(modelName='CodeLLaMa-v2').Generate("generate me an email regex, do not give me an explanation")
+    answer = OllamaModelProvider('codellama:7b').Generate("generate me an email regex, do not give me an explanation")
     print(answer)

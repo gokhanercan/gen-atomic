@@ -1,8 +1,12 @@
+from typing import Optional
+
 from models.ModelBase import ModelBase
-from models.OllamaModels import OllamaModels
+
 from models.RandomModel import RandomModel
 from models.CodeLlamaModel import CodeLlamaModel
 from models.StubModel import StubModel
+from providers.ModelProviderBase import ModelProviderBase
+from providers.OllamaModelProvider import OllamaModelProvider
 
 
 class ModelFactory(object):
@@ -28,7 +32,7 @@ class ModelFactory(object):
     def CreateFakeModels(self):
         models = []
         for modelName in self.ListFakeModelNames():
-            m: ModelBase = self.Create(modelName)
+            m: ModelBase = self.Create("",modelName)        #TODO:
             models.append(m)
         return models
 
@@ -43,14 +47,19 @@ class ModelFactory(object):
             models.append(m)
         return models
 
-    def Create(self, modelName: str):
-        if(modelName == "Stub"):
+    def Create(self, providerName:str = Optional[str], modelConf:str = Optional[str])->ModelBase:
+        #Provider
+        if(providerName == "ollama"):
+            p:ModelProviderBase = OllamaModelProvider(modelConf)
+            return p
+
+        if(modelConf == "Stub"):
             return StubModel()
-        elif(modelName == "Random"):
+        elif(modelConf == "Random"):
             return RandomModel()
-        elif (modelName == "CodeLlama"):
-            return CodeLlamaModel()
-        elif (modelName == "CodeLLaMa-v2"):         #TODO:Merge ollama models.
-            return OllamaModels("CodeLLaMa-v2")
+        # elif (modelConf == "CodeLlama"):
+        #     return CodeLlamaModel()
+        # elif (modelConf == "CodeLLaMa-v2"):         #TODO:Merge ollama models.
+        #     return OllamaModels("CodeLLaMa-v2")
         else:
-            raise Exception(f"No model implementation found for '{modelName}'.")
+            raise Exception(f"No model implementation found for '{modelConf}'.")
