@@ -159,6 +159,7 @@
       </ICCases>
    </Unit>
    <Unit name="VisaMasterCreditCard" desc="Visa or Master credit card number with dash/hypens separators adhering Luhn algorithm" type="RegexVal">
+      <!--TODO: Luhn alg. cannot be implemented via regex. https://www.oreilly.com/library/view/regular-expressions-cookbook/9781449327453/ch04s20.html-->
       <CCases>
          <CCase val="4111-1111-1111-1111"/>
       </CCases>
