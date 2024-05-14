@@ -73,7 +73,7 @@ class ExperimentHost(object):
             icPassed: int = 0
 
             for f in ds.Units:
-                generated: str = model.Generate(f.Description, model.ModelName())
+                generated: str = model.Generate(f.Description)
                 for cc in f.CorrectCases:
                     dfCases.at[caseIndex, "Type"] = f.UnitType.name
                     dfCases.at[caseIndex, "Name"] = f.Name
