@@ -1,3 +1,4 @@
+
 import os
 from pathlib import Path
 from unittest import TestCase
@@ -29,16 +30,16 @@ class Paths(object):
     def _FindProjectRoot(self, path: str) -> str:
         srcRoot: str = ""
 
-        if (path.__contains__("\\src\\")):  # We assume that no subfolders with the name 'src' will be added to the project.
+        if ("src" in path.split(os.path.sep)):  # Using os.path.sep for platform independence
             cursor = path
             isSrc: bool = False
-            while (isSrc == False):
+            while (not isSrc):
                 cursor = Path(cursor).parent
                 part = cursor.parts[-1]
                 if (part == "src"):
                     isSrc = True
                     srcRoot = str(cursor)
-        elif (path.__contains__("\\src")):
+        elif ("src" in path):
             srcRoot = path
         else:
             if (self._IsFolderExists(path, "src")):
@@ -53,30 +54,33 @@ class Paths(object):
 class PathsTest(TestCase):
 
     def test_FindProjectRoot_NestedSrcPath_ReturnParent(self):
-        self.assertEqual(r"C:\Projects\gen-atomic",
-                         Paths()._FindProjectRoot(r"C:\Projects\gen-atomic\src\UI\folder\StreamlitUI.py"))
+        self.assertEqual(os.path.join("C:", "Projects", "gen-atomic"),
+                         Paths()._FindProjectRoot(
+                             os.path.join("C:", "Projects", "gen-atomic", "src", "UI", "folder", "StreamlitUI.py")))
 
     def test_FindProjectRoot_SrcFilePath_ReturnParent(self):
-        self.assertEqual(r"C:\Projects\gen-atomic",
-                         Paths()._FindProjectRoot(r"C:\Projects\gen-atomic\src\StreamlitUI.py"))
+        self.assertEqual(os.path.join("C:", "Projects", "gen-atomic"),
+                         Paths()._FindProjectRoot(
+                             os.path.join("C:", "Projects", "gen-atomic", "src", "StreamlitUI.py")))
 
     def test_FindProjectRoot_SrcFolderPath_ReturnParent(self):
-        self.assertEqual(str(Path(r"C:\Projects\gen-atomic")), Paths()._FindProjectRoot(r"C:\Projects\gen-atomic\src"))
+        self.assertEqual(os.path.join("C:", "Projects", "gen-atomic"),
+                         Paths()._FindProjectRoot(os.path.join("C:", "Projects", "gen-atomic", "src")))
 
     def test_FindProjectRoot_ProjectFolderPath_ReturnParent(self):
         paths = Paths()
         from unittest.mock import patch
         with patch.object(paths, '_IsFolderExists', return_value=True):
-            self.assertEqual(r"C:\Projects\gen-atomic", paths._FindProjectRoot(r"C:\Projects\gen-atomic"))
+            self.assertEqual(os.path.join("C:", "Projects", "gen-atomic"),
+                             paths._FindProjectRoot(os.path.join("C:", "Projects", "gen-atomic")))
 
     def test_FindProjectRoot_NoProjectPath_RaiseError(self):
         paths = Paths()
         from unittest.mock import patch
         with patch.object(paths, '_IsFolderExists', return_value=False):
             with self.assertRaises(Exception):
-                paths._FindProjectRoot(r"C:\Projects\somerandomfolder")
+                paths._FindProjectRoot(os.path.join("C:", "Projects", "somerandomfolder"))
 
 
 if __name__ == "__main__":
     print("root: ", Paths().GetProjectRoot())
-
