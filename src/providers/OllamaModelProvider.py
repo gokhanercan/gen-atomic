@@ -36,35 +36,36 @@ class OllamaModelProvider(ModelProviderBase, ModelBase):
 
     @staticmethod
     def ModelConfigurationsList()->List[str]:
-        return ["codellama:7b","llama3","phi3","codegemma","codellama:70b","llama3:70b","starcoder2","gemma","tinyllama"]
+        return ["codellama", "phi3"]
+        #return ["codellama:7b","llama3","phi3","codegemma","codellama:70b","llama3:70b","starcoder2","gemma","tinyllama"]
         #return ["codellama:7b", "codellama:70b", "phi3", "llama3:7b", "llama2"]  # ? :
     def ModelConfigurations(self):
         return OllamaModelProvider.ModelConfigurationsList()
 
-    def start_ollama_server(self):
+    def start_ollama_server(self, modelName: str):
         """
         #client examples: https://github.com/ollama/ollama-python/tree/main/examples
         # Use WSL command to launch Ollama on localhost (accessible from Windows)
         # For Win, Set env variable OLLAMA_MODELS for root models dir ref:https://github.com/ollama/ollama/blob/main/docs/faq.md#where-are-models-stored
         :return:
         """
-        process = subprocess.Popen(["wsl", "--user", "root", "--", "ollama run", "codellama"], stdout=subprocess.PIPE,
+        process = subprocess.Popen(["wsl", "--user", "root", "--", "ollama run", modelName], stdout=subprocess.PIPE,
                                     stderr=subprocess.PIPE)
         process.communicate()
         return process
 
-    def Generate(self, description: str) -> str:
+    def Generate(self, description: str, modelName: str) -> str:
 
-        ollama_server_process = self.start_ollama_server()
+        ollama_server_process = self.start_ollama_server(modelName=modelName)
         #time.sleep(2)  # Adjust delay as needed
 
         client = ollama.Client('http://localhost:11434')  # Specify full URL with port
         instruction:str = "Consider yourself a function that takes the input of asked validation regex statement, and your output is '''Regex: {created regex}''' Do not give me an explanation, only give me a regex expression. Do not add any additional characters."
-        prompt:str =         f"{instruction}\nAsked regex statement: {description}."
+        prompt:str = f"{instruction}\nAsked regex statement: {description}."
         promptColored: str = f"{instruction}\nAsked regex statement: {Fore.BLUE}{description}{Fore.RESET}."
         print(f"\nP:{promptColored}")
         print(Fore.RESET)
-        response = client.generate(model="codellama", prompt=prompt)        #phi3,llama2,llama3,deepseek-coder,codegemma,starcoder2  ref:https://ollama.com/library?sort=popular
+        response = client.generate(model=modelName, prompt=prompt)        #phi3,llama2,llama3,deepseek-coder,codegemma,starcoder2  ref:https://ollama.com/library?sort=popular
         answer = response['response']
 
         ollama_server_process.terminate()       #TODO: Manage the connecion. Do not terminate on every call.
