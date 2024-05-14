@@ -50,18 +50,14 @@ class OllamaModelProvider(ModelProviderBase, ModelBase):
         :return:
         """
         modelName = self.ModelConfiguration
-        process = subprocess.Popen(["wsl", "--user", "root", "--", "ollama run", modelName], stdout=subprocess.PIPE,
-                                    stderr=subprocess.PIPE)
+        process = subprocess.Popen(["ollama run", modelName], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         process.communicate()
         return process
 
     def Generate(self, description: str) -> str:
 
-
         modelName = self.ModelConfiguration
-        ollama_server_process = self.start_ollama_server()
-
-        #time.sleep(2)  # Adjust delay as needed
+        #ollama_server_process = self.start_ollama_server()
 
         client = ollama.Client('http://localhost:11434')  # Specify full URL with port
         instruction:str = "Consider yourself a function that takes the input of asked validation regex statement, and your output is '''Regex: {created regex}''' Do not give me an explanation, only give me a regex expression. Do not add any additional characters."
@@ -72,7 +68,7 @@ class OllamaModelProvider(ModelProviderBase, ModelBase):
         response = client.generate(model=modelName, prompt=prompt)        #phi3,llama2,llama3,deepseek-coder,codegemma,starcoder2  ref:https://ollama.com/library?sort=popular
         answer = response['response']
 
-        ollama_server_process.terminate()       #TODO: Manage the connecion. Do not terminate on every call.
+        #ollama_server_process.terminate()       #TODO: Manage the connecion. Do not terminate on every call.
 
         gencode:str = str(answer).strip().replace("Regex: ","").replace("```","").replace("`","")      #TODO: Output parsers here please!
         print(f"A: {Fore.CYAN}{gencode}{Fore.RESET}")
