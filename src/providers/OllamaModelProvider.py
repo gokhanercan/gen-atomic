@@ -36,9 +36,9 @@ class OllamaModelProvider(ModelProviderBase, ModelBase):
 
     @staticmethod
     def ModelConfigurationsList()->List[str]:
-        return ["codellama", "phi3"]
-        #return ["codellama:7b","llama3","phi3","codegemma","codellama:70b","llama3:70b","starcoder2","gemma","tinyllama"]
-        #return ["codellama:7b", "codellama:70b", "phi3", "llama3:7b", "llama2"]  # ? :
+        #return ["codellama", "phi3"]
+        return ["codellama","llama3","phi3","codegemma","codellama:70b","llama3:70b","starcoder2","gemma","tinyllama"]
+        #return ["codellama", "codellama:70b", "phi3", "llama3:7b", "llama2"]  # ? :
     def ModelConfigurations(self):
         return OllamaModelProvider.ModelConfigurationsList()
 
