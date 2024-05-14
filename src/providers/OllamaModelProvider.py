@@ -42,21 +42,25 @@ class OllamaModelProvider(ModelProviderBase, ModelBase):
     def ModelConfigurations(self):
         return OllamaModelProvider.ModelConfigurationsList()
 
-    def start_ollama_server(self, modelName: str):
+    def start_ollama_server(self):
         """
         #client examples: https://github.com/ollama/ollama-python/tree/main/examples
         # Use WSL command to launch Ollama on localhost (accessible from Windows)
         # For Win, Set env variable OLLAMA_MODELS for root models dir ref:https://github.com/ollama/ollama/blob/main/docs/faq.md#where-are-models-stored
         :return:
         """
+        modelName = self.ModelConfiguration
         process = subprocess.Popen(["wsl", "--user", "root", "--", "ollama run", modelName], stdout=subprocess.PIPE,
                                     stderr=subprocess.PIPE)
         process.communicate()
         return process
 
-    def Generate(self, description: str, modelName: str) -> str:
+    def Generate(self, description: str) -> str:
 
-        ollama_server_process = self.start_ollama_server(modelName=modelName)
+
+        modelName = self.ModelConfiguration
+        ollama_server_process = self.start_ollama_server()
+
         #time.sleep(2)  # Adjust delay as needed
 
         client = ollama.Client('http://localhost:11434')  # Specify full URL with port
