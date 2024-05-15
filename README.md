@@ -59,7 +59,7 @@ or
 # Key Dependencies
 
 Python 3.8+, Ollama
-This project might depend on some certain LLM Hosts and AI frameworks in the future, such as LlamaIndex, LangChain, Pytorch etc.
+This project might depend on some certain LLM Hosts and AI frameworks in the future, such as LlamaIndex, LangChain, HF, Pytorch etc.
 
 # Contribute
 
