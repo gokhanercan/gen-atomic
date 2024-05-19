@@ -128,9 +128,7 @@ class ExperimentHost(object):
 
             f1Score: float = 2*precision*recall / (precision + recall)
             dfAggr.at["F1 Score", accuracyColName] = f1Score
-
-
-            # endregion
+            #endregion
 
         end_time = time.time()
         elapsed_time = end_time - start_time

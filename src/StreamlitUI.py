@@ -63,5 +63,3 @@ if st.button("Generate"):
     st.text_area("Generated Unit", stream_output)
 
 
-
-
