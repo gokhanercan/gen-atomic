@@ -1,6 +1,7 @@
 from typing import List
 
 from models.ModelBase import ModelBase
+from providers.ChatGPTModelProvider import ChatGPTModelProvider
 from providers.ModelProviderBase import ModelProviderBase
 from providers.OllamaModelProvider import OllamaModelProvider
 
@@ -16,6 +17,13 @@ class ProviderFactory(object):
             models:List[ModelBase] = []
             for modelconf in modelconfs:
                 m:ModelBase = OllamaModelProvider(modelconf)
+                models.append(m)
+            return models
+        if(providerName == "chatgpt"):
+            modelconfs:List[str] = ChatGPTModelProvider.ModelConfigurationsList()
+            models:List[ModelBase] = []
+            for modelconf in modelconfs:
+                m:ModelBase = ChatGPTModelProvider(modelconf)
                 models.append(m)
             return models
         else:
