@@ -30,7 +30,7 @@ class Paths(object):
     def _FindProjectRoot(self, path: str) -> str:
         srcRoot: str = ""
 
-        if ("src" in path.split(os.path.sep)):  # Using os.path.sep for platform independence
+        if (path.__contains__(os.path.sep + "src" + os.path.sep)):  # Using os.path.sep for platform independence
             cursor = path
             isSrc: bool = False
             while (not isSrc):
@@ -39,7 +39,7 @@ class Paths(object):
                 if (part == "src"):
                     isSrc = True
                     srcRoot = str(cursor)
-        elif ("src" in path):
+        elif (path.__contains__(os.path.sep + "src" )):
             srcRoot = path
         else:
             if (self._IsFolderExists(path, "src")):
