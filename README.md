@@ -25,6 +25,8 @@ Check out the [streamlit app](https://gen-atomic.streamlit.app/) to get an idea 
    .\setup.sh
    ```
 
+3. Download [Ollama](https://ollama.com/download) 
+
 ## Run the Code
 
 1. Run main method of the file 'ExperimentHost.py'. You will see the default experiment/benchmark scores like the following:

@@ -4,3 +4,4 @@ streamlit
 patch
 ollama
 colorama
+openai

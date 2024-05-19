@@ -1,15 +1,12 @@
 import time
 from typing import List
-
+from openai import OpenAI
 from models.ModelBase import ModelBase
-import subprocess
-import ollama
 from colorama import init, Fore, Back, Style
-
 from providers.ModelProviderBase import ModelProviderBase
 
 
-class OllamaModelProvider(ModelProviderBase, ModelBase):
+class ChatGPTModelProvider(ModelProviderBase, ModelBase):
 
     def __init__(self, modelConfiguration:str) -> None:
         super().__init__()
@@ -26,54 +23,52 @@ class OllamaModelProvider(ModelProviderBase, ModelBase):
         #Ollama-phi3:7b-simple:r3-p1
 
     def ProviderName(self):
-        return "ollama"
+        return "chatgpt"
 
     def ProviderAbbreviation(self):
-        return "ol"
+        return "cg"
 
     def ModelName(self):
         return self.ModelConfiguration
 
     @staticmethod
     def ModelConfigurationsList()->List[str]:
-        return ["codellama"]
-        #return ["codellama","llama3","phi3","codegemma","codellama:70b","llama3:70b","starcoder2","gemma","tinyllama"]
-        #return ["codellama", "codellama:70b", "phi3", "llama3:7b", "llama2"]  # ? :
+        return ["gpt-3.5-turbo"]  # cost: <= 1 cent
+        #return ["gpt-4"] #cost: approximately 6 cents
     def ModelConfigurations(self):
-        return OllamaModelProvider.ModelConfigurationsList()
-
-    def start_ollama_server(self):
-        """
-        #client examples: https://github.com/ollama/ollama-python/tree/main/examples
-        # Use WSL command to launch Ollama on localhost (accessible from Windows)
-        # For Win, Set env variable OLLAMA_MODELS for root models dir ref:https://github.com/ollama/ollama/blob/main/docs/faq.md#where-are-models-stored
-        :return:
-        """
-        modelName = self.ModelConfiguration
-        process = subprocess.Popen(["ollama run", modelName], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        process.communicate()
-        return process
+        return ChatGPTModelProvider.ModelConfigurationsList()
 
     def Generate(self, description: str) -> str:
 
         modelName = self.ModelConfiguration
-        #ollama_server_process = self.start_ollama_server()
 
-        client = ollama.Client('http://localhost:11434')  # Specify full URL with port
+        client = OpenAI(
+            # This is the default and can be omitted
+            api_key="sk-gen-atomic-key-XhFAbEnBiGODTwE3IgX6T3BlbkFJJabbjULa8lJaflR5Fpfs",
+        )
+
         instruction:str = "Consider yourself a function that takes the input of asked validation regex statement, and your output is '''Regex: {created regex}''' Do not give me an explanation, only give me a regex expression. Do not add any additional characters."
         prompt:str = f"{instruction}\nAsked regex statement: {description}."
         promptColored: str = f"{instruction}\nAsked regex statement: {Fore.BLUE}{description}{Fore.RESET}."
         print(f"\nP:{promptColored}")
         print(Fore.RESET)
-        response = client.generate(model=modelName, prompt=prompt)        #phi3,llama2,llama3,deepseek-coder,codegemma,starcoder2  ref:https://ollama.com/library?sort=popular
-        answer = response['response']
 
-        #ollama_server_process.terminate()       #TODO: Manage the connecion. Do not terminate on every call.
+        chat_completion = client.chat.completions.create(
+            messages=[
+                {
+                    "role": "user",
+                    "content": prompt,
+                }
+            ],
+            model=modelName,
+        )
+
+        answer = chat_completion.choices[0].message.content    #phi3,llama2,llama3,deepseek-coder,codegemma,starcoder2  ref:https://ollama.com/library?sort=popular
 
         gencode:str = str(answer).strip().replace("Regex: ","").replace("```","").replace("`","")      #TODO: Output parsers here please!
         print(f"A: {Fore.CYAN}{gencode}{Fore.RESET}")
         return gencode
 
 if __name__ == "__main__":
-    answer = OllamaModelProvider('codellama:7b').Generate("generate me an email regex, do not give me an explanation")
+    answer = ChatGPTModelProvider('gpt-3.5-turbo').Generate("Generic email address")
     print(answer)
