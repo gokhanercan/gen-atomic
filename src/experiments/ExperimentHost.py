@@ -120,14 +120,14 @@ class ExperimentHost(object):
             overallAccuracy: float = (float(passedCaseCount) / float(totalCaseCount)) * 100
             dfAggr.at["Overall", accuracyColName] = overallAccuracy
 
-            precision: float = (float(ccPassed) / float(ccPassed + (icCount - icPassed))) * 100
-            dfAggr.at["Precision", accuracyColName] = precision
-
-            recall: float = (float(ccPassed) / float(ccCount)) * 100
-            dfAggr.at["Recall", accuracyColName] = recall
-
-            f1Score: float = 2*precision*recall / (precision + recall)
-            dfAggr.at["F1 Score", accuracyColName] = f1Score
+            # precision: float = (float(ccPassed) / float(ccPassed + (icCount - icPassed))) * 100
+            # dfAggr.at["Precision", accuracyColName] = precision
+            #
+            # recall: float = (float(ccPassed) / float(ccCount)) * 100
+            # dfAggr.at["Recall", accuracyColName] = recall
+            #
+            # f1Score: float = 2*precision*recall / (precision + recall)
+            # dfAggr.at["F1 Score", accuracyColName] = f1Score
             #endregion
 
         end_time = time.time()
