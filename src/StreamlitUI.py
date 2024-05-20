@@ -2,11 +2,13 @@
     #streamlit run L:\Projects\gen-atomic\src\StreamlitUI.py
 
 import sys
+from typing import List
+
 import streamlit as st
 
 from data.Dataset import Dataset, Unit
 from data.DatasetXmlRepository import DatasetXmlRepository
-from models.ModelBase import ModelBase
+from models.ModelBase import ModelBase, ModelConf
 from models.ModelFactory import ModelFactory
 from utility.Paths import Paths
 
@@ -34,17 +36,23 @@ icase = bar.selectbox('Choose an inccorrect case?',field.IncorrectCases)
 
 #Model
 bar.subheader("Model")
-modelName: str = bar.selectbox('Choose a model?', ModelFactory().ListModelNames())
-model: ModelBase = ModelFactory().Create(modelName) #inja
-model.StubUnit = r"""^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$"""
-bar.write(f"<b>Model:</b> {modelName}", unsafe_allow_html=True)      #TODO: We need components to provide commonly used functionality like bolds, text colors etc.
-# bar.write("<span style='color:red'>This text is red!</span>", unsafe_allow_html=True)
+modelFactory = ModelFactory()
+modelConfigs:List[ModelConf] = modelFactory.GetModelConfigurations()
+configKeys = [obj.ConfigKey() for obj in modelConfigs]
 
+modelConf:ModelConf = bar.selectbox('Choose a model?', modelConfigs)
+model: ModelBase = ModelFactory().CreateByCfg(modelConf)
+modelName:str = model.ModelName()
+modelKey:str = model.ConfigKey()
+
+model.StubUnit = r"""^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$"""
+bar.write(f"<b>Model:</b> {modelKey}", unsafe_allow_html=True)      #TODO: We need components to provide commonly used functionality like bolds, text colors etc.
+# bar.write("<span style='color:red'>This text is red!</span>", unsafe_allow_html=True)
 #endregion
 
 #TRY
 st.subheader("Configuration")
-st.write(f"<b>Model:</b> {modelName}", unsafe_allow_html=True)
+st.write(f"<b>Model:</b> {modelKey}", unsafe_allow_html=True)
 st.write(f"<b>LangUnit:</b> {field.UnitType.name}", unsafe_allow_html=True)
 
 st.subheader("Try")
@@ -52,10 +60,10 @@ sampleText:str = st.text_input("Sample Text",ccase)
 userDesc:str = st.text_input("Description",field.Description)
 #generated = st.text_input("Generated Unit","")
 #unit:UnitBase = UnitFactory().Create(field.UnitType)
-def stream_parser(generated):
+
+def stream_parser(generated):       #TODO: Will be removed.
     for chunk in generated:
         yield chunk['message']['content']
-
 
 if st.button("Generate"):
     generated = model.Generate(userDesc)  #inja 2

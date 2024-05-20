@@ -13,15 +13,6 @@ class ChatGPTModelProvider(ModelProviderBase, ModelBase):
         ModelBase.__init__(self)
         self.ModelConfiguration = modelConfiguration     #TODO: add to params. model:70b
 
-        #EXPERIMENT <MODELCONFIG | DATASET>
-        #MODELCONFIG <PROVIDER | MODEL | FLOW | PROMPT>
-        #MODEL CONF: Exp4029-MFTSG#12-win5-dim100-ns5-hs0-del0-mean1-iter2-root0-inf0-seg3-lang=tr-ngr[no]__TRCorpora2LCNPS2SH-TR2022_MM_NLPTPPRJ1_der0comp0frg0st2.vec
-        #ModelProvider[p1:p2]-Model[p1:p2]--Flow[p1:p2]--Prompt[p1:p2]
-        #Ollama-codellama:7b -noflow-p1
-        #Ollama-codellama:70b-noflow-p1
-        #Ollama-phi3:7b-noflow-p1
-        #Ollama-phi3:7b-simple:r3-p1
-
     def ProviderName(self):
         return "chatgpt"
 

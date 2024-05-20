@@ -48,6 +48,6 @@ class ExperimentFactory(object):
     @staticmethod
     def CreateProviderExperiment(unitType: UnitType, providerName:str) -> Experiment:
         unit = UnitFactory().Create(unitType)
-        models: List[ModelBase] = ProviderFactory().CreateModelConfiguration(providerName)
+        models: List[ModelBase] = ProviderFactory().CreateModelConfigurations(providerName)
         exp: Experiment = Experiment(unit,models)
         return exp

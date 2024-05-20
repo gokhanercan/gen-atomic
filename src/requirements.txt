@@ -5,3 +5,4 @@ patch
 ollama
 colorama
 openai
+Deprecated

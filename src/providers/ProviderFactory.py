@@ -11,7 +11,15 @@ class ProviderFactory(object):
     def __init__(self) -> None:
         super().__init__()
 
-    def CreateModelConfiguration(self, providerName:str)->List[ModelBase]:
+    @staticmethod
+    def GetAllProviderNames():
+        """
+        List of available provider names.
+        :return:
+        """
+        return ["ollama","chatgpt"]     #TODO: Auto detect available ones.
+
+    def CreateModelConfigurations(self, providerName:str)->List[ModelBase]:
         if(providerName == "ollama"):
             modelconfs:List[str] = OllamaModelProvider.ModelConfigurationsList()
             models:List[ModelBase] = []
@@ -19,6 +27,7 @@ class ProviderFactory(object):
                 m:ModelBase = OllamaModelProvider(modelconf)
                 models.append(m)
             return models
+
         if(providerName == "chatgpt"):
             modelconfs:List[str] = ChatGPTModelProvider.ModelConfigurationsList()
             models:List[ModelBase] = []

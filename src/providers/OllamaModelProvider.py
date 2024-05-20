@@ -11,7 +11,7 @@ from providers.ModelProviderBase import ModelProviderBase
 
 class OllamaModelProvider(ModelProviderBase, ModelBase):
 
-    def __init__(self, modelConfiguration:str) -> None:
+    def __init__(self, modelConfiguration:str = None) -> None:
         super().__init__()
         ModelBase.__init__(self)
         self.ModelConfiguration = modelConfiguration     #TODO: add to params. model:70b

@@ -109,7 +109,7 @@ class ExperimentHost(object):
             print(f"\tExperiment for model {modelConf} is completed in {self.format_time(model_elapsed_time)} seconds.", )
             modelResults[modelConf] = dfCases
 
-            modelConf:str = model.ModelConfAbbr()
+            modelConf:str = model.ConfigKey()
             accuracyColName = f"{modelConf} (%)"
             ccAccuracy: float = (float(ccPassed) / float(ccCount)) * 100
             dfAggr.at["CorrectCase", accuracyColName] = ccAccuracy
@@ -147,23 +147,22 @@ class ExperimentHost(object):
         return "{:02}:{:02}:{:02}".format(int(hours), int(minutes), int(seconds))
 
 if __name__ == '__main__':
-    path = Paths().GetDataset("AtomicDataset")
+    path = Paths().GetDataset("AtomicDataset-1")
     ds: Dataset = DatasetXmlRepository.Load(path)
     #exp: Experiment = ExperimentFactory.CreateSingleModelExperiment (UnitType.RegexVal,"ollama","codellama:7b")
     exp = ExperimentFactory().CreateProviderExperiment(UnitType.RegexVal,"ollama")
-    #fakeModels = ModelFactory().CreateFakeModels()
-    #exp.Models = exp.Models + fakeModels
+    fakeModels = ModelFactory().CreateFakeModels()
+    exp.Models = exp.Models + fakeModels
     #exp: Experiment = ExperimentFactory.CreateExperimentWithAllModels(UnitType.RegexVal)
 
     #region Stub Model
     # customize stub
-    # stubModel = [item for item in exp.Models if item.ModelName().__contains__("Stub")][0]
-    # fixedRegex: str = r"""^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$"""
-    # stubModel.StubUnit = fixedRegex  # type: ignore
-    # stubModel.StubName = "EmailStub"
+    stubModel = [item for item in exp.Models if item.ModelName().__contains__("Stub")][0]
+    fixedRegex: str = r"""^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$"""
+    stubModel.StubUnit = fixedRegex  # type: ignore
+    stubModel.StubName = "EmailStub"
     #endregion
 
     r:ExperimentResults = ExperimentHost().Run(exp, ds, formatCode=False)
     r.Print()
     ds.Print()
-

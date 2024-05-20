@@ -1,11 +1,12 @@
 import ollama
+from deprecated import deprecated
 
 from models.ModelBase import ModelBase
-from utility import StringHelper
-from utility.StringHelper import Coelesce
 
 
-class CodeLlamaModel(ModelBase):
+@deprecated
+class CodeLlamaModel(ModelBase):    #TODO: Merge with OllamaModelProvider and delete.
+
     SYSTEM_PROMPT = f"""You are a helpful chatbot that has access to the following 
                     open-source models codellama.
                     You can can answer questions for users on any topic."""

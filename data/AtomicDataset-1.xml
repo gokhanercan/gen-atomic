@@ -1,0 +1,13 @@
+<?xml version="1.0" ?>
+<Units>
+   <Unit name="Email" desc="Generic email address" type="RegexVal">
+      <CCases>
+         <CCase val="mail@gokhanercan.com"/>
+         <CCase val="amojtehed@gmail.com"/>
+      </CCases>
+      <ICCases>
+         <ICCase val="dsadsadasda"/>
+         <ICCase val="http://invalidaemail"/>
+      </ICCases>
+   </Unit>
+</Units>
