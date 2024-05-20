@@ -1,3 +1,4 @@
+import os
 import time
 from typing import List
 from openai import OpenAI
@@ -25,7 +26,7 @@ class ChatGPTModelProvider(ModelProviderBase, ModelBase):
     @staticmethod
     def ModelConfigurationsList()->List[str]:
         return ["gpt-3.5-turbo"]  # cost: <= 1 cent
-        #return ["gpt-4"] #cost: approximately 6 cents
+        #return ["gpt-4"] #cost: approximately 10 cents
     def ModelConfigurations(self):
         return ChatGPTModelProvider.ModelConfigurationsList()
 
@@ -33,9 +34,13 @@ class ChatGPTModelProvider(ModelProviderBase, ModelBase):
 
         modelName = self.ModelConfiguration
 
+        openai_api_key = os.getenv('OPEN_AI_API_KEY')
+
+        if not openai_api_key:
+            raise ValueError("The OPEN_AI_API_KEY environment variable is not set.")
+
         client = OpenAI(
-            # This is the default and can be omitted
-            api_key="sk-gen-atomic-key-XhFAbEnBiGODTwE3IgX6T3BlbkFJJabbjULa8lJaflR5Fpfs",
+            api_key=openai_api_key,
         )
 
         instruction:str = "Consider yourself a function that takes the input of asked validation regex statement, and your output is '''Regex: {created regex}''' Do not give me an explanation, only give me a regex expression. Do not add any additional characters."
