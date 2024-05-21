@@ -44,13 +44,17 @@ class ChatGPTModelProvider(ModelProviderBase, ModelBase):
         )
 
         instruction:str = "Consider yourself a function that takes the input of asked validation regex statement, and your output is '''Regex: {created regex}''' Do not give me an explanation, only give me a regex expression. Do not add any additional characters."
-        prompt:str = f"{instruction}\nAsked regex statement: {description}."
+        prompt:str = f"\nAsked regex statement: {description}."
         promptColored: str = f"{instruction}\nAsked regex statement: {Fore.BLUE}{description}{Fore.RESET}."
         print(f"\nP:{promptColored}")
         print(Fore.RESET)
 
         chat_completion = client.chat.completions.create(
             messages=[
+                {
+                    "role": "system",
+                    "content": instruction
+                 },
                 {
                     "role": "user",
                     "content": prompt,
