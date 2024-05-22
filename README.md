@@ -1,7 +1,9 @@
 # About gen-atomic
 
-[![Python application](https://github.com/gokhanercan/gen-atomic/actions/workflows/python-app.yml/badge.svg?branch=master)](https://github.com/gokhanercan/gen-atomic/actions/workflows/python-app.yml)
+[![Build and Tests](https://github.com/gokhanercan/gen-atomic/actions/workflows/python-app.yml/badge.svg?branch=master)](https://github.com/gokhanercan/gen-atomic/actions/workflows/python-app.yml)
 ![GitHub last commit (branch)](https://img.shields.io/github/last-commit/gokhanercan/gen-atomic/master?style=flat)
+
+![Static Badge](https://img.shields.io/badge/Docs-orange?style=flat&label=gen-atomic&color=orange&link=https%3A%2F%2Fgithub.com%2Fgokhanercan%2Fgen-atomic%2Fblob%2Fmaster%2FDOC.md)
 [![Demo](https://img.shields.io/badge/Streamlit_Demo-Visit-blue.svg)](https://gen-atomic.streamlit.app/)
 
 An LLM code **gen**eration and benchmarking framework aiming to support a wide range of **atom**ic _language units_, from compiled to semi-structured markups.
