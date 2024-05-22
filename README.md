@@ -4,7 +4,6 @@
 ![GitHub last commit (branch)](https://img.shields.io/github/last-commit/gokhanercan/gen-atomic/master?style=flat)
 
 ![Static Badge](https://img.shields.io/badge/Docs-orange?style=flat&label=gen-atomic&color=orange&link=https%3A%2F%2Fgithub.com%2Fgokhanercan%2Fgen-atomic%2Fblob%2Fmaster%2FDOC.md&link=!%5BStatic%20Badge%5D(https%3A%2F%2Fimg.shields.io%2Fbadge%2FDocs-orange%3Fstyle%3Dflat%26label%3Dgen-atomic%26color%3Dorange%26link%3Dhttps%253A%252F%252Fgithub.com%252Fgokhanercan%252Fgen-atomic%252Fblob%252Fmaster%252FDOC.md))
-
 [![Demo](https://img.shields.io/badge/Streamlit_Demo-Visit-blue.svg)](https://gen-atomic.streamlit.app/)
 
 An LLM code **gen**eration and benchmarking framework aiming to support a wide range of **atom**ic _language units_, from compiled to semi-structured markups.
