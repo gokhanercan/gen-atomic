@@ -3,15 +3,28 @@
 [![Build and Tests](https://github.com/gokhanercan/gen-atomic/actions/workflows/python-app.yml/badge.svg?branch=master)](https://github.com/gokhanercan/gen-atomic/actions/workflows/python-app.yml)
 ![GitHub last commit (branch)](https://img.shields.io/github/last-commit/gokhanercan/gen-atomic/master?style=flat)
 
-[![Docs](https://img.shields.io/badge/Docs-Visit-orange.svg)](https://github.com/gokhanercan/gen-atomic/blob/master/DOC.md)
 [![Demo](https://img.shields.io/badge/Streamlit_Demo-Visit-blue.svg)](https://gen-atomic.streamlit.app/)
+[![Docs](https://img.shields.io/badge/Docs-Visit-orange.svg)](https://github.com/gokhanercan/gen-atomic/blob/master/DOC.md)
+[![Version](https://img.shields.io/badge/Version-early_alpha-yellow.svg)](https://github.com/gokhanercan/gen-atomic/blob/master/DOC.md)
 
-An LLM code **gen**eration and benchmarking framework aiming to support a wide range of **atom**ic _language units_, from compiled to semi-structured markups.
-Please refer to the [Project Glossary on the Documentation page](DOC.md) for clarification.
+## What is gen-atomic?
+Gen-atomic is an LLM-based code generation framework aims to support a wide range of atomic language units, from compiled code to semi-structured markups.
 
-Here is the initial sketch. We will share more about the theoretical foundation and goals of the project. Some hints: Atomic Design, Flow Engineering, Specification-by-example.
-![image](https://github.com/gokhanercan/gen-atomic/assets/1479777/912bada9-f907-4a4a-9ea7-341d3da60403)
-https://pitch.com/v/gen-atomic-tyqhkw
+It is also a runtime library that enables developers generate language code blocks without needing to know how LLMs are trained, fine-tuned, evaluated, benchmarked, prompted, parsed, and integrated. It collects data from offline experiments to maximize runtime performance by deciding which models to use and how to ensemble them for a particular task, based on defined cost, time, and performance goals.
+
+The ultimate client usage will be as follows:
+```
+   code:str = AtomicRuntime("RegexVal-Stats.json","LocalModelsOnly","MaximizeAccuracy","MajorityVoting")
+                 .Gen("RegexVal", "Full internet website address supporting SSL protocol",
+                       correct_cases :  ["https://www.gokhanercan.com","https://gokhanercan.com/"],
+                       incorrect_cases: ["http://www.gokhanercan.com" ,"ftps://www.gokhanercan.com"]
+                 )
+```
+It supports various types of plugins, such as LangUnits, Models, Prompts, Parsers, and Flows, to extend and customize its functionality.
+
+Currently in its early alpha stage, the project is still undergoing significant changes and improvements.
+We will share more about the theoretical foundation and goals of the project. Some hints include Atomic Design, Flow Engineering, N-version Programming, Specification-by-example.
+Please refer to the [Project Glossary on the Documentation page](DOC.md) for clarification of the terms we use. 
 
 # Getting Started
 
