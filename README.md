@@ -12,13 +12,16 @@ Gen-atomic is an LLM-based code generation framework aims to support a wide rang
 
 It is also a runtime library that enables developers generate language code blocks without needing to know how LLMs are trained, fine-tuned, evaluated, benchmarked, prompted, parsed, and integrated. It collects data from offline experiments to maximize runtime performance by deciding which models to use and how to ensemble them for a particular task, based on defined cost, time, and performance goals.
 
-The ultimate client usage will be as follows:
+The ultimate client usage will be as follows: 
 ```
    code:str = AtomicRuntime("RegexVal-Stats.json","LocalModelsOnly","MaximizeAccuracy","MajorityVoting")
-                 .Gen("RegexVal", "Full internet website address supporting SSL protocol",
-                       correct_cases :  ["https://www.gokhanercan.com","https://gokhanercan.com/"],
-                       incorrect_cases: ["http://www.gokhanercan.com" ,"ftps://www.gokhanercan.com"]
+                 .Gen("RegexVal", "Generic IP address in IPv4 format, 4 blocks of numbers",
+                       correct_cases :  ["127.0.0.1", "192.1.1.12", "255.255.255.255"],
+                       incorrect_cases: ["127:0:0:1" ,"1.0.0.0.0.0","256.1.1.999"]
                  )
+   print(code)
+   #prints: ^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$               
+   
 ```
 It supports various types of plugins, such as LangUnits, Models, Prompts, Parsers, and Flows, to extend and customize its functionality.
 

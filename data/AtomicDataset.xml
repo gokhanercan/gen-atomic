@@ -40,6 +40,7 @@
       <CCases>
          <CCase val="127.0.0.1"/>
          <CCase val="192.1.1.12"/>
+         <CCase val="255.255.255.255"/>
       </CCases>
       <ICCases>
          <CCase val="127,0,0,1"/>
@@ -49,6 +50,7 @@
          <ICCase val="12.11,23"/>
          <ICCase val="gokhan"/>
          <ICCase val="2001:db8:1234::1"/>
+         <CCase val="256.256.256.256"/>
       </ICCases>
    </Unit>
    <Unit name="IPAddressV6" desc="Generic IP address in IPv6 format" type="RegexVal">
@@ -217,7 +219,7 @@
          <ICCase val="#FF5733"/>
       </ICCases>
    </Unit>
-   <Unit name="Username" desc="Lowercased username without special characters but underscore char and numbers, between 3 and 20 characters lenght" type="RegexVal">
+   <Unit name="Username" desc="Lowercased username without special characters but underscore char and numbers, between 3 and 20 characters length" type="RegexVal">
       <CCases>
          <CCase val="gokhanercan"/>
          <CCase val="gokhan123"/>
