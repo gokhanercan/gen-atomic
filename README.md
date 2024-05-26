@@ -20,7 +20,7 @@ The ultimate client usage will be as follows:
                        incorrect_cases: ["127:0:0:1" ,"1.0.0.0.0.0","256.1.1.999"]
                  )
    print(code)
-   #prints: ^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$               
+   #prints: ^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$               
    
 ```
 It supports various types of plugins, such as LangUnits, Models, Prompts, Parsers, and Flows, to extend and customize its functionality.

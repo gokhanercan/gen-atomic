@@ -160,6 +160,26 @@
          <ICCase val=".ini"/>
       </ICCases>
    </Unit>
+   <Unit name="TransparentImageFileExtensions" desc="Common internet image file extensions that support transparency with dot" type="RegexVal">
+      <CCases>
+         <CCase val=".png"/>
+         <CCase val=".gif"/>
+      </CCases>
+      <ICCases>
+         <ICCase val=".jpg"/>
+         <ICCase val=".jpeg"/>
+      </ICCases>
+   </Unit>
+   <Unit name="AnimatedImageFileExtensions" desc="The most widely available internet image extension that support animations with dot" type="RegexVal">
+      <CCases>
+         <CCase val=".gif"/>
+      </CCases>
+      <ICCases>
+         <ICCase val=".jpg"/>
+         <ICCase val=".jpeg"/>
+         <ICCase val=".png"/>
+      </ICCases>
+   </Unit>
    <Unit name="VisaMasterCreditCard" desc="Visa or Master credit card number with dash/hypens separators adhering Luhn algorithm" type="RegexVal">
       <!--TODO: Luhn alg. cannot be implemented via regex. https://www.oreilly.com/library/view/regular-expressions-cookbook/9781449327453/ch04s20.html-->
       <CCases>
