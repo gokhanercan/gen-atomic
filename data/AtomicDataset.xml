@@ -160,7 +160,7 @@
          <ICCase val=".ini"/>
       </ICCases>
    </Unit>
-   <Unit name="TransparentImageFileExtensions" desc="Common internet image file extensions that support transparency with dot" type="RegexVal">
+   <Unit name="TransparentImageFileExtensions" desc="Common internet image file extensions that supports transparency with dot" type="RegexVal">
       <CCases>
          <CCase val=".png"/>
          <CCase val=".gif"/>
@@ -170,7 +170,7 @@
          <ICCase val=".jpeg"/>
       </ICCases>
    </Unit>
-   <Unit name="AnimatedImageFileExtensions" desc="The most widely available internet image extension that support animations with dot" type="RegexVal">
+   <Unit name="AnimatedImageFileExtensions" desc="The most widely available internet image extension that supports animations with dot" type="RegexVal">
       <CCases>
          <CCase val=".gif"/>
       </CCases>
