@@ -1,0 +1,11 @@
+<?xml version="1.0" ?>
+<Units>
+   <!--<input type="password" id="password" name="password" required>-->
+   <Unit name="PasswordInput" desc="Textbox for password" type="HtmlVal">
+      <MandatoryUnits>
+         <MUnit tag="input" />
+         <MUnit attr="type:password"  />
+         <MUnit attr="required" negate="1" />
+      </MandatoryUnits>
+   </Unit>
+</Units>
