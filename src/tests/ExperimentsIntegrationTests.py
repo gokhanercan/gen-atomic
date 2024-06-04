@@ -14,7 +14,7 @@ class ExperimentsIntegrationTest(TestCase):
 
         path:str = Paths().GetDataset("AtomicDataset")
         ds: Dataset = DatasetXmlRepository.Load(path)
-        exp:Experiment = ExperimentFactory().CreateExperimentWithFakeModels(UnitType.RegexVal)
+        exp:Experiment = ExperimentFactory().CreateExperimentWithFakeModels(UnitType.SQL)
 
         # customize stub
         stubModel = [item for item in exp.Models if item.ModelName().__contains__("Stub")][0]

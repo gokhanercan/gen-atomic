@@ -31,6 +31,7 @@ class Dataset(object):
 class UnitType(Enum):
     RegexVal = 0  # RegexValidators
     HTML = 1
+    SQL = 2
 
 class Unit(object):     #TODO: Find a better name for this. Field,Column,Case etc.
 
