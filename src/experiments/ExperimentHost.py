@@ -147,10 +147,10 @@ class ExperimentHost(object):
         return "{:02}:{:02}:{:02}".format(int(hours), int(minutes), int(seconds))
 
 if __name__ == '__main__':
-    path = Paths().GetDataset("AtomicDataset-1")
+    path = Paths().GetDataset("AtomicDataset")
     ds: Dataset = DatasetXmlRepository.Load(path)
     #exp: Experiment = ExperimentFactory.CreateSingleModelExperiment (UnitType.RegexVal,"ollama","codellama:7b")
-    exp = ExperimentFactory().CreateProviderExperiment(UnitType.RegexVal,"ollama")
+    exp = ExperimentFactory().CreateProviderExperiment(UnitType.SQL,"ollama")
     fakeModels = ModelFactory().CreateFakeModels()
     exp.Models = exp.Models + fakeModels
     #exp: Experiment = ExperimentFactory.CreateExperimentWithAllModels(UnitType.RegexVal)
