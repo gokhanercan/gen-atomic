@@ -1,6 +1,6 @@
 from data.Dataset import UnitType
 from units.RegexVal.RegexVal import RegexVal
-from units.SqlVal.SqlVal import SqlVal
+from units.Sql.SqlVal import SqlVal
 from units.UnitBase import UnitBase
 
 

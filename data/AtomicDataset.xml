@@ -256,7 +256,7 @@
       </ICCases>
    </Unit>
 
-   <Unit name="SecureWebsite" desc="SQL TEST" type="SQL">
+   <Unit name="SQL1" desc="SQL TEST" type="SQL">
       <CCases>
          <CCase val="select * from Foo"/>
          <CCase val="select * from Foo where name='devops'"/>

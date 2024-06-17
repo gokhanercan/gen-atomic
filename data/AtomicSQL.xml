@@ -1,13 +1,23 @@
 <?xml version="1.0" ?>
 <Units>
-   <Unit name="Email" desc="Generic email address" type="RegexVal">
-      <CCases>
-         <CCase val="mail@gokhanercan.com"/>
-         <CCase val="amojtehed@gmail.com"/>
-      </CCases>
-      <ICCases>
-         <ICCase val="dsadsadasda"/>
-         <ICCase val="http://invalidaemail"/>
-      </ICCases>
-   </Unit>
+    <Unit name="SelectQuery" desc="Select all fields from products" type="SQL">
+        <SQLContext schema="Product(ID,Name,Price)" data="{[{ID:1,Name:'p1'},{ID:2,Name:'p2'}]}" />
+        <Expecteds>
+            <E data-count="2" />
+            <E must-include="ID" />
+            <E must-include="Name" />
+        </Expecteds>
+    </Unit>
+
+    <Unit name="SelectQuery" desc="Select only primary keys from products name is starting with A" type="SQL">
+        <SQLContext schema="Product(ID,Name,Price)" data="{[{ID:1,Name:'Article'},{ID:2,Name:'Apron'},{ID:3,Name:'Coconut'}]}" />
+        <Expecteds>
+            <Condition criteria="count:2" />
+        </Expecteds>
+        <!--
+        <NotExpecteds>
+            <E must-not-include="Name" />
+        </NotExpecteds>
+        -->
+    </Unit>
 </Units>
