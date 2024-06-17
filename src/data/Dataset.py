@@ -1,3 +1,4 @@
+from dataclasses import dataclass
 from enum import unique, Enum
 from typing import List
 
@@ -14,11 +15,13 @@ class Dataset(object):
     def Print(self):
         ccCount:int = 0
         icCount:int = 0
+        conditionsCount:int = 0
         print(f"-- {self.Name.upper()} DATASET --")
         for u in self.Units:
             ccCount = ccCount + len(u.CorrectCases)
             icCount = icCount + len(u.IncorrectCases)
-        overall:int = ccCount + icCount
+            conditionsCount = conditionsCount + len(u.Conditions)
+        overall:int = ccCount + icCount + conditionsCount
         df: DataFrame = DataFrame()
         df.at["Count",    "CorrectCase"] = str(ccCount)
         df.at["Count",    "IncorrectCase"] = str(icCount)
@@ -31,7 +34,16 @@ class Dataset(object):
 class UnitType(Enum):
     RegexVal = 0  # RegexValidators
     HTML = 1
-    SQL = 2
+    SQLSelect = 2
+
+@dataclass
+class Criteria:
+    name: str
+    value: str
+
+class Condition(object):
+    def __init__(self,criteria:Criteria):
+        self.Criteria:Criteria = criteria
 
 class Unit(object):     #TODO: Find a better name for this. Field,Column,Case etc.
 
@@ -44,6 +56,9 @@ class Unit(object):     #TODO: Find a better name for this. Field,Column,Case et
         if(self.CorrectCases is None): self.CorrectCases = []
         self.IncorrectCases:List[str] = incorrectCases
         if (self.IncorrectCases is None): self.IncorrectCases = []
+
+        #HACK
+        self.Conditions:List[Condition]
 
     @property
     def TotalCases(self):

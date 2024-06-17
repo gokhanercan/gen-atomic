@@ -90,7 +90,7 @@ class OllamaModelProvider(ModelProviderBase, ModelBase):
 
         #ollama_server_process.terminate()       #TODO: Manage the connecion. Do not terminate on every call.
 
-        gencode:str = str(answer).strip().replace("Regex: ","").replace("```","").replace("`","")      #TODO: Output parsers here please!
+        gencode:str = str(answer).strip().replace("Regex: ","").replace("```","").replace("`","").replace("SQL: ","")      #TODO: Output parsers here please!
         print(f"A: {Fore.CYAN}{gencode}{Fore.RESET}")
         return gencode
 
