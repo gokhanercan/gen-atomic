@@ -10,13 +10,7 @@ import sqlparse
 
 
 class Sql(UnitBase):
-    """
-    Eval Conditions:
-    A) ResultSet Eval
-        1- count:2
-        2- last-record-id:1
-        3- first-record-id:3
-    """
+
     def __init__(self, unitType) -> None:
         UnitBase.__init__(self,unitType)
 
@@ -29,6 +23,7 @@ class Sql(UnitBase):
 
     def RunTest(self, code:str, correctCase:str, conditions:List[Condition])->bool:
         import sqlite3
+        #TODO: Pass schema and data context here.
 
         # Define the database schema
         schema = """
@@ -38,21 +33,26 @@ class Sql(UnitBase):
         );
         """
 
-        connection = sqlite3.connect(':memory:')
-        cursor = connection.cursor()
-        cursor.executescript(schema)
-        connection.commit()
+        try:
+            with sqlite3.connect(':memory:') as connection:
+                #Schema
+                cursor = connection.cursor()
+                cursor.executescript(schema)
+                connection.commit()
 
-        #Data
-        cursor.execute("INSERT INTO products (ID, Name) VALUES (?, ?)", (1,"Product1"))
-        cursor.execute("INSERT INTO products (ID, Name) VALUES (?, ?)", (2,"A101"))
-        connection.commit()
+                #Data
+                cursor.execute("INSERT INTO products (ID, Name) VALUES (?, ?)", (1,"Product1"))
+                cursor.execute("INSERT INTO products (ID, Name) VALUES (?, ?)", (2,"A101"))
+                connection.commit()
 
-        #QUERY
-        cursor.execute(code)
-        resultset = cursor.fetchall()
-        for row in resultset:
-            print(row)
+                #Query
+                cursor.execute(code)
+                resultset = cursor.fetchall()
+                for row in resultset:
+                    print(row)
+
+        except sqlite3.Error as e:
+            print(f"An error occurred: {e}")
 
         #EVAL
         passCount:int = 0
@@ -62,18 +62,9 @@ class Sql(UnitBase):
                 passed:bool = datacount == int(c.Criteria.value)
                 if(passed): passCount = passCount+1
 
-        connection.close()      #TODO: Handle grafeull errors
-
         return passCount == len(conditions)
 
-        #resultset = new SQlLite("db schema TODO:").Init().Run(code)
-        # cond1="data-count=2"
-        # data = new SQlLite("db schema").Init().Run("lln gen query")
-        # if("data-count"):   #
-        #     cond1.val("data-count") == len(data)
-        #return self.validate_sql(code, correctCase)
 
-    # region Regex Implementation
     @staticmethod
     def validate_sql(sql_pattern, test_string) -> bool:
         try:
@@ -82,7 +73,7 @@ class Sql(UnitBase):
         except:
             print(f"{Fore.RED}Invalid SQL expression pattern.{Fore.RESET}")  # TODO: Handle that error well. Reflection.
             return False
-    # endregion
+
 class SqlTest(TestCase):
    def test_sql_parser(self):
         #sql:UnitBase = Sql(UnitType.SQL)

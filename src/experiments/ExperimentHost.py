@@ -75,7 +75,7 @@ class ExperimentHost(object):
             icPassed: int = 0
 
             for f in ds.Units:
-                #Conditions
+                #region Conditions
                 generated: str = model.Generate(f.Description)
                 passed: bool = exp.Unit.RunTest(generated, None, f.Conditions)
 
@@ -91,6 +91,7 @@ class ExperimentHost(object):
                 totalCaseCount = totalCaseCount + 1
                 ccCount = ccCount + 1
                 caseIndex += 1
+                #endregion
 
                 #region Cases
                 for cc in f.CorrectCases:
@@ -179,22 +180,19 @@ if __name__ == '__main__':
     selectUnit:Unit = Unit("SelectQuery","Select all fields from products",UnitType.SQLSelect,None,None)
     selectUnit.Conditions = [
         Condition(Criteria("data-count", "2")),
+        # unit.Conditions.append(Criteria("has-column", "ID"))
+        # unit.Conditions.append(Criteria("has-column", "Name"))
+        # unit.Conditions.append(Criteria("first-record-id", "1"))     #id == unique_key
+        # unit.Conditions.append(Criteria("has-record-with-id", "1"))  # id == unique_key
     ]
     ds.Units.append(selectUnit)
 
     #Sample2
-    selectUnit2: Unit = Unit("SelectQuery2", "Select all products those names are beginning with A letter", UnitType.SQLSelect, None, None)
+    selectUnit2: Unit = Unit("SelectQuery2", "Select all products whose names are beginning with the letter 'A'", UnitType.SQLSelect, None, None)
     selectUnit2.Conditions = [
         Condition(Criteria("data-count", "1")),
     ]
     ds.Units.append(selectUnit2)
-
-    # unit.Conditions.append()
-    # unit.Conditions.append()
-    # unit.Conditions.append(Criteria("has-column", "ID"))
-    # unit.Conditions.append(Criteria("has-column", "Name"))
-    # unit.Conditions.append(Criteria("first-record-id", "1"))     #id == unique_key
-    # unit.Conditions.append(Criteria("has-record-with-id", "1"))  # id == unique_key
 
     #exp: Experiment = ExperimentFactory.CreateSingleModelExperiment (UnitType.RegexVal,"ollama","codellama:7b")
     exp = ExperimentFactory().CreateProviderExperiment(UnitType.SQLSelect,"ollama")
