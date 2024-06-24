@@ -22,7 +22,7 @@ class Sql(UnitBase):
         #ANTLR
         pass
 
-    def createSchema(self, schema_str) -> str:
+    def createSchema(self, schema_str):
         table_name, columns = schema_str.split('(')
         table_name = table_name.strip()
 
