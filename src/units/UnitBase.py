@@ -17,6 +17,12 @@ class UnitBase(ABC):
     # def Execute(self, code: str):
     #     pass
 
+    def getPrompt(self, description) -> str:
+        pass
+
+    def parseOutput(self, answer) -> str:
+        pass
+
     # @abstractmethod
     def RunTest(self, code:str, correctCase:str)->bool:       #TODO: add more test oracle types here. Currently bool for RegexVal
         """Run the unit with test data"""

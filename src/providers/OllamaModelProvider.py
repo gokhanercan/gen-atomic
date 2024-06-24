@@ -7,6 +7,7 @@ import ollama
 from colorama import init, Fore, Back, Style
 
 from providers.ModelProviderBase import ModelProviderBase
+from units import UnitBase
 
 
 class OllamaModelProvider(ModelProviderBase, ModelBase):
@@ -74,19 +75,16 @@ class OllamaModelProvider(ModelProviderBase, ModelBase):
     #     print(f"A: {Fore.CYAN}{gencode}{Fore.RESET}")
     #     return gencode
 
-    def Generate(self, description: str) -> str:
+    def Generate(self, description: str, unitBase:UnitBase) -> str:
 
         modelName = self.ModelConfiguration
         #ollama_server_process = self.start_ollama_server()
 
         client = ollama.Client('http://localhost:11434')  # Specify full URL with port
-        instruction:str = "Consider yourself a function that takes the input of asked sql generation, and your output is '''SQL: {created sql}''' Do not give me an explanation, only give me a sql expression. Do not add any additional characters."
-        prompt:str = f"{instruction}\nAsked sql statement: {description}."
-        promptColored: str = f"{instruction}\nAsked sql statement: {Fore.BLUE}{description}{Fore.RESET}."
-        print(f"\nP:{promptColored}")
-        print(Fore.RESET)
+        prompt = unitBase.getPrompt(description)
         response = client.generate(model=modelName, prompt=prompt)        #phi3,llama2,llama3,deepseek-coder,codegemma,starcoder2  ref:https://ollama.com/library?sort=popular
         answer = response['response']
+        answer = unitBase.parseOutput(answer)
 
         #ollama_server_process.terminate()       #TODO: Manage the connecion. Do not terminate on every call.
 

@@ -3,6 +3,7 @@ from typing import Optional
 
 from deprecated import deprecated
 
+from units.UnitBase import UnitBase
 from utility import StringHelper
 
 
@@ -50,5 +51,5 @@ class ModelBase(ABC):
         return ModelConf(self.ModelName(),self.ProviderName(),self.ProviderAbbreviation())
 
     @abstractmethod
-    def Generate(self, description: str) -> str:
+    def Generate(self, description: str, unit: UnitBase) -> str:
         pass

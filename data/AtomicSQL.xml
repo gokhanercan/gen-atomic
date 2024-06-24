@@ -1,7 +1,7 @@
 <?xml version="1.0" ?>
 <Units>
     <Unit name="SelectQuery" desc="Select all fields from products" type="SQL">
-<!--        <SQLContext schema="Product(ID*,Name,Price)" data="{[{ID:1,Name:'p1'},{ID:2,Name:'p2'}]}" />-->
+<!--        <SQLContext schema="Products(ID*,Name,Price)" data="{[{ID:1,Name:'p1'},{ID:2,Name:'p2'}]}" />-->
 
 <!--        list[(-->
 <!--            (1,"Gokhan","Ercan"),-->

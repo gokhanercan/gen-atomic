@@ -76,8 +76,12 @@ class ExperimentHost(object):
 
             for f in ds.Units:
                 #region Conditions
-                generated: str = model.Generate(f.Description)
-                passed: bool = exp.Unit.RunTest(generated, None, f.Conditions)
+                generated: str = model.Generate(f.Description, exp.Unit)
+
+                if f.UnitType is UnitType.SQLSelect:
+                    passed: bool = exp.Unit.RunTest(generated, None, f.Conditions)
+                else:
+                    passed: bool = exp.Unit.RunTest(generated, None)
 
                 dfCases.at[caseIndex, "Type"] = f.UnitType.name
                 dfCases.at[caseIndex, "Name"] = f.Name
@@ -132,7 +136,7 @@ class ExperimentHost(object):
 
             modelConf:str = model.ConfigKey()
             accuracyColName = f"{modelConf} (%)"
-            if(ccCount + icCount + len(f.Conditions) == 0): raise Exception("No cases defined in the dataset!")
+            #if(ccCount + icCount + len(f.Conditions) == 0): raise Exception("No cases defined in the dataset!") TODO: commented because of a lack of Conditions implementation
             ccAccuracy: float = (float(ccPassed) / float(ccCount)) * 100
             dfAggr.at["CorrectCase", accuracyColName] = ccAccuracy
 
@@ -219,5 +223,13 @@ if __name__ == '__main__':
     #endregion
 
     r:ExperimentResults = ExperimentHost().Run(exp, ds, formatCode=False)
+    r.Print()
+    ds.Print()
+
+    path = Paths().GetDataset("AtomicDataset-1")
+    ds: Dataset = DatasetXmlRepository.Load(path)
+    exp = ExperimentFactory().CreateProviderExperiment(UnitType.RegexVal, "ollama")
+
+    r: ExperimentResults = ExperimentHost().Run(exp, ds, formatCode=False)
     r.Print()
     ds.Print()
