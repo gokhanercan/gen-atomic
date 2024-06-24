@@ -91,7 +91,7 @@ class Sql(UnitBase):
             # Convert the list of values to a tuple
             result.append(tuple(values))
 
-            return result
+        return result
 
     def RunTest(self, code:str, correctCase:str, conditions:List[Condition])->bool:
         import sqlite3
