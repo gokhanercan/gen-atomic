@@ -9,8 +9,8 @@ class RegexVal(UnitBase):
     def __init__(self, unitType) -> None:
         UnitBase.__init__(self,unitType)
 
-    def GetUnitType(self):
-        return "Expression"     #Function|Class|Module....
+    # def GetUnitType(self):
+    #     return "Expression"     #Function|Class|Module....
 
     def CheckSyntax(self, code: str):
         pass

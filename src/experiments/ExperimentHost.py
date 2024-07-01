@@ -1,14 +1,16 @@
 import time
 from typing import Optional, List, Dict
 
-from data.Dataset import Dataset, UnitType
+from data.Dataset import Dataset, UnitType, Unit, Criteria, Condition
 from data.DatasetXmlRepository import DatasetXmlRepository
 from experiments.Experiment import Experiment, ExperimentFactory
 from pandas import DataFrame  # type: ignore
 from tabulate import tabulate  # type: ignore
 from colorama import Fore
 
+from models.ModelBase import ModelConf
 from models.ModelFactory import ModelFactory
+from providers.OllamaModelProvider import OllamaModelProvider
 from utility.FormatHelper import FormatHelper
 from utility.Paths import Paths
 
@@ -34,13 +36,13 @@ class ExperimentResults(object):
                     if(modelConf.__contains__("Random")): continue
                 print(f"\n-- {modelConf.upper()} MODEL RESULTS --")
                 #region styling
-                for index, row in df.iterrows():
-                    if row['Passed'] == "OK":
-                        df.at[index, 'Passed'] = f"{Fore.GREEN}OK{Fore.RESET}"
-                        df.at[index, 'Case'] = f"{Fore.GREEN}{row['Case']}{Fore.RESET}"
-                    if row['Passed'] == "X":
-                        df.at[index, 'Passed'] = f"{Fore.RED}X{Fore.RESET}"
-                        df.at[index, 'Case'] = f"{Fore.RED}{row['Case']}{Fore.RESET}"
+                # for index, row in df.iterrows():
+                #     if row['Passed'] == "OK":
+                #         df.at[index, 'Passed'] = f"{Fore.GREEN}OK{Fore.RESET}"
+                #         df.at[index, 'Case'] = f"{Fore.GREEN}{row['Case']}{Fore.RESET}"
+                #     if row['Passed'] == "X":
+                #         df.at[index, 'Passed'] = f"{Fore.RED}X{Fore.RESET}"
+                #         df.at[index, 'Case'] = f"{Fore.RED}{row['Case']}{Fore.RESET}"
                 #endregion
                 print(tabulate(df, headers="keys", tablefmt='grid', floatfmt=".2f"))
         if(self.Results is not None):
@@ -73,7 +75,25 @@ class ExperimentHost(object):
             icPassed: int = 0
 
             for f in ds.Units:
+                #region Conditions
                 generated: str = model.Generate(f.Description)
+                passed: bool = exp.Unit.RunTest(generated, None, f.Conditions)
+
+                dfCases.at[caseIndex, "Type"] = f.UnitType.name
+                dfCases.at[caseIndex, "Name"] = f.Name
+                #dfCases.at[caseIndex, "Cond"] = "CC-> " + cc
+                dfCases.at[caseIndex, "Passed"] = "OK" if passed else "X"
+                dfCases.at[caseIndex, "Generated Code"] = FormatHelper.ShortenCode(generated,20) if formatCode else generated
+                if (passed):
+                    passedCaseCount = passedCaseCount + 1
+                    ccPassed = ccPassed + 1
+                dfCases.at[caseIndex, "Desc"] = f.Description
+                totalCaseCount = totalCaseCount + 1
+                ccCount = ccCount + 1
+                caseIndex += 1
+                #endregion
+
+                #region Cases
                 for cc in f.CorrectCases:
                     dfCases.at[caseIndex, "Type"] = f.UnitType.name
                     dfCases.at[caseIndex, "Name"] = f.Name
@@ -103,6 +123,7 @@ class ExperimentHost(object):
                     icCount = icCount + 1
                     caseIndex += 1
                 fieldIndex += 1
+                #endregion
 
             model_end_time = time.time()
             model_elapsed_time = model_end_time - model_start_time
@@ -111,11 +132,12 @@ class ExperimentHost(object):
 
             modelConf:str = model.ConfigKey()
             accuracyColName = f"{modelConf} (%)"
+            if(ccCount + icCount + len(f.Conditions) == 0): raise Exception("No cases defined in the dataset!")
             ccAccuracy: float = (float(ccPassed) / float(ccCount)) * 100
             dfAggr.at["CorrectCase", accuracyColName] = ccAccuracy
 
-            icAccuracy: float = (float(icPassed) / float(icCount)) * 100
-            dfAggr.at["IncorrectCase", accuracyColName] = icAccuracy
+            #icAccuracy: float = (float(icPassed) / float(icCount)) * 100
+            #dfAggr.at["IncorrectCase", accuracyColName] = icAccuracy
 
             overallAccuracy: float = (float(passedCaseCount) / float(totalCaseCount)) * 100
             dfAggr.at["Overall", accuracyColName] = overallAccuracy
@@ -147,12 +169,41 @@ class ExperimentHost(object):
         return "{:02}:{:02}:{:02}".format(int(hours), int(minutes), int(seconds))
 
 if __name__ == '__main__':
-    path = Paths().GetDataset("AtomicDataset-1")
-    ds: Dataset = DatasetXmlRepository.Load(path)
+    #path = Paths().GetDataset("AtomicDataset-1")
+    #ds: Dataset = DatasetXmlRepository.Load(path)
+
+    #HACK (TODO:)
+    ds:Dataset = Dataset("SQL")
+    ds.Units = []
+
+    #Sample1
+    selectUnit:Unit = Unit("SelectQuery","Select all fields from products",UnitType.SQLSelect,None,None)
+    selectUnit.Conditions = [
+        Condition(Criteria("data-count", "2")),
+        # unit.Conditions.append(Criteria("has-column", "ID"))
+        # unit.Conditions.append(Criteria("has-column", "Name"))
+        # unit.Conditions.append(Criteria("first-record-id", "1"))     #id == unique_key
+        # unit.Conditions.append(Criteria("has-record-with-id", "1"))  # id == unique_key
+    ]
+    ds.Units.append(selectUnit)
+
+    #Sample2
+    selectUnit2: Unit = Unit("SelectQuery2", "Select all products whose names are beginning with the letter 'A'", UnitType.SQLSelect, None, None)
+    selectUnit2.Conditions = [
+        Condition(Criteria("data-count", "1")),
+    ]
+    ds.Units.append(selectUnit2)
+
     #exp: Experiment = ExperimentFactory.CreateSingleModelExperiment (UnitType.RegexVal,"ollama","codellama:7b")
-    exp = ExperimentFactory().CreateProviderExperiment(UnitType.RegexVal,"ollama")
-    fakeModels = ModelFactory().CreateFakeModels()
-    exp.Models = exp.Models + fakeModels
+    exp = ExperimentFactory().CreateProviderExperiment(UnitType.SQLSelect,"ollama")
+    modelFactory = ModelFactory()
+    fakeModels = [
+        modelFactory.CreateByCfg(ModelConf("Stub")),
+    ]
+    exp.Models = fakeModels # exp.Models + fakeModels
+
+    exp.Models.append(OllamaModelProvider('codellama'))
+
     #exp: Experiment = ExperimentFactory.CreateExperimentWithAllModels(UnitType.RegexVal)
 
     #region Stub Model
@@ -161,6 +212,10 @@ if __name__ == '__main__':
     fixedRegex: str = r"""^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$"""
     stubModel.StubUnit = fixedRegex  # type: ignore
     stubModel.StubName = "EmailStub"
+
+    #HACK
+    stubModel.StubUnit = "select * from Products"
+    stubModel.StubName = "SQLStub"
     #endregion
 
     r:ExperimentResults = ExperimentHost().Run(exp, ds, formatCode=False)

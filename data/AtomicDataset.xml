@@ -255,4 +255,15 @@
          <ICCase val="gokhan ercan"/>
       </ICCases>
    </Unit>
+
+<!--   <Unit name="SQL1" desc="SQL TEST" type="SQLSelect">-->
+<!--      <CCases>-->
+<!--         <CCase val="select * from Foo"/>-->
+<!--         <CCase val="select * from Foo where name='devops'"/>-->
+<!--      </CCases>-->
+<!--      <ICCases>-->
+<!--         <ICCase val="select * with Foo"/>-->
+<!--         <ICCase val="select * for Foo"/>-->
+<!--      </ICCases>-->
+<!--   </Unit>-->
 </Units>
