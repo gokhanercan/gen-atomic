@@ -12,7 +12,7 @@ class ParseResult(object):
 class AntlrWrapper(object):     #Base:Parsers/SyntaxCheckers.
 
     def Parse(self, grammarName:str, input:str)->ParseResult:      #TODO:Return Complex type
-        parserType = AntlrParserFactory.DiscoverParser(grammarName)
+        parserType = AntlrParserFactory().DiscoverParser(grammarName)
         #parser.parse       -> main.
         return ParseResult()
 
