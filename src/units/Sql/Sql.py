@@ -148,33 +148,6 @@ class Sql(UnitBase):
             print(f"{Fore.RED}Invalid SQL expression pattern.{Fore.RESET}")  # TODO: Handle that error well. Reflection.
             return False
 
-    def getPrompt(self, description) -> str:
-        instruction:str = ("Consider yourself a function that takes the input of asked validation sql statement, and "
-                           "your output should be a markdown code snippet formatted in the following schema, including "
-                           "the leading and trailing \"```sql\" and \"```\". Do not give me an explanation, only give "
-                           "me a sql expression. Do not add any additional characters.")
-        prompt:str = f"{instruction}\nAsked sql statement: {description}."
-        promptColored: str = f"{instruction}\nAsked sql statement: {Fore.BLUE}{description}{Fore.RESET}."
-        print(f"\nP:{promptColored}")
-        print(Fore.RESET)
-
-        return prompt
-
-    def parseOutput(self, answer) -> str:
-        sql_pattern = r"```sql(.*?)```"
-        match = re.search(sql_pattern, answer, re.DOTALL)  # re.DOTALL allows matching newlines
-
-        print(f"Full Output:\n{answer}\n")
-
-        if match:
-
-            extracted_sql = match.group(1)
-            print(f"Extracted sql pattern: {Fore.CYAN}{extracted_sql}{Fore.RESET}")
-            return extracted_sql.strip()
-        else:
-            print("Couldn't find sql pattern between ```")
-            return answer
-
 
 class SqlTest(TestCase):
 

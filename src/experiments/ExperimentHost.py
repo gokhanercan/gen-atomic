@@ -76,7 +76,7 @@ class ExperimentHost(object):
 
             for f in ds.Units:
                 #region Conditions
-                generated: str = model.Generate(f.Description, exp.Unit)
+                generated: str = model.Generate(f.Description)
 
                 if f.UnitType is UnitType.SQLSelect:
                     passed: bool = exp.Unit.RunTest(generated, None, f.Conditions)
@@ -223,13 +223,5 @@ if __name__ == '__main__':
     #endregion
 
     r:ExperimentResults = ExperimentHost().Run(exp, ds, formatCode=False)
-    r.Print()
-    ds.Print()
-
-    path = Paths().GetDataset("AtomicDataset-1")
-    ds: Dataset = DatasetXmlRepository.Load(path)
-    exp = ExperimentFactory().CreateProviderExperiment(UnitType.RegexVal, "ollama")
-
-    r: ExperimentResults = ExperimentHost().Run(exp, ds, formatCode=False)
     r.Print()
     ds.Print()

@@ -18,34 +18,7 @@ class RegexVal(UnitBase):
     def RunTest(self, code:str, correctCase:str)->bool:
         return self.validate_regex(code, correctCase)
 
-    def getPrompt(self, description) -> str:
-        instruction: str = (
-            "Consider yourself a function that takes the input of asked validation regex statement, and "
-            "your output should be a markdown code snippet formatted in the following schema, including "
-            "the leading and trailing \"```regex\" and \"```\". Do not give me an explanation, only give "
-            "me a regex expression. Do not add any additional characters.")
-        prompt: str = f"{instruction}\nAsked regex statement: {description}."
-        promptColored: str = f"{instruction}\nAsked regex statement: {Fore.BLUE}{description}{Fore.RESET}."
-        print(f"\nP:{promptColored}")
-        print(Fore.RESET)
-
-        return prompt
     # region Regex Implementation
-
-    def parseOutput(self, answer) -> str:
-        regex_pattern = r"```regex(.*?)```"
-        match = re.search(regex_pattern, answer, re.DOTALL)  # re.DOTALL allows matching newlines
-
-        print(f"Full Output:\n{answer}\n")
-
-        if match:
-
-            extracted_regex = match.group(1)
-            print(f"Extracted regex pattern: {Fore.CYAN}{extracted_regex}{Fore.RESET}")
-            return extracted_regex.strip()
-        else:
-            print("Couldn't find regex pattern between ```")
-            return answer
 
     @staticmethod
     def validate_regex(regex_pattern, test_string) -> bool:
