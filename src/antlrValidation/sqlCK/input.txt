@@ -2,7 +2,7 @@ SELECT * FROM foo where id IS NOT DISTINCT FROM 10;
 
 SELECT * FROM foo where id = 10 AND id != 25;
 
-SELECT * FROM msg WHERE data = 'o ne'
+SELECT * FROM msg WHERE data = 'o ne';
 
 CREATE TABLE "Person" (
 "PersonId"	    INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
@@ -11,7 +11,7 @@ CREATE TABLE "Person" (
 "Deleted"	    INTEGER DEFAULT NULL
 )
 
-Selects Name, printf('%,d',Bytes) Size,
+Select Name, printf('%,d',Bytes) Size,
     FIRST_VALUE(Name) OVER (
         ORDER BY Bytes
     ) AS SmallestTrack
