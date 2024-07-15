@@ -1,12 +1,13 @@
 import time
 from typing import List
-
+import re
 from models.ModelBase import ModelBase
 import subprocess
 import ollama
 from colorama import init, Fore, Back, Style
-import re
+
 from providers.ModelProviderBase import ModelProviderBase
+from units import UnitBase
 
 
 class OllamaModelProvider(ModelProviderBase, ModelBase):
@@ -54,26 +55,88 @@ class OllamaModelProvider(ModelProviderBase, ModelBase):
         process.communicate()
         return process
 
+    # def Generate(self, description: str) -> str:
+    #
+    #     modelName = self.ModelConfiguration
+    #     #ollama_server_process = self.start_ollama_server()
+    #
+    #     client = ollama.Client('http://localhost:11434')  # Specify full URL with port
+    #     instruction:str = "Consider yourself a function that takes the input of asked validation regex statement, and your output is '''Regex: {created regex}''' Do not give me an explanation, only give me a regex expression. Do not add any additional characters."
+    #     prompt:str = f"{instruction}\nAsked regex statement: {description}."
+    #     promptColored: str = f"{instruction}\nAsked regex statement: {Fore.BLUE}{description}{Fore.RESET}."
+    #     print(f"\nP:{promptColored}")
+    #     print(Fore.RESET)
+    #     response = client.generate(model=modelName, prompt=prompt)        #phi3,llama2,llama3,deepseek-coder,codegemma,starcoder2  ref:https://ollama.com/library?sort=popular
+    #     answer = response['response']
+    #
+    #     #ollama_server_process.terminate()       #TODO: Manage the connecion. Do not terminate on every call.
+    #
+    #     gencode:str = str(answer).strip().replace("Regex: ","").replace("```","").replace("`","")      #TODO: Output parsers here please!
+    #     print(f"A: {Fore.CYAN}{gencode}{Fore.RESET}")
+    #     return gencode
+
     def Generate(self, description: str) -> str:
 
         modelName = self.ModelConfiguration
         #ollama_server_process = self.start_ollama_server()
 
         client = ollama.Client('http://localhost:11434')  # Specify full URL with port
-        instruction:str = "Consider yourself a function that takes the input of asked validation regex statement, and your output is '''Regex: {created regex}''' Do not give me an explanation, only give me a regex expression. Do not add any additional characters."
-        prompt:str = f"{instruction}\nAsked regex statement: {description}."
-        promptColored: str = f"{instruction}\nAsked regex statement: {Fore.BLUE}{description}{Fore.RESET}."
+
+        #prompt
+        instruction: str = ("Consider yourself a function that takes the input of asked validation sql statement, and "
+                            "your output should be a markdown code snippet formatted in the following schema, including "
+                            "the leading and trailing \"```sql\" and \"```\". Do not give me an explanation, only give "
+                            "me a sql expression. Do not add any additional characters.")
+        prompt: str = f"{instruction}\nAsked sql statement: {description}."
+        promptColored: str = f"{instruction}\nAsked sql statement: {Fore.BLUE}{description}{Fore.RESET}."
         print(f"\nP:{promptColored}")
         print(Fore.RESET)
+
         response = client.generate(model=modelName, prompt=prompt)        #phi3,llama2,llama3,deepseek-coder,codegemma,starcoder2  ref:https://ollama.com/library?sort=popular
         answer = response['response']
 
+        sql_pattern = r"```sql(.*?)```"
+        match = re.search(sql_pattern, answer, re.DOTALL)  # re.DOTALL allows matching newlines
+
+        print(f"Full Output:\n{answer}\n")
+
+        if match:
+            extracted_sql = match.group(1)
+            print(f"Extracted sql pattern: {Fore.CYAN}{extracted_sql}{Fore.RESET}")
+            answer = extracted_sql.strip()
+        else:
+            print("Couldn't find sql pattern between ```")
+
         #ollama_server_process.terminate()       #TODO: Manage the connecion. Do not terminate on every call.
 
-        gencode:str = str(answer).strip().replace("Regex: ","").replace("```","").replace("`","")      #TODO: Output parsers here please!
+        gencode:str = str(answer).strip().replace("Regex: ","").replace("```","").replace("`","").replace("SQL: ","")      #TODO: Output parsers here please!
         print(f"A: {Fore.CYAN}{gencode}{Fore.RESET}")
         return gencode
 
 if __name__ == "__main__":
     answer = OllamaModelProvider('codellama:7b').Generate("generate me an email regex, do not give me an explanation")
     print(answer)
+
+
+   #############
+
+
+#
+# regex_pattern = r"```regex(.*?)```"
+# match = re.search(regex_pattern, answer, re.DOTALL)  # re.DOTALL allows matching newlines
+#
+# print(f"Full Output:\n{answer}\n")
+#
+# if match:
+#     #gencode: str = str(answer).strip().replace("Regex: ", "").replace("```", "").replace("`", "")  # TODO: Output parsers here please!
+#     #print(f"A: {Fore.CYAN}{gencode}{Fore.RESET}")
+#
+#     extracted_regex = match.group(1)
+#     print(f"Extracted regex pattern: {Fore.CYAN}{extracted_regex}{Fore.RESET}")
+#     return extracted_regex.strip()
+# else:
+#     print("Couldn't find regex pattern between ```")
+#     return answer
+#
+# #ollama_server_process.terminate()       #TODO: Manage the connecion. Do not terminate on every call.
+#

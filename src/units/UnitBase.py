@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from data.Dataset import UnitType
+from data.Dataset import UnitType, Unit
 
 
 class UnitBase(ABC):
@@ -9,15 +9,6 @@ class UnitBase(ABC):
         super().__init__()
         self.UnitType:UnitType = unitType
 
-    # def CheckSyntax(self, code: str):
-    #     """Implement any syntax checker if it has any"""
-    #     pass
-
-    #@abstractmethod
-    # def Execute(self, code: str):
-    #     pass
-
     # @abstractmethod
-    def RunTest(self, code:str, correctCase:str)->bool:       #TODO: add more test oracle types here. Currently bool for RegexVal
-        """Run the unit with test data"""
+    def RunTest(self, code:str, correctCase:str, unit:Unit)->bool:
         pass
