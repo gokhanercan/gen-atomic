@@ -6,5 +6,4 @@ ollama
 colorama
 openai
 Deprecated
-sqlparse
-antlr4-python3-runtime==4.13.0
+sqlite3
