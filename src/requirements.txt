@@ -6,4 +6,3 @@ ollama
 colorama
 openai
 Deprecated
-sqlparse

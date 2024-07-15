@@ -3,7 +3,7 @@ from pathlib import Path
 
 import xml.etree.ElementTree as et
 
-from data.Dataset import Dataset, Unit, UnitType
+from data.Dataset import Dataset, Unit, UnitType, Constraint, Criteria, Context
 from utility.Paths import Paths
 from utility.StringHelper import IsNullOrEmpty
 
@@ -27,20 +27,41 @@ class DatasetXmlRepository(object):
             type:UnitType = UnitType[eUnit.get("type")]
             u:Unit = Unit(name,desc,type,None,None)
             units.append(u)
+
             #CC
             eCCS = eUnit.find("CCases")
-            cCases:List[str] = []
-            for eCC in eCCS:
-                val:str = eCC.get("val")
-                cCases.append(val)
-            u.CorrectCases = cCases
+            if(eCCS):
+                cCases:List[str] = []
+                for eCC in eCCS:
+                    val:str = eCC.get("val")
+                    cCases.append(val)
+                u.CorrectCases = cCases
+
             #ICC
             eICCS = eUnit.find("ICCases")
-            icCases: List[str] = []
-            for eICC in eICCS:
-                val: str = eICC.get("val")
-                icCases.append(val)
-            u.IncorrectCases = icCases
+            if(eICCS):
+                icCases: List[str] = []
+                for eICC in eICCS:
+                    val: str = eICC.get("val")
+                    icCases.append(val)
+                u.IncorrectCases = icCases
+
+            #Constraints
+            eConstraints = eUnit.find("Constraints")
+            constraints:List[Constraint] = []
+            if(eConstraints):
+                for eCons in eConstraints:
+                    valuePair:str = eCons.get("criteria")
+                    name,value = valuePair.split(":")
+                    constraints.append(Constraint(Criteria(name,value)))
+                u.Constraints = constraints
+
+            #Context
+            eContext = eUnit.find("Context")
+            if(eContext):
+                data = eContext.find("Data").text.strip()
+                schema = eContext.find("Schema").text.strip()
+                u.Context = Context(data,schema)
         ds.Units = units
         return ds
 
@@ -75,7 +96,7 @@ class DatasetXmlRepository(object):
 
 
 if __name__ == '__main__':
-    path = Paths().GetDataset("AtomicDataset")
+    path = Paths().GetDataset("AtomicRegexValDataset")
 
     # Read DS
     ds:Dataset = DatasetXmlRepository.Load(path)

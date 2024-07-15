@@ -1,7 +1,7 @@
 import time
 from typing import Optional, List, Dict
 
-from data.Dataset import Dataset, UnitType, Unit, Criteria, Condition
+from data.Dataset import Dataset, UnitType, Unit, Criteria, Constraint
 from data.DatasetXmlRepository import DatasetXmlRepository
 from experiments.Experiment import Experiment, ExperimentFactory
 from pandas import DataFrame  # type: ignore
@@ -75,17 +75,12 @@ class ExperimentHost(object):
             icPassed: int = 0
 
             for f in ds.Units:
-                #region Conditions
+                #region Constraints
                 generated: str = model.Generate(f.Description)
-
-                if f.UnitType is UnitType.SQLSelect:
-                    passed: bool = exp.Unit.RunTest(generated, None, f.Conditions)
-                else:
-                    passed: bool = exp.Unit.RunTest(generated, None)
+                passed: bool = exp.Unit.RunTest(generated, "", f)
 
                 dfCases.at[caseIndex, "Type"] = f.UnitType.name
                 dfCases.at[caseIndex, "Name"] = f.Name
-                #dfCases.at[caseIndex, "Cond"] = "CC-> " + cc
                 dfCases.at[caseIndex, "Passed"] = "OK" if passed else "X"
                 dfCases.at[caseIndex, "Generated Code"] = FormatHelper.ShortenCode(generated,20) if formatCode else generated
                 if (passed):
@@ -102,7 +97,7 @@ class ExperimentHost(object):
                     dfCases.at[caseIndex, "Type"] = f.UnitType.name
                     dfCases.at[caseIndex, "Name"] = f.Name
                     dfCases.at[caseIndex, "Case"] = "CC-> " + cc
-                    passed:bool = exp.Unit.RunTest(generated, cc)
+                    passed:bool = exp.Unit.RunTest(generated, cc, f)
                     dfCases.at[caseIndex, "Passed"] = "OK" if passed else "X"
                     dfCases.at[caseIndex, "Generated Code"] = FormatHelper.ShortenCode(generated, 20) if formatCode else generated
                     if (passed):
@@ -116,7 +111,7 @@ class ExperimentHost(object):
                     dfCases.at[caseIndex, "Type"] = f.UnitType.name
                     dfCases.at[caseIndex, "Name"] = f.Name
                     dfCases.at[caseIndex, "Case"] = "IC-> " + icc
-                    passed:bool = not exp.Unit.RunTest(generated, icc)  # type: ignore
+                    passed:bool = not exp.Unit.RunTest(generated, icc, f)  # type: ignore
                     dfCases.at[caseIndex, "Passed"] = "OK" if passed else "X"
                     dfCases.at[caseIndex, "Generated Code"] = FormatHelper.ShortenCode(generated, 20) if formatCode else generated
                     if (passed):
@@ -172,56 +167,52 @@ class ExperimentHost(object):
         minutes, seconds = divmod(remainder, 60)
         return "{:02}:{:02}:{:02}".format(int(hours), int(minutes), int(seconds))
 
-if __name__ == '__main__':
-    #path = Paths().GetDataset("AtomicDataset-1")
-    #ds: Dataset = DatasetXmlRepository.Load(path)
+def RunSQLSelectExperiment():
+    #Dataset
+    path = Paths().GetDataset("AtomicSQLSelectDataset")
+    ds: Dataset = DatasetXmlRepository.Load(path)
 
-    #HACK (TODO:)
-    ds:Dataset = Dataset("SQL")
-    ds.Units = []
-
-    #Sample1
-    selectUnit:Unit = Unit("SelectQuery","Select all fields from products",UnitType.SQLSelect,None,None)
-    selectUnit.Conditions = [
-        Condition(Criteria("data-count", "2")),
-        # unit.Conditions.append(Criteria("has-column", "ID"))
-        # unit.Conditions.append(Criteria("has-column", "Name"))
-        # unit.Conditions.append(Criteria("first-record-id", "1"))     #id == unique_key
-        # unit.Conditions.append(Criteria("has-record-with-id", "1"))  # id == unique_key
-    ]
-    ds.Units.append(selectUnit)
-
-    #Sample2
-    selectUnit2: Unit = Unit("SelectQuery2", "Select all products whose names are beginning with the letter 'A'", UnitType.SQLSelect, None, None)
-    selectUnit2.Conditions = [
-        Condition(Criteria("data-count", "1")),
-    ]
-    ds.Units.append(selectUnit2)
-
-    #exp: Experiment = ExperimentFactory.CreateSingleModelExperiment (UnitType.RegexVal,"ollama","codellama:7b")
-    exp = ExperimentFactory().CreateProviderExperiment(UnitType.SQLSelect,"ollama")
+    #Exp. Context
+    exp = ExperimentFactory().CreateProviderExperiment(UnitType.SQLSelect, "ollama")
     modelFactory = ModelFactory()
+
+    #Fakes
     fakeModels = [
         modelFactory.CreateByCfg(ModelConf("Stub")),
     ]
-    exp.Models = fakeModels # exp.Models + fakeModels
+    exp.Models = fakeModels  # exp.Models + fakeModels
+    stubModel = [item for item in exp.Models if item.ModelName().__contains__("Stub")][0]
+    stubModel.StubUnit = "select * from Products"
+    stubModel.StubName = "SQLStub"
 
+    #Real Model
     exp.Models.append(OllamaModelProvider('codellama'))
 
-    #exp: Experiment = ExperimentFactory.CreateExperimentWithAllModels(UnitType.RegexVal)
+    r: ExperimentResults = ExperimentHost().Run(exp, ds, formatCode=False)
+    r.Print()
+    ds.Print()
 
-    #region Stub Model
-    # customize stub
+def RunRegexValExperiment():
+    #Dataset
+    path = Paths().GetDataset("AtomicRegexValDataset")
+    ds: Dataset = DatasetXmlRepository.Load(path)
+
+    #Exp. Context
+    exp = ExperimentFactory().CreateProviderExperiment(UnitType.RegexVal, "ollama")
+    modelFactory = ModelFactory()
+
+    #Stub
+    fakeModels = [modelFactory.CreateByCfg(ModelConf("Stub"))]
+    exp.Models = exp.Models + fakeModels
     stubModel = [item for item in exp.Models if item.ModelName().__contains__("Stub")][0]
     fixedRegex: str = r"""^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$"""
     stubModel.StubUnit = fixedRegex  # type: ignore
     stubModel.StubName = "EmailStub"
 
-    #HACK
-    stubModel.StubUnit = "select * from Products"
-    stubModel.StubName = "SQLStub"
-    #endregion
-
     r:ExperimentResults = ExperimentHost().Run(exp, ds, formatCode=False)
     r.Print()
     ds.Print()
+
+if __name__ == '__main__':
+    RunSQLSelectExperiment()
+    #RunRegexValExperiment()

@@ -1,0 +1,38 @@
+<?xml version="1.0" ?>
+<Units>
+   <Unit name="SelectQuery" desc="Select all fields from products" type="SQLSelect">
+      <Context>
+         <Data>
+            <![CDATA[
+               {[{ID:1,Name:'Product1',Price:10},{ID:2,Name:'AnotherProduct2',Price:20}]}
+            ]]>
+         </Data>
+         <Schema>
+            <![CDATA[
+               Products(ID*:INTEGER,Name:VARCHAR,Price:FLOAT)
+            ]]>
+         </Schema>
+      </Context>
+      <Constraints >
+         <Constraint criteria="data-count:2" />
+      </Constraints>
+   </Unit>
+
+   <Unit name="LikeFilter" desc="Select all products whose names are beginning with the letter 'A'" type="SQLSelect">
+      <Context>
+         <Data>
+            <![CDATA[
+               {[{ID:1,Name:'Product1',Price:10},{ID:2,Name:'AnotherProduct2',Price:20}]}
+            ]]>
+         </Data>
+         <Schema>
+            <![CDATA[
+               Products(ID*:INTEGER,Name:VARCHAR,Price:FLOAT)
+            ]]>
+         </Schema>
+      </Context>
+      <Constraints >
+         <Constraint criteria="data-count:1" />
+      </Constraints>
+   </Unit>
+</Units>

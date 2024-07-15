@@ -1,5 +1,6 @@
 from colorama import Fore
 
+from data.Dataset import Unit
 from units.UnitBase import UnitBase
 import re
 
@@ -15,7 +16,7 @@ class RegexVal(UnitBase):
     def CheckSyntax(self, code: str):
         pass
 
-    def RunTest(self, code:str, correctCase:str)->bool:
+    def RunTest(self, code:str, correctCase:str, unit:Unit)->bool:
         return self.validate_regex(code, correctCase)
 
     # region Regex Implementation

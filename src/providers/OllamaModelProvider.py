@@ -101,7 +101,6 @@ class OllamaModelProvider(ModelProviderBase, ModelBase):
         print(f"Full Output:\n{answer}\n")
 
         if match:
-
             extracted_sql = match.group(1)
             print(f"Extracted sql pattern: {Fore.CYAN}{extracted_sql}{Fore.RESET}")
             answer = extracted_sql.strip()

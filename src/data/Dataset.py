@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from enum import unique, Enum
-from typing import List
+from typing import List, Optional
 
 from pandas import DataFrame
 from tabulate import tabulate
@@ -15,13 +15,13 @@ class Dataset(object):
     def Print(self):
         ccCount:int = 0
         icCount:int = 0
-        conditionsCount:int = 0
+        constraintCount:int = 0
         print(f"-- {self.Name.upper()} DATASET --")
         for u in self.Units:
             ccCount = ccCount + len(u.CorrectCases)
             icCount = icCount + len(u.IncorrectCases)
-            conditionsCount = conditionsCount + len(u.Conditions)
-        overall:int = ccCount + icCount + conditionsCount
+            constraintCount = constraintCount + len(u.Constraints)
+        overall:int = ccCount + icCount + constraintCount
         df: DataFrame = DataFrame()
         df.at["Count",    "CorrectCase"] = str(ccCount)
         df.at["Count",    "IncorrectCase"] = str(icCount)
@@ -41,7 +41,12 @@ class Criteria:
     name: str
     value: str
 
-class Condition(object):
+@dataclass
+class Context:
+    Data:str
+    Schema:str
+
+class Constraint(object):
     def __init__(self,criteria:Criteria):
         self.Criteria:Criteria = criteria
 
@@ -51,14 +56,15 @@ class Unit(object):     #TODO: Find a better name for this. Field,Column,Case et
         self.Name = name
         self.Description = desc
         self.UnitType: UnitType = unitType
+
+        self.Context: Optional[Context] = None
+        self.Constraints: List[Constraint] = []
+
         #Cases
         self.CorrectCases:List[str] = correctCases  # TODO: Is this ds generalizable to other langs?     #TODO: We need additonal and optional case desc for this, for defining specific cases.
         if(self.CorrectCases is None): self.CorrectCases = []
         self.IncorrectCases:List[str] = incorrectCases
         if (self.IncorrectCases is None): self.IncorrectCases = []
-
-        #HACK
-        self.Conditions:List[Condition]
 
     @property
     def TotalCases(self):
