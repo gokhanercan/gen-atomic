@@ -1,0 +1,4 @@
+java -jar antlr-4.13.1-complete.jar -Dlanguage=Python3 sql.g4
+
+Test Grammar
+grun SQL -gui test.sql
