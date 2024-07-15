@@ -32,9 +32,12 @@ class Dataset(object):
         print(tabulate(df, headers="keys", tablefmt='psql', floatfmt=".2f"))
 @unique
 class UnitType(Enum):
-    RegexVal = 0  # RegexValidators
+    RegexVal = 0  # Validation script for Regex
     HTML = 1
-    SQLSelect = 2
+    SQLSelect = 2   #SQL
+
+    def DescriptionName(self):
+        return self.value       #TODO: Get friendly desc name from annotation.
 
 @dataclass
 class Criteria:

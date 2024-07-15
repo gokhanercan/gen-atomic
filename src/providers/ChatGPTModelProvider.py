@@ -5,6 +5,7 @@ from openai import OpenAI
 from models.ModelBase import ModelBase
 from colorama import init, Fore, Back, Style
 from providers.ModelProviderBase import ModelProviderBase
+from data.Dataset import *
 
 
 class ChatGPTModelProvider(ModelProviderBase, ModelBase):
@@ -30,7 +31,7 @@ class ChatGPTModelProvider(ModelProviderBase, ModelBase):
     def ModelConfigurations(self):
         return ChatGPTModelProvider.ModelConfigurationsList()
 
-    def Generate(self, description: str) -> str:
+    def Generate(self, description: str, UnitType:UnitType) -> str:
 
         modelName = self.ModelConfiguration
 
@@ -70,5 +71,5 @@ class ChatGPTModelProvider(ModelProviderBase, ModelBase):
         return gencode
 
 if __name__ == "__main__":
-    answer = ChatGPTModelProvider('gpt-3.5-turbo').Generate("Generic email address")
+    answer = ChatGPTModelProvider('gpt-3.5-turbo').Generate("Generic email address",UnitType.RegexVal)
     print(answer)

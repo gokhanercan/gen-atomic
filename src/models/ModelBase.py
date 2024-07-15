@@ -1,10 +1,8 @@
 from abc import ABC, abstractmethod
 from typing import Optional
-
 from deprecated import deprecated
-
 from utility import StringHelper
-
+from data.Dataset import *
 
 class ModelConf(object):
     def __init__(self, modelName:str, providerName:Optional[str] = None, providerAbbreviation:Optional[str] = None) -> None:
@@ -50,5 +48,5 @@ class ModelBase(ABC):
         return ModelConf(self.ModelName(),self.ProviderName(),self.ProviderAbbreviation())
 
     @abstractmethod
-    def Generate(self, description: str) -> str:
+    def Generate(self, description: str, UnitType:UnitType) -> str:
         pass

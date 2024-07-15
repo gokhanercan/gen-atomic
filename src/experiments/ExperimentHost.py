@@ -76,7 +76,7 @@ class ExperimentHost(object):
 
             for f in ds.Units:
                 #region Constraints
-                generated: str = model.Generate(f.Description)
+                generated: str = model.Generate(f.Description,f.UnitType)
                 passed: bool = exp.Unit.RunTest(generated, "", f)
 
                 dfCases.at[caseIndex, "Type"] = f.UnitType.name
@@ -214,5 +214,5 @@ def RunRegexValExperiment():
     ds.Print()
 
 if __name__ == '__main__':
-    RunSQLSelectExperiment()
-    #RunRegexValExperiment()
+    #RunSQLSelectExperiment()
+    RunRegexValExperiment()

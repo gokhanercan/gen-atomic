@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from typing import List
-
+from data.Dataset import *
 
 class ModelProviderBase(ABC):
     def __init__(self) -> None:
@@ -19,7 +19,7 @@ class ModelProviderBase(ABC):
         pass
 
     @abstractmethod
-    def Generate(self, description: str) -> str:
+    def Generate(self, description: str, UnitType:UnitType) -> str:
         pass
 
     @abstractmethod

@@ -106,13 +106,14 @@ class Sql(UnitBase):
 
         except sqlite3.Error as e:
             print(f"An error occurred: {e}")
+            return False
 
         #EVAL
         passCount:int = 0
         for c in unit.Constraints:
             name,value = c.Criteria.name,c.Criteria.value
             if(name == "data-count"):
-                datacount:int = len(resultset)
+                datacount:int = 0 if resultset is None else len(resultset)
                 passed:bool = datacount == int(value)
                 if(passed): passCount = passCount+1
 
