@@ -1,27 +1,10 @@
-from units.UnitBase import UnitBase
-
-
-# class TypeDiscovery(object):
-#
-#     def __init__(self) -> None:
-#         super().__init__()
-#
-#     def Discover(self):
-#         pass
-#
-#     def get_subclasses(self,cls):
-#         subclasses = set(cls.__subclasses__())
-#         all_subclasses = set(subclasses)
-#         for subclass in subclasses:
-#             all_subclasses.update(self.get_subclasses(subclass))
-#         return all_subclasses
-
 import pkgutil
 import importlib
 import inspect
+from abc import ABCMeta
 
 
-def find_subclasses(module_name, base_class):
+def find_subclasses(module_name:str, base_class)->set:
     subclasses = set()
     module = importlib.import_module(module_name)
     for _, name, is_pkg in pkgutil.walk_packages(module.__path__, module.__name__ + "."):
@@ -34,5 +17,4 @@ def find_subclasses(module_name, base_class):
 
 
 if __name__ == '__main__':
-    # print(TypeDiscovery().get_subclasses(UnitBase))
-    print(find_subclasses('units', UnitBase))
+    print(find_subclasses('utility', ABCMeta))

@@ -3,7 +3,7 @@ from pathlib import Path
 
 import xml.etree.ElementTree as et
 
-from data.Dataset import Dataset, Unit, UnitType, Constraint, Criteria, Context
+from data.Dataset import Dataset, Unit, Constraint, Criteria, Context
 from utility.Paths import Paths
 from utility.StringHelper import IsNullOrEmpty
 
@@ -24,8 +24,8 @@ class DatasetXmlRepository(object):
         for eUnit in root:
             name:str = eUnit.get("name")
             desc:str = eUnit.get("desc")
-            type:UnitType = UnitType[eUnit.get("type")]
-            u:Unit = Unit(name,desc,type,None,None)
+            unitType:str = eUnit.get("type")
+            u:Unit = Unit(name,desc,unitType,None,None)
             units.append(u)
 
             #CC
@@ -100,3 +100,5 @@ if __name__ == '__main__':
 
     # Read DS
     ds:Dataset = DatasetXmlRepository.Load(path)
+    print(ds)
+    print(ds.Units)

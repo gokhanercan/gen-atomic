@@ -1,16 +1,23 @@
 from typing import List
 from data.Dataset import Unit
-from units.UnitBase import UnitBase
+from langunits.LangUnit import LangUnit, UnitType
 
-class Sql(UnitBase):
 
-    def __init__(self, unitType) -> None:
-        UnitBase.__init__(self,unitType)
+class SqlSelect(LangUnit):
+    def __init__(self) -> None:
+        super().__init__()
+        LangUnit.__init__()
+    def PromptText(self):
+        return "SQL select query"
+
+    def GetUnitType(self) -> UnitType:
+        return UnitType.Query
 
     def CheckSyntax(self, code: str):       #Static check. Parse, SyntaxCheck, Compile.
         #ANTLR
         pass
 
+    #region Internal Impl
     def createSchema(self, schema_str):
         table_name, columns = schema_str.split('(')
         table_name = table_name.strip()
@@ -79,6 +86,7 @@ class Sql(UnitBase):
             result.append(tuple(values))
 
         return result
+    #endregion
 
     def RunTest(self, code:str, correctCase:str, unit:Unit)->bool:
         import sqlite3

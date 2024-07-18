@@ -1,18 +1,17 @@
 from colorama import Fore
-
 from data.Dataset import Unit
-from units.UnitBase import UnitBase
+from langunits.LangUnit import LangUnit, UnitType
 import re
 
 
-class RegexVal(UnitBase):
+class RegexVal(LangUnit):
+    def __init__(self) -> None:
+        super().__init__()
 
-    def __init__(self, unitType) -> None:
-        UnitBase.__init__(self,unitType)
-
-    # def GetUnitType(self):
-    #     return "Expression"     #Function|Class|Module....
-
+    def PromptText(self):
+        return "regular expression for validation"
+    def GetUnitType(self) -> UnitType:
+        return UnitType.Expression
     def CheckSyntax(self, code: str):
         pass
 
@@ -35,4 +34,3 @@ class RegexVal(UnitBase):
             print(f"{Fore.RED}Invalid regular expression pattern.{Fore.RESET}")  # TODO: Handle that error well. Reflection.
             return False
     # endregion
-

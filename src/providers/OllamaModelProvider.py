@@ -8,7 +8,7 @@ from colorama import init, Fore, Back, Style
 from data.Dataset import *
 
 from providers.ModelProviderBase import ModelProviderBase
-from units import UnitBase
+from langunits import UnitBase
 
 
 class OllamaModelProvider(ModelProviderBase, ModelBase):
