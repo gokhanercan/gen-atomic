@@ -6,7 +6,7 @@ from langunits.LangUnit import LangUnit, UnitType
 class SqlSelect(LangUnit):
     def __init__(self) -> None:
         super().__init__()
-        LangUnit.__init__()
+
     def PromptText(self):
         return "SQL select query"
 

@@ -1,8 +1,11 @@
 from typing import List
 
 from langunits.LangUnitFactory import LangUnitFactory
+from models.ModelFactory import ModelFactory
+from utility.PrintHelper import *
 
 
+# noinspection PyMethodMayBeStatic
 class API(object):
     """
     Facade API layer for easily interacting with the library.
@@ -10,9 +13,12 @@ class API(object):
     def __init__(self) -> None:
         super().__init__()
 
-    def GetLangUnitPluginNames(self)-> List[str]:
-        names:str = [key for key in LangUnitFactory().Meta.keys()]
-        return names
+    def GetAllLangUnitNames(self)-> List[str]:
+        return LangUnitFactory().GetAllLangUnitNames()
+
+    def GetAllModelProviderNames(self)-> List[str]:
+        return ModelFactory().GetAllModelProviderNames()
 
 if __name__ == '__main__':
-    print(API().GetLangUnitPluginNames())
+    Print("LangUnits",      API().GetAllLangUnitNames())
+    Print("ModelProviders", API().GetAllModelProviderNames())

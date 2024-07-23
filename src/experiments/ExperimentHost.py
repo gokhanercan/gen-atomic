@@ -1,16 +1,16 @@
 import time
 from typing import Optional, List, Dict
 
-from data.Dataset import Dataset, UnitType, Unit, Criteria, Constraint
+from data.Dataset import Dataset, Unit, Criteria, Constraint
 from data.DatasetXmlRepository import DatasetXmlRepository
 from experiments.Experiment import Experiment, ExperimentFactory
 from pandas import DataFrame  # type: ignore
 from tabulate import tabulate  # type: ignore
 from colorama import Fore
 
-from models.ModelBase import ModelConf
+from models.ModelBase import ModelConfInfo
 from models.ModelFactory import ModelFactory
-from providers.OllamaModelProvider import OllamaModelProvider
+# from providers.OllamaModelProvider import OllamaModelProvider
 from utility.FormatHelper import FormatHelper
 from utility.Paths import Paths
 
@@ -79,7 +79,7 @@ class ExperimentHost(object):
                 generated: str = model.Generate(f.Description,f.UnitType)
                 passed: bool = exp.Unit.RunTest(generated, "", f)
 
-                dfCases.at[caseIndex, "Type"] = f.UnitType.name
+                dfCases.at[caseIndex, "Type"] = f.UnitType
                 dfCases.at[caseIndex, "Name"] = f.Name
                 dfCases.at[caseIndex, "Passed"] = "OK" if passed else "X"
                 dfCases.at[caseIndex, "Generated Code"] = FormatHelper.ShortenCode(generated,20) if formatCode else generated
@@ -94,7 +94,7 @@ class ExperimentHost(object):
 
                 #region Cases
                 for cc in f.CorrectCases:
-                    dfCases.at[caseIndex, "Type"] = f.UnitType.name
+                    dfCases.at[caseIndex, "Type"] = f.UnitType
                     dfCases.at[caseIndex, "Name"] = f.Name
                     dfCases.at[caseIndex, "Case"] = "CC-> " + cc
                     passed:bool = exp.Unit.RunTest(generated, cc, f)
@@ -108,7 +108,7 @@ class ExperimentHost(object):
                     ccCount = ccCount + 1
                     caseIndex += 1
                 for icc in f.IncorrectCases:
-                    dfCases.at[caseIndex, "Type"] = f.UnitType.name
+                    dfCases.at[caseIndex, "Type"] = f.UnitType
                     dfCases.at[caseIndex, "Name"] = f.Name
                     dfCases.at[caseIndex, "Case"] = "IC-> " + icc
                     passed:bool = not exp.Unit.RunTest(generated, icc, f)  # type: ignore
@@ -178,7 +178,7 @@ def RunSQLSelectExperiment():
 
     #Fakes
     fakeModels = [
-        modelFactory.CreateByCfg(ModelConf("Stub")),
+        modelFactory.CreateByCfg(ModelConfInfo("Stub")),
     ]
     exp.Models = fakeModels  # exp.Models + fakeModels
     stubModel = [item for item in exp.Models if item.ModelName().__contains__("Stub")][0]
@@ -198,11 +198,11 @@ def RunRegexValExperiment():
     ds: Dataset = DatasetXmlRepository.Load(path)
 
     #Exp. Context
-    exp = ExperimentFactory().CreateProviderExperiment(UnitType.RegexVal, "ollama")
+    exp = ExperimentFactory().CreateProviderExperiment("RegexVal", "ollama")
     modelFactory = ModelFactory()
 
     #Stub
-    fakeModels = [modelFactory.CreateByCfg(ModelConf("Stub"))]
+    fakeModels = [modelFactory.CreateByCfg(ModelConfInfo("Stub"))]
     exp.Models = exp.Models + fakeModels
     stubModel = [item for item in exp.Models if item.ModelName().__contains__("Stub")][0]
     fixedRegex: str = r"""^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$"""

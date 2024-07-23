@@ -21,7 +21,8 @@ class LangUnit(ABC):
     @abstractmethod
     def PromptText(self):
         pass
-
+    def Name(self)->str:
+        return self.__class__.__name__
     @abstractmethod
     def GetUnitType(self)->UnitType:
         pass

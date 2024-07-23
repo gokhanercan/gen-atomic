@@ -33,3 +33,18 @@ Here are some example schema explanations:
 | f(str)->bool        | A function unit that accepts a string input and returns a bool output                                 |
 | f([str])->str       | A function unit that accepts a string array and returns a string                                      |
 | f(TableSchema)->str | A function unit that accepts a metadata object that represent a database table and returns a string   |
+
+## Implementation Notes
+### Types of Plugins
+| PluginType     | Base Type        | Factory          | Example(s)          | Example Key | Notes                              |
+|----------------|-------------------|------------------|---------------------|-------------|------------------------------------|
+| **Models**         | ModelBase         | ModelFactory     | RandomModel         | np-random   | np means NoProvider                |
+| **ModelProviders** | ModelProviderBase | ModelFactory     | OllamaModelProvider | ol          | ModelProviders are also ModelBases |
+| **LangUnits**      | LangUnit          | LangUnitFactory | RegexVal, SqlSelect | _n/a_         ||
+
+### Types, Names and Identifiers
+Some notes on the Type and Identity system of the library that can help you implement plugins.
+
+|Name         | PlainName                              | TypeName                        | Key       |
+|-------------|----------------------------------------|---------------------------------|-----------|
+| RandomModel | Random |  models.RandomModel.RandomModel | np-random           |              

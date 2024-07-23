@@ -1,23 +1,22 @@
 from typing import List, Optional
 
-from data.Dataset import UnitType
+from langunits.LangUnit import LangUnit
+from langunits.LangUnitFactory import LangUnitFactory
 from models.ModelBase import ModelBase
 from models.ModelFactory import ModelFactory
-from providers.ProviderFactory import ProviderFactory
-from langunits.UnitBase import UnitBase
-from langunits.UnitFactory import UnitFactory
+# from providers.ProviderFactory import ProviderFactory
 from utility import StringHelper
 
 
 class Experiment(object):
-    def __init__(self, unit:UnitBase, models:List[ModelBase] = None) -> None:
+    def __init__(self, langUnit:LangUnit, models:List[ModelBase] = None) -> None:
         super().__init__()
-        self.Unit:UnitBase = unit
+        self.LangUnit:LangUnit = langUnit #We support single LangUnit per Experiment
         self.Models:List[ModelBase] = models
         self.Name:Optional[str] = None
 
     def GetName(self)->str:
-        return StringHelper.Coelesce(self.Name,self.Unit.UnitType.name)
+        return StringHelper.Coelesce(self.Name,self.LangUnit.GetUnitType())
 
 
 class ExperimentFactory(object):
@@ -25,29 +24,32 @@ class ExperimentFactory(object):
         super().__init__()
 
     @staticmethod
-    def CreateExperimentWithAllModels(unitType:UnitType)->Experiment:
-        unit = UnitFactory().Create(unitType)
+    def CreateExperimentWithAllModels(langUnitName:str)->Experiment:
+        unit:LangUnit = LangUnitFactory().Create(langUnitName)
         models:List[ModelBase] = ModelFactory().CreateAllModels()
         exp:Experiment = Experiment(unit,models)
         return exp
 
     @staticmethod
-    def CreateExperimentWithFakeModels(unitType:UnitType)->Experiment:
-        unit = UnitFactory().Create(unitType)
+    def CreateExperimentWithFakeModels(langUnitName:str)->Experiment:
+        unit:LangUnit = LangUnitFactory().Create(langUnitName)
         models:List[ModelBase] = ModelFactory().CreateFakeModels()
         exp:Experiment = Experiment(unit,models)
         return exp
 
     @staticmethod
-    def CreateSingleModelExperiment(unitType: UnitType, providerName:str, modelConf:str) -> Experiment:
-        unit = UnitFactory().Create(unitType)
+    def CreateSingleModelExperiment(langUnitName:str, providerName:str, modelConf:str) -> Experiment:
+        unit:LangUnit = LangUnitFactory().Create(langUnitName)
         model: ModelBase = ModelFactory().Create(providerName,modelConf)
         exp: Experiment = Experiment(unit, [model])
         return exp
 
     @staticmethod
-    def CreateProviderExperiment(unitType: UnitType, providerName:str) -> Experiment:
-        unit = UnitFactory().Create(unitType)
+    def CreateProviderExperiment(langUnitName:str, providerName:str) -> Experiment:
+        unit:LangUnit = LangUnitFactory().Create(langUnitName)
         models: List[ModelBase] = ProviderFactory().CreateModelConfigurations(providerName)
         exp: Experiment = Experiment(unit,models)
         return exp
+
+if __name__ == '__main__':
+    print(ExperimentFactory().CreateExperimentWithAllModels("SqlSelect"))

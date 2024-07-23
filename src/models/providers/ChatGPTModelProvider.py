@@ -1,16 +1,16 @@
 import os
-import time
-from typing import List
 from openai import OpenAI
+
+from langunits.LangUnitFactory import LangUnitInfo
 from models.ModelBase import ModelBase
 from colorama import init, Fore, Back, Style
-from providers.ModelProviderBase import ModelProviderBase
 from data.Dataset import *
+from models.providers.ModelProviderBase import ModelProviderBase
 
 
-class ChatGPTModelProvider(ModelProviderBase, ModelBase):
+class ChatGPTModelProvider(ModelProviderBase):
 
-    def __init__(self, modelConfiguration:str) -> None:
+    def __init__(self, modelConfiguration:Optional[str] = None) -> None:
         super().__init__()
         ModelBase.__init__(self)
         self.ModelConfiguration = modelConfiguration     #TODO: add to params. model:70b
@@ -31,18 +31,12 @@ class ChatGPTModelProvider(ModelProviderBase, ModelBase):
     def ModelConfigurations(self):
         return ChatGPTModelProvider.ModelConfigurationsList()
 
-    def Generate(self, description: str, UnitType:UnitType) -> str:
-
+    def Generate(self, description: str, langUnitInfo:LangUnitInfo) -> str:
         modelName = self.ModelConfiguration
-
         openai_api_key = os.getenv('OPEN_AI_API_KEY')
-
         if not openai_api_key:
             raise ValueError("The OPEN_AI_API_KEY environment variable is not set.")
-
-        client = OpenAI(
-            api_key=openai_api_key,
-        )
+        client = OpenAI(api_key=openai_api_key)
 
         instruction:str = "Consider yourself a function that takes the input of asked validation regex statement, and your output is '''Regex: {created regex}''' Do not give me an explanation, only give me a regex expression. Do not add any additional characters."
         prompt:str = f"\nAsked regex statement: {description}."
@@ -71,5 +65,5 @@ class ChatGPTModelProvider(ModelProviderBase, ModelBase):
         return gencode
 
 if __name__ == "__main__":
-    answer = ChatGPTModelProvider('gpt-3.5-turbo').Generate("Generic email address",UnitType.RegexVal)
+    answer = ChatGPTModelProvider('gpt-3.5-turbo').Generate("Generic email address", LangUnitInfo("RegexVal","regular expression for validation"))
     print(answer)

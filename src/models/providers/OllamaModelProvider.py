@@ -1,23 +1,24 @@
 import time
 from typing import List
 import re
+
+from langunits.LangUnitFactory import LangUnitInfo
 from models.ModelBase import ModelBase
 import subprocess
 import ollama
 from colorama import init, Fore, Back, Style
 from data.Dataset import *
-
-from providers.ModelProviderBase import ModelProviderBase
-from langunits import UnitBase
+from models.providers.ModelProviderBase import ModelProviderBase
 
 
-class OllamaModelProvider(ModelProviderBase, ModelBase):
+class OllamaModelProvider(ModelProviderBase):        #TODO: Model devs should not enforced to introduce both!!!
 
     def __init__(self, modelConfiguration:str = None) -> None:
         super().__init__()
         ModelBase.__init__(self)
-        self.ModelConfiguration = modelConfiguration     #TODO: add to params. model:70b
+        self.ModelConfiguration = modelConfiguration
 
+        #region Naming convention ideas
         #EXPERIMENT <MODELCONFIG | DATASET>
         #MODELCONFIG <PROVIDER | MODEL | FLOW | PROMPT>
         #MODEL CONF: Exp4029-MFTSG#12-win5-dim100-ns5-hs0-del0-mean1-iter2-root0-inf0-seg3-lang=tr-ngr[no]__TRCorpora2LCNPS2SH-TR2022_MM_NLPTPPRJ1_der0comp0frg0st2.vec
@@ -26,6 +27,7 @@ class OllamaModelProvider(ModelProviderBase, ModelBase):
         #Ollama-codellama:70b-noflow-p1
         #Ollama-phi3:7b-noflow-p1
         #Ollama-phi3:7b-simple:r3-p1
+        #endregion
     def ProviderName(self):
         return "ollama"
 
@@ -37,7 +39,8 @@ class OllamaModelProvider(ModelProviderBase, ModelBase):
 
     @staticmethod
     def ModelConfigurationsList()->List[str]:
-        return ["codellama"]
+        return ["codellama","llama3"]
+        #TODO: Dynamically fetch list of models supported by Ollama. After implementing this drop static support and self.ModelConfigurations signature.
         #return ["codellama","llama3","phi3","codegemma","codellama:70b","llama3:70b","starcoder2","gemma","tinyllama"]
         #return ["codellama", "codellama:70b", "phi3", "llama3:7b", "llama2"]  # ? :
     def ModelConfigurations(self):
@@ -55,35 +58,19 @@ class OllamaModelProvider(ModelProviderBase, ModelBase):
         process.communicate()
         return process
 
-    # def Generate(self, description: str) -> str:
-    #
-    #     modelName = self.ModelConfiguration
-    #     #ollama_server_process = self.start_ollama_server()
-    #
-    #     client = ollama.Client('http://localhost:11434')  # Specify full URL with port
-    #     instruction:str = "Consider yourself a function that takes the input of asked validation regex statement, and your output is '''Regex: {created regex}''' Do not give me an explanation, only give me a regex expression. Do not add any additional characters."
-    #     prompt:str = f"{instruction}\nAsked regex statement: {description}."
-    #     promptColored: str = f"{instruction}\nAsked regex statement: {Fore.BLUE}{description}{Fore.RESET}."
-    #     print(f"\nP:{promptColored}")
-    #     print(Fore.RESET)
-    #     response = client.generate(model=modelName, prompt=prompt)        #phi3,llama2,llama3,deepseek-coder,codegemma,starcoder2  ref:https://ollama.com/library?sort=popular
-    #     answer = response['response']
-    #
-    #     #ollama_server_process.terminate()       #TODO: Manage the connecion. Do not terminate on every call.
-    #
-    #     gencode:str = str(answer).strip().replace("Regex: ","").replace("```","").replace("`","")      #TODO: Output parsers here please!
-    #     print(f"A: {Fore.CYAN}{gencode}{Fore.RESET}")
-    #     return gencode
-
-    def Generate(self, description: str, unitType:UnitType) -> str:
-
+    def Generate(self, description: str, langUnitInfo:LangUnitInfo) -> str:
+        """
+        TODO: https://github.com/users/gokhanercan/projects/3/views/1?pane=issue&itemId=71867358
+        :param description:
+        :param langUnitInfo:
+        :return:
+        """
         modelName = self.ModelConfiguration
         #ollama_server_process = self.start_ollama_server()
-
         client = ollama.Client('http://localhost:11434')  # Specify full URL with port
 
         #prompt
-        langDesc:str = unitType.name
+        langDesc:str = langUnitInfo.PromptText
         instruction: str = (f"Consider yourself a function that takes the input of asked validation {langDesc} statement, and "
                             f"your output should be a markdown code snippet formatted in the following schema, including "
                             f"the leading and trailing \"```{langDesc}\" and \"```\". Do not give me an explanation, only give "
@@ -96,10 +83,8 @@ class OllamaModelProvider(ModelProviderBase, ModelBase):
         response = client.generate(model=modelName, prompt=prompt)        #phi3,llama2,llama3,deepseek-coder,codegemma,starcoder2  ref:https://ollama.com/library?sort=popular
         answer = response['response']
 
-        # langPrefix:str = "sql" if(unitType == UnitType.SQLSelect) else "regex"
         sql_pattern = rf"```{langDesc}(.*?)```"
         match = re.search(sql_pattern, answer, re.DOTALL)  # re.DOTALL allows matching newlines
-
         print(f"Full Output:\n{answer}\n")
 
         if match:
@@ -109,36 +94,13 @@ class OllamaModelProvider(ModelProviderBase, ModelBase):
         else:
             print(f"Couldn't find {langDesc} pattern between ```")
 
-        #ollama_server_process.terminate()       #TODO: Manage the connecion. Do not terminate on every call.
+        #ollama_server_process.terminate()       #TODO: Manage the connection. Do not terminate on every call.
 
-        gencode:str = str(answer).strip().replace("Regex: ","").replace("```","").replace("`","").replace("SQL: ","")      #TODO: Output parsers here please!
+        gencode:str = str(answer).strip().replace("Regex: ","").replace("regexp","").replace("```","").replace("`","").replace("SQL: ","")      #TODO: Output parsers here please!
         print(f"A: {Fore.CYAN}{gencode}{Fore.RESET}")
         return gencode
 
 if __name__ == "__main__":
-    answer = OllamaModelProvider('codellama:7b').Generate("generate me an email regex, do not give me an explanation")
+    answer = OllamaModelProvider('codellama').Generate("generate me an email regex, do not give me an explanation",
+                    LangUnitInfo("RegexVal", "regular expression for validation"))
     print(answer)
-
-
-   #############
-
-
-#
-# regex_pattern = r"```regex(.*?)```"
-# match = re.search(regex_pattern, answer, re.DOTALL)  # re.DOTALL allows matching newlines
-#
-# print(f"Full Output:\n{answer}\n")
-#
-# if match:
-#     #gencode: str = str(answer).strip().replace("Regex: ", "").replace("```", "").replace("`", "")  # TODO: Output parsers here please!
-#     #print(f"A: {Fore.CYAN}{gencode}{Fore.RESET}")
-#
-#     extracted_regex = match.group(1)
-#     print(f"Extracted regex pattern: {Fore.CYAN}{extracted_regex}{Fore.RESET}")
-#     return extracted_regex.strip()
-# else:
-#     print("Couldn't find regex pattern between ```")
-#     return answer
-#
-# #ollama_server_process.terminate()       #TODO: Manage the connecion. Do not terminate on every call.
-#
