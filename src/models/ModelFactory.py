@@ -91,10 +91,8 @@ class ModelFactory(object):
         return [k for k in self.StandaloneModelsMeta]
     def GetAllBaselineModelNames(self)->List[str]:
         return [key for key,value in self.StandaloneModelsMeta.items() if value.IsBaseline==True]       #Limited to standalone models only for now.
-    def GetAllModelKeys(self, includeBaselines:bool = False)->List[str]:
-        models = self.CreateAllModels()
-        modelKeys = [m.Key() for m in models]
-        return modelKeys
+    def GetAllModelKeys(self)->List[str]:       #TODO: add some filters here. ExcludeBaselines, FilterByModelName, ByProviderName etc.
+        return [k for k,v in self.ModelIndex.items()]
 
     #endregion
 
@@ -146,8 +144,11 @@ if __name__ == '__main__':
     Print("ModelProviderNames",   factory.GetAllModelProviderNames())
     Print("StandaloneModelNames", factory.GetAllStandaloneModelNames())
     Print("BaselineModelNames",   factory.GetAllBaselineModelNames())
+
     #Keys
+    Print("ModelIndex", factory.ModelIndex)
     Print("AllModelKeys",  factory.GetAllModelKeys())
+
     #Models Instance Creation
     Print("BaselineModels",   factory.CreateBaselineModels())
     Print("StandaloneModels", factory.CreateStandaloneModels())
@@ -156,8 +157,8 @@ if __name__ == '__main__':
     Print("CreateModel(name) usage", factory.CreateModel("RandomModel"))
     Print("CreateModelProvider(name) usage",factory.CreateModelProvider("OllamaModelProvider"))
     Print("CreateModelsByProvider(name) usage",factory.CreateModelsByProvider("OllamaModelProvider"))
-    Print("CreateModelByKey(key) via standalone usage", factory.CreateModelByKey("np.random"))
-    Print("CreateModelByKey(key) usage via provider usage", factory.CreateModelByKey("ol.ollama"))
+    Print("CreateModelByKey(key) usage via standalones", factory.CreateModelByKey("np.random"))
+    Print("CreateModelByKey(key) usage via providers", factory.CreateModelByKey("ol.codellama"))
 
 
 

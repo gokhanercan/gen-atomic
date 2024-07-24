@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from data.Dataset import *
-from models.ModelBase import ModelBase
+from models.ModelBase import ModelBase, ModelInfo
 from utility import StringHelper
 
 
@@ -10,7 +10,8 @@ class ModelProviderBase(ModelBase):
         self.ActiveModelName:Optional[str] = activeModelName
     def ModelName(self)->str:
          return self.ActiveModelName if(not StringHelper.IsNullOrEmpty(self.ActiveModelName)) else "n/a"
-
     @abstractmethod
     def ModelNames(self)->List[str]:       #str:ModelNames
         pass
+    def GetModelConf(self)->ModelInfo:
+        return ModelInfo(self.ModelName(), self.ProviderName(), self.ProviderAbbreviation())

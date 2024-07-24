@@ -19,6 +19,10 @@ class API(object):
     def GetAllModelProviderNames(self)-> List[str]:
         return ModelFactory().GetAllModelProviderNames()
 
+    def GetAllModelKeys(self)-> List[str]:
+        return ModelFactory().GetAllModelKeys()
+
 if __name__ == '__main__':
     Print("LangUnits",      API().GetAllLangUnitNames())
     Print("ModelProviders", API().GetAllModelProviderNames())
+    Print("ModelKeys",      API().GetAllModelKeys())
