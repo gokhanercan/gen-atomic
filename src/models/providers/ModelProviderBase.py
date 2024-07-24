@@ -1,22 +1,16 @@
 from abc import ABC, abstractmethod
-from typing import List
 from data.Dataset import *
-from langunits.LangUnitFactory import LangUnitInfo
 from models.ModelBase import ModelBase
+from utility import StringHelper
 
 
 class ModelProviderBase(ModelBase):
-    def __init__(self) -> None:
+    def __init__(self, activeModelName:str = None) -> None:
         super().__init__()
-
-    # @abstractmethod
-    # def ProviderName(self):
-    #     pass
-    #
-    # @abstractmethod
-    # def ProviderAbbreviation(self):
-    #     pass
+        self.ActiveModelName:Optional[str] = activeModelName
+    def ModelName(self)->str:
+         return self.ActiveModelName if(not StringHelper.IsNullOrEmpty(self.ActiveModelName)) else "n/a"
 
     @abstractmethod
-    def ModelConfigurations(self)->List[str]:          #?Keys or Names ??
+    def ModelNames(self)->List[str]:       #str:ModelNames
         pass

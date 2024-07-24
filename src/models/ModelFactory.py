@@ -1,75 +1,48 @@
-from abc import ABCMeta
-from dataclasses import dataclass, field
-from typing import Optional, List
-from deprecated import deprecated
 from models.ModelBase import *
 from models.providers.ModelProviderBase import ModelProviderBase
 from utility import Discovery
-
 from utility.PrintHelper import Print
-
-
-@dataclass
-class ModelProviderMeta(object):
-    Name: str
-    Type: ABCMeta
-
-@dataclass
-class ModelMeta(object):
-    Name: str
-    Type: ABCMeta
-    # ProviderName: Optional[str]
-    IsBaseline: bool = field(default = False)
 
 class ModelFactory(object):
     def __init__(self) -> None:
         super().__init__()
-        self.StandaloneModelsMeta:dict[str, ModelMeta] = self._DiscoverStandaloneModels()
-        self.ModelProvidersMeta: dict[str, ModelProviderMeta] = self._DiscoverModelProviders()
+        self.StandaloneModelsMeta:dict[str, StandaloneModelMeta] = self._DiscoverStandaloneModels() #Name|Meta
+        self.ModelProvidersMeta: dict[str, ModelProviderMeta] = self._DiscoverModelProviders()      #Name|Meta
+        #Model Auto Key Indexing via instances
+        self.ModelIndex:dict[str:ModelMeta] = self._BuildModelIndex()                               #Key|Meta
 
-    # def GetModelKeys(self)->List[str]:           #TODO: GetModelNames and GetModelConfs, we need both!
-    #     modelConfs:List[ModelConfInfo] = self.GetModelConfigurations()
-    #     modelNames:List[str] = []
-    #     for modelConf in modelConfs:
-    #         modelNames.append(modelConf.ConfigKey())
-    #     return modelNames
+    def _BuildModelIndex(self)->dict[str:ModelMeta]:
+        index: dict[str:ModelMeta] = {}
 
-    # def GetModelConfigurations(self)->List[ModelConfInfo]:
-    #     modelConfs:[ModelConfInfo] = []
-    #     providerFactory = ModelFactory()
-    #     for providerName in ModelFactory.GetAllModelProviderNames():
-    #         modelConfigs:[ModelBase] = providerFactory.CreateModelConfigurations(providerName)
-    #         for model in modelConfigs:
-    #             modelConfs.append(model.GetModelConf())
-    #     return modelConfs
+        #Standalones
+        for k,v in self.StandaloneModelsMeta.items():
+            sMeta:StandaloneModelMeta = v
+            sModel:ModelBase = self.CreateModel(sMeta.Name)
+            key:str = sModel.Key()
+            meta:ModelMeta = ModelMeta(Name=sMeta.Name,PlainName=sModel.PlainName(),Key=key,StandaloneModelMeta=sMeta, ModelProviderMeta = None)
+            index[key] = meta
+            sModel.ModelMeta = meta
 
-    # def CreateAllModels(self)->[ModelBase]: #TODO:
-    #     models = []
-    #     for modelName in self.GetModelKeys() + self.ListFakeModelKeys():
-    #         m: ModelBase = self.Create(modelName)
-    #         models.append(m)
-    #     return models
-
-    # @deprecated("Just like what we did for ANTLR and LangUnit, we need a plugin-wise factory here to support open-closed principle.")
-    # def CreateByCfg(self, cfg:ModelConfInfo)->ModelBase:
-    #     if (cfg.ProviderName == "ollama"):
-    #         return OllamaModelProvider(cfg.ModelName)
-    #     if (cfg.ProviderName == "ollama"):
-    #         return ChatGPTModelProvider(cfg.ModelName)
-    #     if(cfg.ProviderName is None):
-    #         if (cfg.ModelName == "Stub"):
-    #             return StubModel()
-    #         elif (cfg.ModelName == "Random"):
-    #             return RandomModel()
-    #     else:
-    #         raise Exception(f"No model implementation found for '{cfg}'.")
-
-    # @deprecated
-    # def Create(self, providerName:str = Optional[str], modelConf:str = Optional[str])->ModelBase:
-    #     if(not providerName and not modelConf): raise Exception("ProviderName or ModelName should be provided.")
-    #     return self.CreateByCfg(ModelConfInfo(modelConf, providerName))
+        #Provider Models
+        for k, v in self.ModelProvidersMeta.items():
+            mpMeta: ModelProviderMeta = v
+            models: List[ModelBase] = self.CreateModelsByProvider(mpMeta.Name)
+            for m in models:
+                key:str = m.Key()
+                meta:ModelMeta = ModelMeta(Name=m.Name(),PlainName=m.PlainName(),Key=key,StandaloneModelMeta=None,ModelProviderMeta=mpMeta)
+                index[key] = meta
+                m.ModelMeta = meta
+        return index
 
     #region Model Instance Creators
+    def CreateModelByKey(self, key:str)->ModelBase:
+        meta:ModelMeta = self.ModelIndex[key]
+        if(meta.IsStandalone):
+            m: ModelBase = self.CreateModel(meta.Name)
+            return m
+        else:
+            mp:ModelProviderBase = self.CreateModelProvider(meta.ModelProviderMeta.Name, meta.PlainName)
+            return mp
     def CreateAllModels(self):
         return self.CreateStandaloneModels() + self.CreateModelProviders()
     def CreateStandaloneModels(self)->List[ModelBase]:
@@ -90,17 +63,17 @@ class ModelFactory(object):
             mp:ModelProviderBase = self.CreateModelProvider(mpName)
             providers.append(mp)
         return providers
-    def CreateModelProvider(self, providerName:str, configName:Optional[str] = None)->ModelProviderBase:
+    def CreateModelProvider(self, providerName:str, modelName:Optional[str] = None)->ModelProviderBase:
         t:ABCMeta = self.ModelProvidersMeta[providerName].Type
         mp:ModelProviderBase = t.__new__(t)
-        mp.__init__(configName)
+        mp.__init__(modelName)
         return mp
     def CreateModelsByProvider(self, providerName:str)->List[ModelProviderBase]:
         p:ModelProviderBase = self.CreateModelProvider(providerName)
-        configNames = p.ModelConfigurations()
+        modelNames = p.ModelNames()
         mps:List[ModelProviderBase] = []
-        for cfgName in configNames:
-            mp:ModelProviderBase = self.CreateModelProvider(providerName,cfgName)
+        for modelName in modelNames:
+            mp:ModelProviderBase = self.CreateModelProvider(providerName,modelName)
             mps.append(mp)
         return mps
     def CreateModel(self, modelName:str)->ModelBase:
@@ -124,6 +97,102 @@ class ModelFactory(object):
         return modelKeys
 
     #endregion
+
+    # region Discovery
+    @staticmethod
+    def _DiscoverBaselineModels() -> dict[str, StandaloneModelMeta]:
+        """
+        Lists all available baseline model names
+        :return:
+        """
+        return {k: v for k, v in ModelFactory._DiscoverStandaloneModels().items() if v.IsBaseline}
+
+    @staticmethod
+    def _DiscoverStandaloneModels() -> dict[str, StandaloneModelMeta]:
+        """
+        Discovers standalone models, not server through model providers
+        :return:
+        """
+        types = Discovery.find_subclasses("models",ModelBase)  # TODO: It can be in any module when it is a plugin. Remove that criteria
+        metas: dict[str, StandaloneModelMeta] = {}
+        for t in types:
+            name: str = t.__name__
+            isBaseline: bool = issubclass(t, BaselineModel)
+            if issubclass(t, ModelProviderBase):
+                continue  # Skipping non-standalone models here. They are discovered in a separate process
+            meta = StandaloneModelMeta(name, t, isBaseline)
+            metas[name] = meta
+        return metas
+
+    @staticmethod
+    def _DiscoverModelProviders() -> dict[str, ModelProviderMeta]:
+        types = Discovery.find_subclasses("models",ModelProviderBase,"providers")
+        metas: dict[str, ModelProviderMeta] = {}
+        for t in types:
+            name: str = t.__name__
+            meta = ModelProviderMeta(name, t)
+            metas[name] = meta
+        return metas
+    # endregion
+
+if __name__ == '__main__':
+    #STATIC Discovery
+    Print("BaselineModelsMeta",     ModelFactory._DiscoverBaselineModels())
+    Print("StandaloneModelsMeta",   ModelFactory._DiscoverStandaloneModels())
+    Print("ModelProvidersMeta",     ModelFactory._DiscoverModelProviders())
+
+    #INSTANCE Queries
+    factory = ModelFactory()
+    Print("ModelProviderNames",   factory.GetAllModelProviderNames())
+    Print("StandaloneModelNames", factory.GetAllStandaloneModelNames())
+    Print("BaselineModelNames",   factory.GetAllBaselineModelNames())
+    #Keys
+    Print("AllModelKeys",  factory.GetAllModelKeys())
+    #Models Instance Creation
+    Print("BaselineModels",   factory.CreateBaselineModels())
+    Print("StandaloneModels", factory.CreateStandaloneModels())
+    Print("ModelProviders",   factory.CreateModelProviders())
+    #usages
+    Print("CreateModel(name) usage", factory.CreateModel("RandomModel"))
+    Print("CreateModelProvider(name) usage",factory.CreateModelProvider("OllamaModelProvider"))
+    Print("CreateModelsByProvider(name) usage",factory.CreateModelsByProvider("OllamaModelProvider"))
+    Print("CreateModelByKey(key) via standalone usage", factory.CreateModelByKey("np.random"))
+    Print("CreateModelByKey(key) usage via provider usage", factory.CreateModelByKey("ol.ollama"))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    # @deprecated("Just like what we did for ANTLR and LangUnit, we need a plugin-wise factory here to support open-closed principle.")
+    # def CreateByCfg(self, cfg:ModelConfInfo)->ModelBase:
+    #     if (cfg.ProviderName == "ollama"):
+    #         return OllamaModelProvider(cfg.ModelName)
+    #     if (cfg.ProviderName == "ollama"):
+    #         return ChatGPTModelProvider(cfg.ModelName)
+    #     if(cfg.ProviderName is None):
+    #         if (cfg.ModelName == "Stub"):
+    #             return StubModel()
+    #         elif (cfg.ModelName == "Random"):
+    #             return RandomModel()
+    #     else:
+    #         raise Exception(f"No model implementation found for '{cfg}'.")
+
+    # @deprecated
+    # def Create(self, providerName:str = Optional[str], modelConf:str = Optional[str])->ModelBase:
+    #     if(not providerName and not modelConf): raise Exception("ProviderName or ModelName should be provided.")
+    #     return self.CreateByCfg(ModelConfInfo(modelConf, providerName))
+
     # @deprecated()
     # def CreateModelConfigurations(self, providerName:str)->List[ModelBase]:
     #     if(providerName == "ollama"):
@@ -143,66 +212,3 @@ class ModelFactory(object):
     #         return models
     #     else:
     #         raise Exception(f"No model implementation found for '{providerName}'.")
-
-    # region Discovery
-    @staticmethod
-    def _DiscoverBaselineModels() -> dict[str, ModelMeta]:
-        """
-        Lists all available baseline model names
-        :return:
-        """
-        return {k: v for k, v in ModelFactory._DiscoverStandaloneModels().items() if v.IsBaseline}
-
-    @staticmethod
-    def _DiscoverStandaloneModels() -> dict[str, ModelMeta]:
-        """
-        Discovers standalone models, not server through model providers
-        :return:
-        """
-        types = Discovery.find_subclasses("models",ModelBase)  # TODO: It can be in any module when it is a plugin. Remove that criteria
-        metas: dict[str, ModelMeta] = {}
-        for t in types:
-            name: str = t.__name__
-            isBaseline: bool = issubclass(t, BaselineModel)
-            if issubclass(t, ModelProviderBase):
-                continue  # Skipping non-standalone models here. They are discovered in a separate process
-            meta = ModelMeta(name, t, isBaseline)
-            metas[name] = meta
-        return metas
-
-    @staticmethod
-    def _DiscoverModelProviders() -> dict[str, ModelProviderMeta]:
-        types = Discovery.find_subclasses("models",ModelProviderBase,"providers")
-        metas: dict[str, ModelProviderMeta] = {}
-        for t in types:
-            name: str = t.__name__
-            meta = ModelProviderMeta(name, t)
-            metas[name] = meta
-        return metas
-    # endregion
-
-if __name__ == '__main__':
-    #Static Discovery
-    Print("BaselineModelsMeta",     ModelFactory._DiscoverBaselineModels())
-    Print("StandaloneModelsMeta",   ModelFactory._DiscoverStandaloneModels())
-    Print("ModelProvidersMeta",     ModelFactory._DiscoverModelProviders())
-
-    #Instance Queries
-    factory = ModelFactory()
-    Print("ModelProviderNames",   factory.GetAllModelProviderNames())
-    Print("StandaloneModelNames", factory.GetAllStandaloneModelNames())
-    Print("BaselineModelNames",   factory.GetAllBaselineModelNames())
-    #Keys
-    Print("AllModelKeys",  factory.GetAllModelKeys())
-    # print("Models:",[factory.CreateModelConfigurations(modelName) for modelName in factory.GetAllProviderNames()])
-
-    #Models Instance Creation
-    Print("BaselineModels",   factory.CreateBaselineModels())
-    Print("StandaloneModels", factory.CreateStandaloneModels())
-    Print("ModelProviders",   factory.CreateModelProviders())
-    #usages
-    Print("CreateModel(name) usage", factory.CreateModel("RandomModel"))        #typename or name or key ??
-    Print("CreateModelProvider(name) usage",factory.CreateModelProvider("OllamaModelProvider"))
-    Print("CreateModelsByProvider(name) usage",factory.CreateModelsByProvider("OllamaModelProvider"))
-    #Models directly
-    # ModelFactory().GetModelKeys()

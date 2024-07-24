@@ -1,4 +1,3 @@
-import time
 from typing import List
 import re
 
@@ -10,13 +9,11 @@ from colorama import init, Fore, Back, Style
 from data.Dataset import *
 from models.providers.ModelProviderBase import ModelProviderBase
 
-
-class OllamaModelProvider(ModelProviderBase):        #TODO: Model devs should not enforced to introduce both!!!
-
-    def __init__(self, modelConfiguration:str = None) -> None:
+class OllamaModelProvider(ModelProviderBase):
+    def __init__(self, activeModelName:str = None) -> None:
         super().__init__()
         ModelBase.__init__(self)
-        self.ModelConfiguration = modelConfiguration
+        ModelProviderBase.__init__(self, activeModelName)
 
         #region Naming convention ideas
         #EXPERIMENT <MODELCONFIG | DATASET>
@@ -30,21 +27,17 @@ class OllamaModelProvider(ModelProviderBase):        #TODO: Model devs should no
         #endregion
     def ProviderName(self):
         return "ollama"
-
     def ProviderAbbreviation(self):
         return "ol"
 
-    def ModelName(self):
-        return self.ModelConfiguration
-
     @staticmethod
-    def ModelConfigurationsList()->List[str]:
+    def ModelNameList()->List[str]:       #str:ModelNames
         return ["codellama","llama3"]
         #TODO: Dynamically fetch list of models supported by Ollama. After implementing this drop static support and self.ModelConfigurations signature.
         #return ["codellama","llama3","phi3","codegemma","codellama:70b","llama3:70b","starcoder2","gemma","tinyllama"]
         #return ["codellama", "codellama:70b", "phi3", "llama3:7b", "llama2"]  # ? :
-    def ModelConfigurations(self):
-        return OllamaModelProvider.ModelConfigurationsList()
+    def ModelNames(self):   #str:ModelNames
+        return OllamaModelProvider.ModelNameList()
 
     def start_ollama_server(self):
         """
@@ -53,8 +46,7 @@ class OllamaModelProvider(ModelProviderBase):        #TODO: Model devs should no
         # For Win, Set env variable OLLAMA_MODELS for root models dir ref:https://github.com/ollama/ollama/blob/main/docs/faq.md#where-are-models-stored
         :return:
         """
-        modelName = self.ModelConfiguration
-        process = subprocess.Popen(["ollama run", modelName], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        process = subprocess.Popen(["ollama run", self.ModelName()], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         process.communicate()
         return process
 
@@ -65,7 +57,6 @@ class OllamaModelProvider(ModelProviderBase):        #TODO: Model devs should no
         :param langUnitInfo:
         :return:
         """
-        modelName = self.ModelConfiguration
         #ollama_server_process = self.start_ollama_server()
         client = ollama.Client('http://localhost:11434')  # Specify full URL with port
 
@@ -80,7 +71,7 @@ class OllamaModelProvider(ModelProviderBase):        #TODO: Model devs should no
         print(f"\nP:{promptColored}")
         print(Fore.RESET)
 
-        response = client.generate(model=modelName, prompt=prompt)        #phi3,llama2,llama3,deepseek-coder,codegemma,starcoder2  ref:https://ollama.com/library?sort=popular
+        response = client.generate(model=self.ModelName(), prompt=prompt)        #phi3,llama2,llama3,deepseek-coder,codegemma,starcoder2  ref:https://ollama.com/library?sort=popular
         answer = response['response']
 
         sql_pattern = rf"```{langDesc}(.*?)```"

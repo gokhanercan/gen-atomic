@@ -1,4 +1,5 @@
-from abc import ABC, abstractmethod
+from abc import ABC, abstractmethod, ABCMeta
+from dataclasses import field
 
 from langunits.LangUnitFactory import LangUnitInfo
 from utility import StringHelper
@@ -19,20 +20,48 @@ class ModelInfo(object):
         self.ProviderName:Optional[str] = providerName
         self.ProviderAbbreviation: Optional[str] = providerAbbreviation
 
-    @deprecated()
-    def ConfigKey(self)->str:
+    def Key(self)->str:
         abbr:str = StringHelper.Coelesce(self.ProviderAbbreviation,"np")
         return f"{abbr.lower()}.{self.PlainName.lower()}"
-    def Key(self)->str:
-        return self.ConfigKey()
     def __str__(self) -> str:
         return self.Key()
     def __repr__(self) -> str:
         return self.Key()
 
+@dataclass
+class ModelProviderMeta:
+    Name: str
+    Type: ABCMeta
+@dataclass
+class StandaloneModelMeta:
+    Name: str
+    Type: ABCMeta
+    IsBaseline: bool = field(default = False)
+@dataclass
+class ModelMeta:
+    """
+    Represents effective metadata information for all available models.
+    """
+    Name: str
+    PlainName:str
+    Key:str
+    StandaloneModelMeta:StandaloneModelMeta = None
+    ModelProviderMeta:ModelProviderMeta = None
+    #TODO: Add configs.
+    @property
+    def IsStandalone(self) -> bool:
+        return self.StandaloneModelMeta is not None
+    @property
+    def IsBaseline(self) -> bool:
+        if(self.IsStandalone):
+            return self.StandaloneModelMeta.IsBaseline
+        else:
+            return False        #We can't define baseline model by providers
+
 class ModelBase(ABC):
     def __init__(self) -> None:
         super().__init__()
+        self.ModelMeta:Optional[ModelMeta] = None     #TODO: Index sets it!
 
     #region Names and Identities
     def Name(self)->str:
