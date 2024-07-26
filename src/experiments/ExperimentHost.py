@@ -8,9 +8,8 @@ from pandas import DataFrame  # type: ignore
 from tabulate import tabulate  # type: ignore
 from colorama import Fore
 
-from models.ModelBase import ModelConfInfo
+from langunits.LangUnit import LangUnitInfo
 from models.ModelFactory import ModelFactory
-# from providers.OllamaModelProvider import OllamaModelProvider
 from utility.FormatHelper import FormatHelper
 from utility.Paths import Paths
 
@@ -28,7 +27,7 @@ class ExperimentResults(object):
 
     def Print(self, ignoreFakeModelReports = True):
         if(self.ModelResults is not None):
-            fakeModelNames = ModelFactory().ListFakeModelNames()
+            fakeModelNames = ModelFactory().GetAllBaselineModelNames()
             for modelConf,df in self.ModelResults.items():
                 if(ignoreFakeModelReports):
                     if(fakeModelNames.__contains__(modelConf)): continue
@@ -61,9 +60,8 @@ class ExperimentHost(object):
 
         dfAggr = DataFrame()
         for model in exp.Models:
-            modelConf: str = f"{model.ProviderName()}-{model.ModelName()}"
             model_start_time = time.time()
-            print(f"\tRunning model {modelConf} on {ds.Name} dataset ...")
+            print(f"\tRunning model {model.Key()} on {ds.Name} dataset ...")
             dfCases: DataFrame = DataFrame()
             fieldIndex: int = 1
             caseIndex: int = 1
@@ -76,8 +74,9 @@ class ExperimentHost(object):
 
             for f in ds.Units:
                 #region Constraints
-                generated: str = model.Generate(f.Description,f.UnitType)
-                passed: bool = exp.Unit.RunTest(generated, "", f)
+                langUnitInfo:LangUnitInfo = exp.LangUnit.CreateInfo()
+                generated: str = model.Generate(f.Description,langUnitInfo)
+                passed: bool = exp.LangUnit.RunTest(generated, "", f)
 
                 dfCases.at[caseIndex, "Type"] = f.UnitType
                 dfCases.at[caseIndex, "Name"] = f.Name
@@ -97,7 +96,7 @@ class ExperimentHost(object):
                     dfCases.at[caseIndex, "Type"] = f.UnitType
                     dfCases.at[caseIndex, "Name"] = f.Name
                     dfCases.at[caseIndex, "Case"] = "CC-> " + cc
-                    passed:bool = exp.Unit.RunTest(generated, cc, f)
+                    passed:bool = exp.LangUnit.RunTest(generated, cc, f)
                     dfCases.at[caseIndex, "Passed"] = "OK" if passed else "X"
                     dfCases.at[caseIndex, "Generated Code"] = FormatHelper.ShortenCode(generated, 20) if formatCode else generated
                     if (passed):
@@ -126,11 +125,10 @@ class ExperimentHost(object):
 
             model_end_time = time.time()
             model_elapsed_time = model_end_time - model_start_time
-            print(f"\tExperiment for model {modelConf} is completed in {self.format_time(model_elapsed_time)} seconds.", )
-            modelResults[modelConf] = dfCases
+            print(f"\tExperiment for model {model.Key()} is completed in {self.format_time(model_elapsed_time)} seconds.", )
+            modelResults[model.Key()] = dfCases
 
-            modelConf:str = model.ConfigKey()
-            accuracyColName = f"{modelConf} (%)"
+            accuracyColName = f"{model.Key()} (%)"
             #if(ccCount + icCount + len(f.Conditions) == 0): raise Exception("No cases defined in the dataset!") TODO: commented because of a lack of Conditions implementation
             ccAccuracy: float = (float(ccPassed) / float(ccCount)) * 100
             dfAggr.at["CorrectCase", accuracyColName] = ccAccuracy
@@ -172,21 +170,13 @@ def RunSQLSelectExperiment():
     path = Paths().GetDataset("AtomicSQLSelectDataset")
     ds: Dataset = DatasetXmlRepository.Load(path)
 
-    #Exp. Context
-    exp = ExperimentFactory().CreateProviderExperiment(UnitType.SQLSelect, "ollama")
-    modelFactory = ModelFactory()
+    exp = ExperimentFactory().CreateProviderExperiment("SqlSelect", "ol", includeBaselines=True)
 
-    #Fakes
-    fakeModels = [
-        modelFactory.CreateByCfg(ModelConfInfo("Stub")),
-    ]
-    exp.Models = fakeModels  # exp.Models + fakeModels
-    stubModel = [item for item in exp.Models if item.ModelName().__contains__("Stub")][0]
+    #region baselines
+    stubModel = [item for item in exp.Models if item.Name().__contains__("Stub")][0]
     stubModel.StubUnit = "select * from Products"
     stubModel.StubName = "SQLStub"
-
-    #Real Model
-    exp.Models.append(OllamaModelProvider('codellama'))
+    #endregion
 
     r: ExperimentResults = ExperimentHost().Run(exp, ds, formatCode=False)
     r.Print()
@@ -214,5 +204,5 @@ def RunRegexValExperiment():
     ds.Print()
 
 if __name__ == '__main__':
-    #RunSQLSelectExperiment()
-    RunRegexValExperiment()
+    RunSQLSelectExperiment()
+    #RunRegexValExperiment()

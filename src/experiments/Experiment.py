@@ -3,7 +3,7 @@ from typing import List, Optional
 from langunits.LangUnit import LangUnit
 from langunits.LangUnitFactory import LangUnitFactory
 from models.ModelBase import ModelBase
-from models.ModelFactory import ModelFactory
+from models.ModelFactory import ModelFactory, ModelFilters
 # from providers.ProviderFactory import ProviderFactory
 from utility import StringHelper
 
@@ -16,7 +16,12 @@ class Experiment(object):
         self.Name:Optional[str] = None
 
     def GetName(self)->str:
-        return StringHelper.Coelesce(self.Name,self.LangUnit.GetUnitType())
+        return StringHelper.Coelesce(self.Name,self.LangUnit.Name())
+
+    def __str__(self) -> str:
+        return f"E[{self.LangUnit}]"
+    def __repr__(self) -> str:
+        return self.__str__()
 
 
 class ExperimentFactory(object):
@@ -31,23 +36,25 @@ class ExperimentFactory(object):
         return exp
 
     @staticmethod
-    def CreateExperimentWithFakeModels(langUnitName:str)->Experiment:
+    def CreateExperimentWithBaselineModels(langUnitName:str)->Experiment:
         unit:LangUnit = LangUnitFactory().Create(langUnitName)
-        models:List[ModelBase] = ModelFactory().CreateFakeModels()
+        models:List[ModelBase] = ModelFactory().CreateModelsByFilters(ModelFilters(IsBaseline=True))
         exp:Experiment = Experiment(unit,models)
         return exp
 
     @staticmethod
-    def CreateSingleModelExperiment(langUnitName:str, providerName:str, modelConf:str) -> Experiment:
+    def CreateSingleModelExperiment(langUnitName:str, modelKey:str) -> Experiment:
         unit:LangUnit = LangUnitFactory().Create(langUnitName)
-        model: ModelBase = ModelFactory().Create(providerName,modelConf)
+        model: ModelBase = ModelFactory().CreateModelByKey(modelKey)
         exp: Experiment = Experiment(unit, [model])
         return exp
 
     @staticmethod
-    def CreateProviderExperiment(langUnitName:str, providerName:str) -> Experiment:
+    def CreateProviderExperiment(langUnitName:str, providerAbbr:str, includeBaselines:bool = False) -> Experiment:
         unit:LangUnit = LangUnitFactory().Create(langUnitName)
-        models: List[ModelBase] = ProviderFactory().CreateModelConfigurations(providerName)
+        modelFactory = ModelFactory()
+        models: List[ModelBase] = modelFactory.CreateModelsByFilters(ModelFilters(providerAbbr=providerAbbr))
+        if(includeBaselines): models += modelFactory.CreateBaselineModels()
         exp: Experiment = Experiment(unit,models)
         return exp
 

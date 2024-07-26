@@ -1,7 +1,7 @@
 import os
 from openai import OpenAI
 
-from langunits.LangUnitFactory import LangUnitInfo
+from langunits.LangUnit import LangUnitInfo
 from models.ModelBase import ModelBase
 from colorama import init, Fore, Back, Style
 from data.Dataset import *

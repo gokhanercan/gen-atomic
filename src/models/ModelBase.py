@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod, ABCMeta
 from dataclasses import field
 
-from langunits.LangUnitFactory import LangUnitInfo
+from langunits.LangUnit import LangUnitInfo
 from utility import StringHelper
 from data.Dataset import *
 
@@ -84,8 +84,3 @@ class ModelBase(ABC):
     @abstractmethod
     def Generate(self, description: str, langUnitInfo:LangUnitInfo) -> str:
         pass
-
-
-    # @deprecated()
-    # def ConfigKey(self):
-    #     return self.GetModelConf().ConfigKey()

@@ -1,7 +1,6 @@
 import string
 import random
 
-from langunits.LangUnitFactory import LangUnitInfo
 from models.ModelBase import *
 
 

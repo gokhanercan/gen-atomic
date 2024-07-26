@@ -1,4 +1,3 @@
-from langunits.LangUnitFactory import LangUnitInfo
 from models.ModelBase import *
 from utility import StringHelper
 from utility.StringHelper import Coelesce
@@ -13,4 +12,4 @@ class StubModel(ModelBase, BaselineModel):
         return Coelesce(self.StubUnit,f"Stub code for description '{description}'")  # type: ignore
 
     def ModelName(self):
-        return StringHelper.Coelesce(self.StubName,super().ModelName())
+        return StringHelper.Coelesce(self.StubName,super().Name())

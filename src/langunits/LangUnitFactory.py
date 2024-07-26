@@ -1,21 +1,10 @@
 from abc import ABCMeta
-from dataclasses import dataclass
 from typing import List
 
-from langunits.LangUnit import LangUnit
+from langunits.LangUnit import LangUnit, LangUnitMeta
 from utility import Discovery
 from utility.PrintHelper import *
 
-
-@dataclass
-class LangUnitMeta(object):
-    Name: str
-    Type: ABCMeta
-
-@dataclass
-class LangUnitInfo(object):
-    Name:str
-    PromptText:str
 
 class LangUnitFactory(object):
 
@@ -24,9 +13,11 @@ class LangUnitFactory(object):
         self.Meta: dict[str, LangUnitMeta] = self.DiscoverUnits()
 
     def CreateInfo(self, name:str):
-        meta: LangUnitMeta = self.Meta[name]
         instance:LangUnit = self.Create(name)
-        return LangUnitInfo(name,instance.PromptText())
+        return instance.CreateInfo()
+        # meta: LangUnitMeta = self.Meta[name]
+        # instance:LangUnit = self.Create(name)
+        # return LangUnitInfo(name,instance.PromptText())
 
     def Create(self, name:str)->LangUnit:
         meta:LangUnitMeta = self.Meta[name]

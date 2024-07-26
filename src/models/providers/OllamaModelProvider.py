@@ -1,7 +1,7 @@
 from typing import List
 import re
 
-from langunits.LangUnitFactory import LangUnitInfo
+from langunits.LangUnit import LangUnitInfo
 from models.ModelBase import ModelBase
 import subprocess
 import ollama
