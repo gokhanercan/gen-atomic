@@ -9,7 +9,10 @@ class ModelProviderBase(ModelBase):
         super().__init__()
         self.ActiveModelName:Optional[str] = activeModelName
     def ModelName(self)->str:
-         return self.ActiveModelName if(not StringHelper.IsNullOrEmpty(self.ActiveModelName)) else "n/a"
+        return self.ActiveModelName if(not StringHelper.IsNullOrEmpty(self.ActiveModelName)) else self.ProviderName()
+    def Name(self) ->str:
+        return self.ModelName()
+
     @abstractmethod
     def ModelNames(self)->List[str]:       #str:ModelNames
         pass

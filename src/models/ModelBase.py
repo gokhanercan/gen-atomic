@@ -72,19 +72,20 @@ class ModelBase(ABC):
         return "NoProvider"
     def ProviderAbbreviation(self)->str:
         return "np"
-    @deprecated()
-    def ConfigKey(self):
-        return self.GetModelConf().ConfigKey()
     def Key(self):
         return self.GetModelConf().Key()
+    def __repr__(self) -> str:
+        return f"M[{self.Key()}]"
+    def __str__(self) -> str:
+        return f"M[{self.Key()}]"
     def GetModelConf(self)->ModelInfo:
         return ModelInfo(self.PlainName(), self.ProviderName(), self.ProviderAbbreviation())
-    # @deprecated
-    # def ModelConfAbbr(self)->str:       #TODO: DRY. Remove.
-    #     #return f"{self.ProviderAbbreviation().lower()}-{self.ModelName().lower()}"
-    #     return self.GetModelConf().ConfigKey()
-    #endregion
 
     @abstractmethod
     def Generate(self, description: str, langUnitInfo:LangUnitInfo) -> str:
         pass
+
+
+    # @deprecated()
+    # def ConfigKey(self):
+    #     return self.GetModelConf().ConfigKey()

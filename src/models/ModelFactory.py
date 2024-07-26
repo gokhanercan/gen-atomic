@@ -3,15 +3,22 @@ from models.providers.ModelProviderBase import ModelProviderBase
 from utility import Discovery
 from utility.PrintHelper import Print
 
+@dataclass
+class ModelFilters:
+    providerAbbr:str = None
+    providerName:str = None
+    keyContains:str = None
+    isBaseline:Optional[bool] = None
+
 class ModelFactory(object):
     def __init__(self) -> None:
         super().__init__()
         self.StandaloneModelsMeta:dict[str, StandaloneModelMeta] = self._DiscoverStandaloneModels() #Name|Meta
         self.ModelProvidersMeta: dict[str, ModelProviderMeta] = self._DiscoverModelProviders()      #Name|Meta
         #Model Auto Key Indexing via instances
-        self.ModelIndex:dict[str:ModelMeta] = self._BuildModelIndex()                               #Key|Meta
+        self.ModelIndex:dict[str,ModelMeta] = self._BuildModelIndex()                               #Key|Meta
 
-    def _BuildModelIndex(self)->dict[str:ModelMeta]:
+    def _BuildModelIndex(self)->dict[str,ModelMeta]:
         index: dict[str:ModelMeta] = {}
 
         #Standalones
@@ -43,8 +50,35 @@ class ModelFactory(object):
         else:
             mp:ModelProviderBase = self.CreateModelProvider(meta.ModelProviderMeta.Name, meta.PlainName)
             return mp
-    def CreateAllModels(self):
-        return self.CreateStandaloneModels() + self.CreateModelProviders()
+
+    def FindKeysByFilters(self,mf:ModelFilters):
+        filtered:dict[str,ModelMeta] = self.ModelIndex
+        #region Apply filters
+        def filterProviderAbbr(filter:str,meta:ModelMeta):
+            return filter == meta.Key.split('.')[0]
+        def filterProviderName(filter:str,meta:ModelMeta):
+            if(meta.ModelProviderMeta): return filter == meta.ModelProviderMeta.Name
+            return False
+        def filterKeyContains(filter:str,meta:ModelMeta):
+            return meta.Key.__contains__(filter)
+        #endregion
+
+        if mf.providerAbbr:
+            filtered = {k:v for k,v in filtered.items() if filterProviderAbbr(mf.providerAbbr,v)}
+        if mf.providerName:
+            filtered = {k: v for k, v in filtered.items() if filterProviderName(mf.providerName, v)}
+        if mf.keyContains:
+            filtered = {k: v for k, v in filtered.items() if filterKeyContains(mf.keyContains, v)}
+        if mf.isBaseline:
+            filtered = {k: v for k, v in filtered.items() if v.IsBaseline == mf.isBaseline}
+
+        return filtered
+    def CreateModelsByFilters(self, mf:ModelFilters)->List[ModelBase]:
+        filtered:dict[str,ModelMeta] = self.FindKeysByFilters(mf)
+        return [self.CreateModelByKey(k) for k,v in filtered.items()]
+
+    def CreateAllModels(self)->List[ModelBase]:
+        return [self.CreateModelByKey(k) for k,v in self.ModelIndex.items()]
     def CreateStandaloneModels(self)->List[ModelBase]:
         models:List[ModelBase] = []
         for modelName in self.GetAllStandaloneModelNames():
@@ -148,68 +182,18 @@ if __name__ == '__main__':
     #Keys
     Print("ModelIndex", factory.ModelIndex)
     Print("AllModelKeys",  factory.GetAllModelKeys())
+    Print("FindKeysByFilters usage", factory.FindKeysByFilters(ModelFilters("ol","OllamaModelProvider", "llama3",False)))
 
     #Models Instance Creation
-    Print("BaselineModels",   factory.CreateBaselineModels())
-    Print("StandaloneModels", factory.CreateStandaloneModels())
-    Print("ModelProviders",   factory.CreateModelProviders())
+    Print("BaselineModels",     factory.CreateBaselineModels())
+    Print("StandaloneModels",   factory.CreateStandaloneModels())
+    Print("ModelProviders",     factory.CreateModelProviders())
+    Print("AllEffectiveModels", factory.CreateAllModels())
+    Print("CreateModelsByFilters() usage", factory.CreateModelsByFilters(ModelFilters("ol","OllamaModelProvider", "llama",False)))
+
     #usages
     Print("CreateModel(name) usage", factory.CreateModel("RandomModel"))
     Print("CreateModelProvider(name) usage",factory.CreateModelProvider("OllamaModelProvider"))
     Print("CreateModelsByProvider(name) usage",factory.CreateModelsByProvider("OllamaModelProvider"))
     Print("CreateModelByKey(key) usage via standalones", factory.CreateModelByKey("np.random"))
     Print("CreateModelByKey(key) usage via providers", factory.CreateModelByKey("ol.codellama"))
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    # @deprecated("Just like what we did for ANTLR and LangUnit, we need a plugin-wise factory here to support open-closed principle.")
-    # def CreateByCfg(self, cfg:ModelConfInfo)->ModelBase:
-    #     if (cfg.ProviderName == "ollama"):
-    #         return OllamaModelProvider(cfg.ModelName)
-    #     if (cfg.ProviderName == "ollama"):
-    #         return ChatGPTModelProvider(cfg.ModelName)
-    #     if(cfg.ProviderName is None):
-    #         if (cfg.ModelName == "Stub"):
-    #             return StubModel()
-    #         elif (cfg.ModelName == "Random"):
-    #             return RandomModel()
-    #     else:
-    #         raise Exception(f"No model implementation found for '{cfg}'.")
-
-    # @deprecated
-    # def Create(self, providerName:str = Optional[str], modelConf:str = Optional[str])->ModelBase:
-    #     if(not providerName and not modelConf): raise Exception("ProviderName or ModelName should be provided.")
-    #     return self.CreateByCfg(ModelConfInfo(modelConf, providerName))
-
-    # @deprecated()
-    # def CreateModelConfigurations(self, providerName:str)->List[ModelBase]:
-    #     if(providerName == "ollama"):
-    #         modelconfs:List[str] = OllamaModelProvider.ModelConfigurationsList()
-    #         models:List[ModelBase] = []
-    #         for modelconf in modelconfs:
-    #             m:ModelBase = OllamaModelProvider(modelconf)
-    #             models.append(m)
-    #         return models
-    #
-    #     if(providerName == "chatgpt"):
-    #         modelconfs:List[str] = ChatGPTModelProvider.ModelConfigurationsList()
-    #         models:List[ModelBase] = []
-    #         for modelconf in modelconfs:
-    #             m:ModelBase = ChatGPTModelProvider(modelconf)
-    #             models.append(m)
-    #         return models
-    #     else:
-    #         raise Exception(f"No model implementation found for '{providerName}'.")
