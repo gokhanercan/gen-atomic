@@ -36,9 +36,18 @@ class ExperimentFactory(object):
         return exp
 
     @staticmethod
+    def CreateExperimentByModelFilters(langUnitName:str, mf:ModelFilters, includeBaselines:bool = False):
+        unit: LangUnit = LangUnitFactory().Create(langUnitName)
+        modelFactory = ModelFactory()
+        models: List[ModelBase] = modelFactory.CreateModelsByFilters(mf)
+        if (includeBaselines): models += modelFactory.CreateBaselineModels()
+        exp: Experiment = Experiment(unit, models)
+        return exp
+
+    @staticmethod
     def CreateExperimentWithBaselineModels(langUnitName:str)->Experiment:
         unit:LangUnit = LangUnitFactory().Create(langUnitName)
-        models:List[ModelBase] = ModelFactory().CreateModelsByFilters(ModelFilters(IsBaseline=True))
+        models:List[ModelBase] = ModelFactory().CreateModelsByFilters(ModelFilters(isBaseline=True))
         exp:Experiment = Experiment(unit,models)
         return exp
 

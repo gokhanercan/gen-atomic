@@ -9,7 +9,7 @@ from tabulate import tabulate  # type: ignore
 from colorama import Fore
 
 from langunits.LangUnit import LangUnitInfo
-from models.ModelFactory import ModelFactory
+from models.ModelFactory import ModelFactory, ModelFilters
 from utility.FormatHelper import FormatHelper
 from utility.Paths import Paths
 
@@ -110,7 +110,7 @@ class ExperimentHost(object):
                     dfCases.at[caseIndex, "Type"] = f.UnitType
                     dfCases.at[caseIndex, "Name"] = f.Name
                     dfCases.at[caseIndex, "Case"] = "IC-> " + icc
-                    passed:bool = not exp.Unit.RunTest(generated, icc, f)  # type: ignore
+                    passed:bool = not exp.LangUnit.RunTest(generated, icc, f)  # type: ignore
                     dfCases.at[caseIndex, "Passed"] = "OK" if passed else "X"
                     dfCases.at[caseIndex, "Generated Code"] = FormatHelper.ShortenCode(generated, 20) if formatCode else generated
                     if (passed):
@@ -172,7 +172,7 @@ def RunSQLSelectExperiment():
 
     exp = ExperimentFactory().CreateProviderExperiment("SqlSelect", "ol", includeBaselines=True)
 
-    #region baselines
+    #region baselines stubbing
     stubModel = [item for item in exp.Models if item.Name().__contains__("Stub")][0]
     stubModel.StubUnit = "select * from Products"
     stubModel.StubName = "SQLStub"
@@ -188,21 +188,18 @@ def RunRegexValExperiment():
     ds: Dataset = DatasetXmlRepository.Load(path)
 
     #Exp. Context
-    exp = ExperimentFactory().CreateProviderExperiment("RegexVal", "ollama")
-    modelFactory = ModelFactory()
+    exp = ExperimentFactory().CreateExperimentByModelFilters("RegexVal",ModelFilters(keyContains="codellama"),includeBaselines=False)
 
-    #Stub
-    fakeModels = [modelFactory.CreateByCfg(ModelConfInfo("Stub"))]
-    exp.Models = exp.Models + fakeModels
-    stubModel = [item for item in exp.Models if item.ModelName().__contains__("Stub")][0]
+    #region baselines stubbing
+    stubModel = [item for item in exp.Models if item.Name().__contains__("Stub")][0]
     fixedRegex: str = r"""^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$"""
     stubModel.StubUnit = fixedRegex  # type: ignore
     stubModel.StubName = "EmailStub"
 
-    r:ExperimentResults = ExperimentHost().Run(exp, ds, formatCode=False)
+    r:ExperimentResults = ExperimentHost().Run(exp, ds, formatCode=True)
     r.Print()
-    ds.Print()
+    # ds.Print()
 
 if __name__ == '__main__':
-    RunSQLSelectExperiment()
-    #RunRegexValExperiment()
+    #RunSQLSelectExperiment()
+    RunRegexValExperiment()
