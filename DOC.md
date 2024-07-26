@@ -55,7 +55,7 @@ Here are some example schema explanations:
 Some notes on the Type and Identity system of the library that can help you implement plugins.
 
 
-| Impl. Type           | Name/ModelName/ConfigName or SubModel?? | PlainName  | TypeName                                                 | Key          | ConfigName | ConfigKey    |
-| ---------------------- | ----------------------------------------- | ------------ | ---------------------------------------------------------- | -------------- | ------------ | -------------- |
-| Standalone Model Ex. | RandomModel                             | Random     | models.RandomModel.RandomModel                           | np-random    | _n\a_      | np-random    |
-| ModelProvider Ex.    | Codellama?                              | Codellama? | models.providers.OllamaModelProvider.OllamaModelProvider | ol-codellama | _n\a_      | ol-random:7b |
+| Impl. Type           | Name/ModelName/ActiveModelName | PlainName  | TypeName                                                 | Key          | ConfigName | ConfigKey    |
+| ---------------------- |--------------------------------| ------------ | ---------------------------------------------------------- | -------------- | ------------ | -------------- |
+| Standalone Model Ex. | RandomModel                    | Random     | models.RandomModel.RandomModel                           | np-random    | _n\a_      | np-random    |
+| ModelProvider Ex.    | Codellama                     | Codellama | models.providers.OllamaModelProvider.OllamaModelProvider | ol-codellama | _n\a_      | ol-random:7b |
