@@ -2,6 +2,6 @@
     <Prompt name="P1">
         Consider yourself a UNIT_TYPE that takes the input of asked [LANG_UNIT_DESC], and your output is '''[LANG_UNIT_NAME]: {created regex}''' Do not give me an explanation, only give me a [LANG_UNIT_NAME]. Do not add any additional characters.
         Asked regex statement [LANG_UNIT_NAME]: [DATA.DESCRIPTION]. Consider handling [DATA.CORRECTCASE] data cases.
-        Existing code was [EXISTING_CODE].
+        @if (Prex)Existing code was [EXISTING_CODE].
     </Prompt>
 </Prompts>

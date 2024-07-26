@@ -1,16 +1,15 @@
-from models.ModelBase import ModelBase
+from models.ModelBase import *
 from utility import StringHelper
 from utility.StringHelper import Coelesce
-from data.Dataset import *
 
-class StubModel(ModelBase):
+class StubModel(ModelBase, BaselineModel):
     def __init__(self, stubUnit:str = None) -> None:
         super().__init__()
         self.StubUnit = stubUnit
         self.StubName = None
 
-    def Generate(self, description: str, UnitType:UnitType) -> str:
+    def Generate(self, description: str,langUnitInfo:LangUnitInfo) -> str:
         return Coelesce(self.StubUnit,f"Stub code for description '{description}'")  # type: ignore
 
     def ModelName(self):
-        return StringHelper.Coelesce(self.StubName,super().ModelName())
+        return StringHelper.Coelesce(self.StubName,super().Name())

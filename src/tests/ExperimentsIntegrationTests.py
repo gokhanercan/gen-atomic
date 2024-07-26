@@ -1,20 +1,28 @@
 import unittest
 from unittest import TestCase
 
-from data.Dataset import Dataset, UnitType
+from api.API import API
+from data.Dataset import Dataset
 from data.DatasetXmlRepository import DatasetXmlRepository
 from experiments.Experiment import Experiment, ExperimentFactory
 from experiments.ExperimentHost import ExperimentHost, ExperimentResults
 from utility.Paths import Paths
 
+class APISmokeTests(TestCase):
+    def test_API_RunAllGetters(self):
+        try:
+            print(API().GetAllProviderNames())
+            print(API().GetAllLangUnitNames())
+        except Exception as e:
+            self.fail(f"Some API getters failed with exception: {e}")
 
 class ExperimentsIntegrationTest(TestCase):
     def test_ExperimentHost_AtomicDataset_RunExperiment(self):
         host:ExperimentHost = ExperimentHost()
 
-        path:str = Paths().GetDataset("AtomicDataset")
+        path:str = Paths().GetDataset("AtomicRegexValDataset")
         ds: Dataset = DatasetXmlRepository.Load(path)
-        exp:Experiment = ExperimentFactory().CreateExperimentWithFakeModels(UnitType.SQL)
+        exp:Experiment = ExperimentFactory().CreateExperimentWithFakeModels("SelectSql")
 
         # customize stub
         stubModel = [item for item in exp.Models if item.ModelName().__contains__("Stub")][0]

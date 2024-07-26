@@ -1,8 +1,6 @@
-
 import os
 from pathlib import Path
 from unittest import TestCase
-
 
 class Paths(object):
 
@@ -16,6 +14,9 @@ class Paths(object):
 
     def GetDataRoot(self) -> str:
         return str(Path(self.GetProjectRoot()).joinpath("data"))
+
+    def GetModulesRoot(self) -> str:
+        return self.GetSourceRoot()
 
     def GetSourceRoot(self) -> str:
         return str(Path(self.GetProjectRoot()).joinpath("src"))

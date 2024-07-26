@@ -8,7 +8,7 @@ import streamlit as st
 
 from data.Dataset import Dataset, Unit
 from data.DatasetXmlRepository import DatasetXmlRepository
-from models.ModelBase import ModelBase, ModelConf
+from models.ModelBase import ModelBase, ModelConfInfo
 from models.ModelFactory import ModelFactory
 from utility.Paths import Paths
 
@@ -37,10 +37,10 @@ icase = bar.selectbox('Choose an inccorrect case?',field.IncorrectCases)
 #Model
 bar.subheader("Model")
 modelFactory = ModelFactory()
-modelConfigs:List[ModelConf] = modelFactory.GetModelConfigurations()
+modelConfigs:List[ModelConfInfo] = modelFactory.GetModelConfigurations()
 configKeys = [obj.ConfigKey() for obj in modelConfigs]
 
-modelConf:ModelConf = bar.selectbox('Choose a model?', modelConfigs)
+modelConf:ModelConfInfo = bar.selectbox('Choose a model?', modelConfigs)
 model: ModelBase = ModelFactory().CreateByCfg(modelConf)
 modelName:str = model.ModelName()
 modelKey:str = model.ConfigKey()

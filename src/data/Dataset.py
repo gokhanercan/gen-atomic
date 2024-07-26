@@ -4,7 +4,7 @@ from typing import List, Optional
 
 from pandas import DataFrame
 from tabulate import tabulate
-
+from deprecated import deprecated
 
 class Dataset(object):
     def __init__(self, name:str):
@@ -30,14 +30,6 @@ class Dataset(object):
         df.at["Perc (%)", "IncorrectCase"] = str(float(icCount) / overall * 100)
         df.at["Perc (%)", "Overall"] = str(100)
         print(tabulate(df, headers="keys", tablefmt='psql', floatfmt=".2f"))
-@unique
-class UnitType(Enum):
-    RegexVal = 0  # Validation script for Regex
-    HTML = 1
-    SQLSelect = 2   #SQL
-
-    def DescriptionName(self):
-        return self.value       #TODO: Get friendly desc name from annotation.
 
 @dataclass
 class Criteria:
@@ -55,10 +47,10 @@ class Constraint(object):
 
 class Unit(object):     #TODO: Find a better name for this. Field,Column,Case etc.
 
-    def __init__(self, name: str, desc: str, unitType: UnitType, correctCases=None, incorrectCases=None):
+    def __init__(self, name: str, desc: str, unitType: str, correctCases=None, incorrectCases=None):
         self.Name = name
         self.Description = desc
-        self.UnitType: UnitType = unitType
+        self.UnitType: str = unitType
 
         self.Context: Optional[Context] = None
         self.Constraints: List[Constraint] = []

@@ -1,52 +1,86 @@
-from abc import ABC, abstractmethod
-from typing import Optional
-from deprecated import deprecated
+from abc import ABC, abstractmethod, ABCMeta
+from dataclasses import field
+
+from langunits.LangUnit import LangUnitInfo
 from utility import StringHelper
 from data.Dataset import *
 
-class ModelConf(object):
-    def __init__(self, modelName:str, providerName:Optional[str] = None, providerAbbreviation:Optional[str] = None) -> None:
+class BaselineModel(ABC):
+    """
+    This is a marker-type to indicate fake/stub/ummy baseline models.
+    """
+    pass
+
+class ModelInfo(object):
+    def __init__(self, plainName:str,
+                       providerName:Optional[str] = None,
+                       providerAbbreviation:Optional[str] = None) -> None:
         super().__init__()
-        self.ModelName:str = modelName
+        self.PlainName:str = plainName
         self.ProviderName:Optional[str] = providerName
         self.ProviderAbbreviation: Optional[str] = providerAbbreviation
 
-    def ConfigKey(self):
+    def Key(self)->str:
         abbr:str = StringHelper.Coelesce(self.ProviderAbbreviation,"np")
-        return f"{abbr.lower()}-{self.ModelName.lower()}"
-
+        return f"{abbr.lower()}.{self.PlainName.lower()}"
     def __str__(self) -> str:
-        return self.ConfigKey()
-
+        return self.Key()
     def __repr__(self) -> str:
-        return self.ConfigKey()
+        return self.Key()
 
+@dataclass
+class ModelProviderMeta:
+    Name: str
+    Type: ABCMeta
+@dataclass
+class StandaloneModelMeta:
+    Name: str
+    Type: ABCMeta
+    IsBaseline: bool = field(default = False)
+@dataclass
+class ModelMeta:
+    """
+    Represents effective metadata information for all available models.
+    """
+    Name: str
+    PlainName:str
+    Key:str
+    StandaloneModelMeta:StandaloneModelMeta = None
+    ModelProviderMeta:ModelProviderMeta = None
+    #TODO: Add configs.
+    @property
+    def IsStandalone(self) -> bool:
+        return self.StandaloneModelMeta is not None
+    @property
+    def IsBaseline(self) -> bool:
+        if(self.IsStandalone):
+            return self.StandaloneModelMeta.IsBaseline
+        else:
+            return False        #We can't define baseline model by providers
 
 class ModelBase(ABC):
     def __init__(self) -> None:
         super().__init__()
+        self.ModelMeta:Optional[ModelMeta] = None     #TODO: Index sets it!
 
-    def ModelName(self):        #TODO: delete
-        return str(type(self).__name__).replace("Model","")
-
-    #@abstractmethod
+    #region Names and Identities
+    def Name(self)->str:
+        return str(type(self).__name__)
+    def PlainName(self)->str:
+        return self.Name().replace("Model","").replace("Provider","")
     def ProviderName(self)->str:
         return "NoProvider"
-
     def ProviderAbbreviation(self)->str:
         return "np"
-
-    @deprecated
-    def ModelConfAbbr(self)->str:       #TODO: DRY. Remove.
-        #return f"{self.ProviderAbbreviation().lower()}-{self.ModelName().lower()}"
-        return self.GetModelConf().ConfigKey()
-
-    def ConfigKey(self):
-        return self.GetModelConf().ConfigKey()
-
-    def GetModelConf(self)->ModelConf:
-        return ModelConf(self.ModelName(),self.ProviderName(),self.ProviderAbbreviation())
+    def Key(self):
+        return self.GetModelConf().Key()
+    def __repr__(self) -> str:
+        return f"M[{self.Key()}]"
+    def __str__(self) -> str:
+        return f"M[{self.Key()}]"
+    def GetModelConf(self)->ModelInfo:
+        return ModelInfo(self.PlainName(), self.ProviderName(), self.ProviderAbbreviation())
 
     @abstractmethod
-    def Generate(self, description: str, UnitType:UnitType) -> str:
+    def Generate(self, description: str, langUnitInfo:LangUnitInfo) -> str:
         pass
