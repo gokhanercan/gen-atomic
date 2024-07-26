@@ -191,10 +191,13 @@ def RunRegexValExperiment():
     exp = ExperimentFactory().CreateExperimentByModelFilters("RegexVal",ModelFilters(keyContains="codellama"),includeBaselines=False)
 
     #region baselines stubbing
-    stubModel = [item for item in exp.Models if item.Name().__contains__("Stub")][0]
-    fixedRegex: str = r"""^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$"""
-    stubModel.StubUnit = fixedRegex  # type: ignore
-    stubModel.StubName = "EmailStub"
+    stubs = [item for item in exp.Models if item.Name().__contains__("Stub")]
+    if(stubs):
+        stubModel = stubs[0]
+        fixedRegex: str = r"""^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$"""
+        stubModel.StubUnit = fixedRegex  # type: ignore
+        stubModel.StubName = "EmailStub"
+    #endregion
 
     r:ExperimentResults = ExperimentHost().Run(exp, ds, formatCode=True)
     r.Print()
