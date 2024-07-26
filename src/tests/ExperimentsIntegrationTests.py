@@ -11,7 +11,7 @@ from utility.Paths import Paths
 class APISmokeTests(TestCase):
     def test_API_RunAllGetters(self):
         try:
-            print(API().GetAllProviderNames())
+            print(API().GetAllModelProviderNames())
             print(API().GetAllLangUnitNames())
         except Exception as e:
             self.fail(f"Some API getters failed with exception: {e}")
@@ -22,10 +22,10 @@ class ExperimentsIntegrationTest(TestCase):
 
         path:str = Paths().GetDataset("AtomicRegexValDataset")
         ds: Dataset = DatasetXmlRepository.Load(path)
-        exp:Experiment = ExperimentFactory().CreateExperimentWithFakeModels("SelectSql")
+        exp:Experiment = ExperimentFactory().CreateExperimentWithBaselineModels("RegexVal")
 
         # customize stub
-        stubModel = [item for item in exp.Models if item.ModelName().__contains__("Stub")][0]
+        stubModel = [item for item in exp.Models if item.Name().__contains__("Stub")][0]
         fixedRegex: str = r"""^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$"""
         stubModel.StubUnit = fixedRegex  # type: ignore
         stubModel.StubName = "EmailStub"
