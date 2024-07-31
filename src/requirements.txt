@@ -8,3 +8,4 @@ openai
 Deprecated
 sqlite3
 groq
+scikit-learn
