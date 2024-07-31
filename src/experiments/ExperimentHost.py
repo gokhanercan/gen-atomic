@@ -72,6 +72,9 @@ class ExperimentHost(object):
             ccPassed: int = 0
             icPassed: int = 0
 
+            y_true: List[int] = []
+            y_pred: List[int] = []
+
             for f in ds.Units:
                 #region Constraints
                 langUnitInfo:LangUnitInfo = exp.LangUnit.CreateInfo()
@@ -106,6 +109,8 @@ class ExperimentHost(object):
                     totalCaseCount = totalCaseCount + 1
                     ccCount = ccCount + 1
                     caseIndex += 1
+                    y_true.append(1)
+                    y_pred.append(int(passed))
                 for icc in f.IncorrectCases:
                     dfCases.at[caseIndex, "Type"] = f.UnitType
                     dfCases.at[caseIndex, "Name"] = f.Name
@@ -120,6 +125,8 @@ class ExperimentHost(object):
                     totalCaseCount = totalCaseCount + 1
                     icCount = icCount + 1
                     caseIndex += 1
+                    y_true.append(0)
+                    y_pred.append(int(not passed))
                 fieldIndex += 1
                 #endregion
 
@@ -130,23 +137,20 @@ class ExperimentHost(object):
 
             accuracyColName = f"{model.Key()} (%)"
             #if(ccCount + icCount + len(f.Conditions) == 0): raise Exception("No cases defined in the dataset!") TODO: commented because of a lack of Conditions implementation
-            ccAccuracy: float = (float(ccPassed) / float(ccCount)) * 100
+            ccAccuracy: float = (float(ccPassed) / float(ccCount)) * 100 if ccCount > 0 else 0
             dfAggr.at["CorrectCase", accuracyColName] = ccAccuracy
 
-            #icAccuracy: float = (float(icPassed) / float(icCount)) * 100
-            #dfAggr.at["IncorrectCase", accuracyColName] = icAccuracy
-
-            overallAccuracy: float = (float(passedCaseCount) / float(totalCaseCount)) * 100
+            overallAccuracy: float = (float(passedCaseCount) / float(totalCaseCount)) * 100 if totalCaseCount > 0 else 0
             dfAggr.at["Overall", accuracyColName] = overallAccuracy
 
-            # precision: float = (float(ccPassed) / float(ccPassed + (icCount - icPassed))) * 100
-            # dfAggr.at["Precision", accuracyColName] = precision
-            #
-            # recall: float = (float(ccPassed) / float(ccCount)) * 100
-            # dfAggr.at["Recall", accuracyColName] = recall
-            #
-            # f1Score: float = 2*precision*recall / (precision + recall)
-            # dfAggr.at["F1 Score", accuracyColName] = f1Score
+            #region Precision, Recall, F1 Score
+
+            from sklearn.metrics import precision_score, recall_score, f1_score
+
+            # Calculate precision, recall, and F1-score
+            dfAggr.at["Precision", accuracyColName] = precision_score(y_true, y_pred) * 100
+            dfAggr.at["Recall", accuracyColName] = recall_score(y_true, y_pred) * 100
+            dfAggr.at["F1 Score", accuracyColName] =  f1_score(y_true, y_pred) * 100
             #endregion
 
         end_time = time.time()
