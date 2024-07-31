@@ -7,3 +7,4 @@ colorama
 openai
 Deprecated
 sqlite3
+groq
