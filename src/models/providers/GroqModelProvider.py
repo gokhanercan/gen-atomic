@@ -37,9 +37,9 @@ class GroqModelProvider(ModelProviderBase):
             raise ValueError("The GROQ_API_KEY environment variable is not set.")
         client = Groq(api_key=groq_api_key)
 
-        instruction:str = "Consider yourself a function that takes the input of asked validation regex statement, and your output is '''Regex: {created regex}''' Do not give me an explanation, only give me a regex expression. Do not add any additional characters."
-        prompt:str = f"\nAsked regex statement: {description}."
-        promptColored: str = f"{instruction}\nAsked regex statement: {Fore.BLUE}{description}{Fore.RESET}."
+        instruction:str = "Consider yourself a function that takes the input of asked SQL select statement, and your output is '''SQL: {created SQLStatement}''' Do not give me an explanation, only give me a sql statement. Do not add any additional characters."
+        prompt:str = f"\nAsked SQL select statement: {description}."
+        promptColored: str = f"{instruction}\nAsked SQL select statement: {Fore.BLUE}{description}{Fore.RESET}."
         print(f"\nP:{promptColored}")
         print(Fore.RESET)
 
@@ -59,7 +59,7 @@ class GroqModelProvider(ModelProviderBase):
 
         answer = chat_completion.choices[0].message.content
 
-        gencode:str = str(answer).strip().replace("Regex: ","").replace("```","").replace("`","")      #TODO: Output parsers here please!
+        gencode:str = str(answer).strip().replace("Regex: ","").replace("SQL: ","").replace("```","").replace("`","")      #TODO: Output parsers here please!
         print(f"A: {Fore.CYAN}{gencode}{Fore.RESET}")
         return gencode
 

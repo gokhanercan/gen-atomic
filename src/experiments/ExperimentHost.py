@@ -92,6 +92,9 @@ class ExperimentHost(object):
                 totalCaseCount = totalCaseCount + 1
                 ccCount = ccCount + 1
                 caseIndex += 1
+
+                y_true.append(1)
+                y_pred.append(int(passed))
                 #endregion
 
                 #region Cases
@@ -148,9 +151,9 @@ class ExperimentHost(object):
             from sklearn.metrics import precision_score, recall_score, f1_score
 
             # Calculate precision, recall, and F1-score
-            dfAggr.at["Precision", accuracyColName] = precision_score(y_true, y_pred) * 100
-            dfAggr.at["Recall", accuracyColName] = recall_score(y_true, y_pred) * 100
-            dfAggr.at["F1 Score", accuracyColName] =  f1_score(y_true, y_pred) * 100
+            dfAggr.at["Precision", accuracyColName] = precision_score(y_true, y_pred, zero_division=0) * 100
+            dfAggr.at["Recall", accuracyColName] = recall_score(y_true, y_pred, zero_division=0) * 100
+            dfAggr.at["F1 Score", accuracyColName] =  f1_score(y_true, y_pred, zero_division=0) * 100
             #endregion
 
         end_time = time.time()
@@ -174,12 +177,12 @@ def RunSQLSelectExperiment():
     path = Paths().GetDataset("AtomicSQLSelectDataset")
     ds: Dataset = DatasetXmlRepository.Load(path)
 
-    exp = ExperimentFactory().CreateProviderExperiment("SqlSelect", "ol", includeBaselines=True)
+    exp = ExperimentFactory().CreateExperimentByModelFilters("SqlSelect",ModelFilters(keyContains="llama3-70b-8192"),includeBaselines=False)
 
     #region baselines stubbing
-    stubModel = [item for item in exp.Models if item.Name().__contains__("Stub")][0]
-    stubModel.StubUnit = "select * from Products"
-    stubModel.StubName = "SQLStub"
+    #stubModel = [item for item in exp.Models if item.Name().__contains__("Stub")][0]
+    #stubModel.StubUnit = "select * from Products"
+    #stubModel.StubName = "SQLStub"
     #endregion
 
     r: ExperimentResults = ExperimentHost().Run(exp, ds, formatCode=False)
@@ -188,11 +191,11 @@ def RunSQLSelectExperiment():
 
 def RunRegexValExperiment():
     #Dataset
-    path = Paths().GetDataset("AtomicRegexValDataset")
+    path = Paths().GetDataset("AtomicSQLSelectDataset")
     ds: Dataset = DatasetXmlRepository.Load(path)
 
     #Exp. Context
-    exp = ExperimentFactory().CreateExperimentByModelFilters("RegexVal",ModelFilters(keyContains="codellama"),includeBaselines=False)
+    exp = ExperimentFactory().CreateExperimentByModelFilters("SqlSelect",ModelFilters(keyContains="llama3-70b-8192"),includeBaselines=False)
 
     #region baselines stubbing
     stubs = [item for item in exp.Models if item.Name().__contains__("Stub")]
@@ -208,5 +211,5 @@ def RunRegexValExperiment():
     # ds.Print()
 
 if __name__ == '__main__':
-    #RunSQLSelectExperiment()
-    RunRegexValExperiment()
+    RunSQLSelectExperiment()
+    #RunRegexValExperiment()
