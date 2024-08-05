@@ -14,6 +14,9 @@ class RandomModel(ModelBase, BaselineModel):
         text = ''.join(random.choice(chars) for _ in range(self.Length))
         return text
 
+    def Generate2(self, finalPrompt: str, langDesc: str) -> str:
+        pass
+
 
 if __name__ == "__main__":
     random_text = RandomModel().Generate("here is the sample text",LangUnitInfo("SqlSelect","sql select query"))

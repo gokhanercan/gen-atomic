@@ -30,6 +30,9 @@ class GroqModelProvider(ModelProviderBase):
     def ModelNames(self):
         return GroqModelProvider.ModelNameList()
 
+    def Generate2(self, finalPrompt: str, langDesc: str) -> str:
+        pass
+
     def Generate(self, description: str, langUnitInfo:LangUnitInfo) -> str:
         from groq import Groq
         groq_api_key = os.environ.get("GROQ_API_KEY")

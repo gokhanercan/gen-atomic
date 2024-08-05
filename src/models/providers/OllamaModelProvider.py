@@ -91,6 +91,39 @@ class OllamaModelProvider(ModelProviderBase):
         print(f"A: {Fore.CYAN}{gencode}{Fore.RESET}")
         return gencode
 
+    def Generate2(self, finalPrompt:str, langDesc:str) -> str:
+        #prompt
+        # langDesc:str = langUnitInfo.PromptText
+        # instruction: str = (f"Consider yourself a function that takes the input of asked validation {langDesc} statement, and "
+        #                     f"your output should be a markdown code snippet formatted in the following schema, including "
+        #                     f"the leading and trailing \"```{langDesc}\" and \"```\". Do not give me an explanation, only give "
+        #                     f"me a {langDesc} expression. Do not add any additional characters.")
+        # prompt: str = f"{instruction}\nAsked {langDesc} statement: {description}."
+        # promptColored: str = f"{instruction}\nAsked {langDesc} statement: {Fore.BLUE}{description}{Fore.RESET}."
+        # print(f"\nP:{promptColored}")
+        # print(Fore.RESET)
+
+        client = ollama.Client('http://localhost:11434')  # Specify full URL with port
+        response = client.generate(model=self.ModelName(), prompt=finalPrompt)        #phi3,llama2,llama3,deepseek-coder,codegemma,starcoder2  ref:https://ollama.com/library?sort=popular
+        answer = response['response']
+
+        #region Parser
+        sql_pattern = rf"```{langDesc}(.*?)```"
+        match = re.search(sql_pattern, answer, re.DOTALL)  # re.DOTALL allows matching newlines
+        print(f"Full Output:\n{answer}\n")
+        if match:
+            extracted_sql = match.group(1)
+            print(f"Extracted {langDesc} pattern: {Fore.CYAN}{extracted_sql}{Fore.RESET}")
+            answer = extracted_sql.strip()
+        else:
+            print(f"Couldn't find {langDesc} pattern between ```")
+        #ollama_server_process.terminate()       #TODO: Manage the connection. Do not terminate on every call.
+
+        gencode:str = str(answer).strip().replace("Regex: ","").replace("regexp","").replace("```","").replace("`","").replace("SQL: ","")      #TODO: Output parsers here please!
+        print(f"A: {Fore.CYAN}{gencode}{Fore.RESET}")
+        #endregion
+        return gencode
+
 if __name__ == "__main__":
     answer = OllamaModelProvider('codellama').Generate("generate me an email regex, do not give me an explanation",
                     LangUnitInfo("RegexVal", "regular expression for validation"))

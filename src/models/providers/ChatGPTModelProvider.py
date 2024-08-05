@@ -27,6 +27,9 @@ class ChatGPTModelProvider(ModelProviderBase):
     def ModelNames(self):
         return ChatGPTModelProvider.ModelNameList()
 
+    def Generate2(self, finalPrompt: str, langDesc: str) -> str:
+        pass
+
     def Generate(self, description: str, langUnitInfo:LangUnitInfo) -> str:
         openai_api_key = os.getenv('OPEN_AI_API_KEY')
         if not openai_api_key:

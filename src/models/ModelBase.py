@@ -84,3 +84,7 @@ class ModelBase(ABC):
     @abstractmethod
     def Generate(self, description: str, langUnitInfo:LangUnitInfo) -> str:
         pass
+
+    @abstractmethod
+    def Generate2(self, finalPrompt:str,langDesc:str) -> str:
+        pass

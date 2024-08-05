@@ -11,5 +11,8 @@ class StubModel(ModelBase, BaselineModel):
     def Generate(self, description: str,langUnitInfo:LangUnitInfo) -> str:
         return Coelesce(self.StubUnit,f"Stub code for description '{description}'")  # type: ignore
 
+    def Generate2(self, finalPrompt: str, langDesc: str) -> str:
+        return Coelesce(self.StubUnit,f"Stub code for description '{langDesc}'")  # type: ignore
+
     def ModelName(self):
         return StringHelper.Coelesce(self.StubName,super().Name())

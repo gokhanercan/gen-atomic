@@ -78,7 +78,10 @@ class ExperimentHost(object):
             for f in ds.Units:
                 #region Constraints
                 langUnitInfo:LangUnitInfo = exp.LangUnit.CreateInfo()
-                generated: str = model.Generate(f.Description,langUnitInfo)
+                finalPrompt:str = exp.Prompting.GenText(langUnitInfo,f.Description)
+                # generated: str = model.Generate(f.Description,langUnitInfo)
+                langPromptText:str = langUnitInfo.PromptText
+                generated: str = model.Generate2(finalPrompt, langPromptText)
                 passed: bool = exp.LangUnit.RunTest(generated, "", f)
 
                 dfCases.at[caseIndex, "Type"] = f.UnitType
@@ -191,11 +194,12 @@ def RunSQLSelectExperiment():
 
 def RunRegexValExperiment():
     #Dataset
-    path = Paths().GetDataset("AtomicSQLSelectDataset")
+    path = Paths().GetDataset("AtomicRegexValDataset")
     ds: Dataset = DatasetXmlRepository.Load(path)
 
     #Exp. Context
-    exp = ExperimentFactory().CreateExperimentByModelFilters("SqlSelect",ModelFilters(keyContains="llama3-70b-8192"),includeBaselines=False)
+    exp = ExperimentFactory().CreateExperimentByModelFilters("RegexVal",ModelFilters(keyContains="codellama",providerAbbr="ol"),includeBaselines=True)
+    #exp = ExperimentFactory().CreateExperimentWithBaselineModels("RegexVal")
 
     #region baselines stubbing
     stubs = [item for item in exp.Models if item.Name().__contains__("Stub")]
@@ -206,10 +210,10 @@ def RunRegexValExperiment():
         stubModel.StubName = "EmailStub"
     #endregion
 
-    r:ExperimentResults = ExperimentHost().Run(exp, ds, formatCode=True)
+    r:ExperimentResults = ExperimentHost().Run(exp, ds, formatCode=False)
     r.Print()
     # ds.Print()
 
 if __name__ == '__main__':
-    RunSQLSelectExperiment()
-    #RunRegexValExperiment()
+    #RunSQLSelectExperiment()
+    RunRegexValExperiment()
