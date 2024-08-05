@@ -1,5 +1,4 @@
 import os
-from groq import Groq
 
 from langunits.LangUnit import LangUnitInfo
 from models.ModelBase import ModelBase
@@ -32,6 +31,7 @@ class GroqModelProvider(ModelProviderBase):
         return GroqModelProvider.ModelNameList()
 
     def Generate(self, description: str, langUnitInfo:LangUnitInfo) -> str:
+        from groq import Groq
         groq_api_key = os.environ.get("GROQ_API_KEY")
         if not groq_api_key:
             raise ValueError("The GROQ_API_KEY environment variable is not set.")
