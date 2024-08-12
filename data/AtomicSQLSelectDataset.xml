@@ -1,5 +1,6 @@
 <?xml version="1.0" ?>
 <Units>
+   <!-- Unit 1 -->
    <Unit name="SelectQuery" desc="Select all fields from products" type="SQLSelect">
       <Context>
          <Data>
@@ -13,12 +14,13 @@
             ]]>
          </Schema>
       </Context>
-      <Constraints >
+      <Constraints>
          <Constraint criteria="data-count:2" />
       </Constraints>
    </Unit>
 
-   <Unit name="LikeFilter" desc="Select all products whose names are beginning with the letter 'A'" type="SQLSelect">
+   <!-- Unit 2 -->
+   <Unit name="LikeFilter" desc="Select all products whose names begin with the letter 'A'" type="SQLSelect">
       <Context>
          <Data>
             <![CDATA[
@@ -31,8 +33,738 @@
             ]]>
          </Schema>
       </Context>
-      <Constraints >
+      <Constraints>
          <Constraint criteria="data-count:1" />
+      </Constraints>
+   </Unit>
+
+   <!-- Unit 3 -->
+   <Unit name="PriceFilter" desc="Select all products with a price greater than 15" type="SQLSelect">
+      <Context>
+         <Data>
+            <![CDATA[
+               {[{ID:1,Name:'Product1',Price:10},{ID:2,Name:'AnotherProduct2',Price:20}]}
+            ]]>
+         </Data>
+         <Schema>
+            <![CDATA[
+               Products(ID*:INTEGER,Name:VARCHAR,Price:FLOAT)
+            ]]>
+         </Schema>
+      </Context>
+      <Constraints>
+         <Constraint criteria="data-count:1" />
+      </Constraints>
+   </Unit>
+
+   <!-- Unit 4 -->
+   <Unit name="OrderByPriceDesc" desc="Select all products and order them by price in descending order" type="SQLSelect">
+      <Context>
+         <Data>
+            <![CDATA[
+               {[{ID:1,Name:'Product1',Price:10},{ID:2,Name:'AnotherProduct2',Price:20}]}
+            ]]>
+         </Data>
+         <Schema>
+            <![CDATA[
+               Products(ID*:INTEGER,Name:VARCHAR,Price:FLOAT)
+            ]]>
+         </Schema>
+      </Context>
+      <Constraints>
+         <Constraint criteria="data-order:Price DESC" />
+      </Constraints>
+   </Unit>
+
+   <!-- Unit 5 -->
+   <Unit name="SelectSpecificFields" desc="Select only the name and price fields from products" type="SQLSelect">
+      <Context>
+         <Data>
+            <![CDATA[
+               {[{Name:'Product1',Price:10},{Name:'AnotherProduct2',Price:20}]}
+            ]]>
+         </Data>
+         <Schema>
+            <![CDATA[
+               Products(ID*:INTEGER,Name:VARCHAR,Price:FLOAT)
+            ]]>
+         </Schema>
+      </Context>
+      <Constraints>
+         <Constraint criteria="fields:Name,Price" />
+      </Constraints>
+   </Unit>
+
+   <!-- Unit 6 -->
+   <Unit name="CountProducts" desc="Count the total number of products" type="SQLSelect">
+      <Context>
+         <Data>
+            <![CDATA[
+               {[{Count:2}]}
+            ]]>
+         </Data>
+         <Schema>
+            <![CDATA[
+               Products(ID*:INTEGER,Name:VARCHAR,Price:FLOAT)
+            ]]>
+         </Schema>
+      </Context>
+      <Constraints>
+         <Constraint criteria="data-count:1" />
+      </Constraints>
+   </Unit>
+
+   <!-- Unit 7 -->
+   <Unit name="SumPrice" desc="Sum the price of all products" type="SQLSelect">
+      <Context>
+         <Data>
+            <![CDATA[
+               {[{SumPrice:30}]}
+            ]]>
+         </Data>
+         <Schema>
+            <![CDATA[
+               Products(ID*:INTEGER,Name:VARCHAR,Price:FLOAT)
+            ]]>
+         </Schema>
+      </Context>
+      <Constraints>
+         <Constraint criteria="data-sum:Price" />
+      </Constraints>
+   </Unit>
+
+   <!-- Unit 8 -->
+   <Unit name="AveragePrice" desc="Calculate the average price of all products" type="SQLSelect">
+      <Context>
+         <Data>
+            <![CDATA[
+               {[{AvgPrice:15}]}
+            ]]>
+         </Data>
+         <Schema>
+            <![CDATA[
+               Products(ID*:INTEGER,Name:VARCHAR,Price:FLOAT)
+            ]]>
+         </Schema>
+      </Context>
+      <Constraints>
+         <Constraint criteria="data-avg:Price" />
+      </Constraints>
+   </Unit>
+
+   <!-- Unit 9 -->
+   <Unit name="MinPrice" desc="Find the minimum price among all products" type="SQLSelect">
+      <Context>
+         <Data>
+            <![CDATA[
+               {[{MinPrice:10}]}
+            ]]>
+         </Data>
+         <Schema>
+            <![CDATA[
+               Products(ID*:INTEGER,Name:VARCHAR,Price:FLOAT)
+            ]]>
+         </Schema>
+      </Context>
+      <Constraints>
+         <Constraint criteria="data-min:Price" />
+      </Constraints>
+   </Unit>
+
+   <!-- Unit 10 -->
+   <Unit name="MaxPrice" desc="Find the maximum price among all products" type="SQLSelect">
+      <Context>
+         <Data>
+            <![CDATA[
+               {[{MaxPrice:20}]}
+            ]]>
+         </Data>
+         <Schema>
+            <![CDATA[
+               Products(ID*:INTEGER,Name:VARCHAR,Price:FLOAT)
+            ]]>
+         </Schema>
+      </Context>
+      <Constraints>
+         <Constraint criteria="data-max:Price" />
+      </Constraints>
+   </Unit>
+
+   <!-- Unit 11 -->
+   <Unit name="PriceRangeFilter" desc="Select products with a price between 10 and 20" type="SQLSelect">
+      <Context>
+         <Data>
+            <![CDATA[
+               {[{ID:1,Name:'Product1',Price:10},{ID:2,Name:'AnotherProduct2',Price:20}]}
+            ]]>
+         </Data>
+         <Schema>
+            <![CDATA[
+               Products(ID*:INTEGER,Name:VARCHAR,Price:FLOAT)
+            ]]>
+         </Schema>
+      </Context>
+      <Constraints>
+         <Constraint criteria="data-count:2" />
+      </Constraints>
+   </Unit>
+
+   <!-- Unit 12 -->
+   <Unit name="DistinctNames" desc="Select distinct product names" type="SQLSelect">
+      <Context>
+         <Data>
+            <![CDATA[
+               {[{Name:'Product1'},{Name:'AnotherProduct2'}]}
+            ]]>
+         </Data>
+         <Schema>
+            <![CDATA[
+               Products(ID*:INTEGER,Name:VARCHAR,Price:FLOAT)
+            ]]>
+         </Schema>
+      </Context>
+      <Constraints>
+         <Constraint criteria="data-count:2" />
+      </Constraints>
+   </Unit>
+
+   <!-- Unit 13 -->
+   <Unit name="GroupByPrice" desc="Group products by price" type="SQLSelect">
+      <Context>
+         <Data>
+            <![CDATA[
+               {[{Price:10,Count:1},{Price:20,Count:1}]}
+            ]]>
+         </Data>
+         <Schema>
+            <![CDATA[
+               Products(ID*:INTEGER,Name:VARCHAR,Price:FLOAT)
+            ]]>
+         </Schema>
+      </Context>
+      <Constraints>
+         <Constraint criteria="group-by:Price" />
+      </Constraints>
+   </Unit>
+
+   <!-- Unit 14 -->
+   <Unit name="HavingClause" desc="Select products having a price greater than 15 after grouping" type="SQLSelect">
+      <Context>
+         <Data>
+            <![CDATA[
+               {[{Price:20,Count:1}]}
+            ]]>
+         </Data>
+         <Schema>
+            <![CDATA[
+               Products(ID*:INTEGER,Name:VARCHAR,Price:FLOAT)
+            ]]>
+         </Schema>
+      </Context>
+      <Constraints>
+         <Constraint criteria="data-count:1" />
+      </Constraints>
+   </Unit>
+
+   <!-- Unit 15 -->
+   <Unit name="InnerJoin" desc="Select products with categories using an inner join" type="SQLSelect">
+      <Context>
+         <Data>
+            <![CDATA[
+               {[{ID:1,Name:'Product1',Price:10,CategoryName:'Category1'},{ID:2,Name:'AnotherProduct2',Price:20,CategoryName:'Category2'}]}
+            ]]>
+         </Data>
+         <Schema>
+            <![CDATA[
+               Products(ID*:INTEGER,Name:VARCHAR,Price:FLOAT)
+               Categories(ID*:INTEGER,CategoryName:VARCHAR)
+            ]]>
+         </Schema>
+      </Context>
+      <Constraints>
+         <Constraint criteria="data-count:2" />
+      </Constraints>
+   </Unit>
+
+   <!-- Unit 16 -->
+   <Unit name="LeftJoin" desc="Select all products and their categories using a left join" type="SQLSelect">
+      <Context>
+         <Data>
+            <![CDATA[
+               {[{ID:1,Name:'Product1',Price:10,CategoryName:'Category1'},{ID:2,Name:'AnotherProduct2',Price:20,CategoryName:null}]}
+            ]]>
+         </Data>
+         <Schema>
+            <![CDATA[
+               Products(ID*:INTEGER,Name:VARCHAR,Price:FLOAT)
+               Categories(ID*:INTEGER,CategoryName:VARCHAR)
+            ]]>
+         </Schema>
+      </Context>
+      <Constraints>
+         <Constraint criteria="data-count:2" />
+      </Constraints>
+   </Unit>
+
+   <!-- Unit 17 -->
+   <Unit name="RightJoin" desc="Select all products and their categories using a right join" type="SQLSelect">
+      <Context>
+         <Data>
+            <![CDATA[
+               {[{ID:1,Name:'Product1',Price:10,CategoryName:'Category1'},{ID:null,Name:null,Price:null,CategoryName:'Category2'}]}
+            ]]>
+         </Data>
+         <Schema>
+            <![CDATA[
+               Products(ID*:INTEGER,Name:VARCHAR,Price:FLOAT)
+               Categories(ID*:INTEGER,CategoryName:VARCHAR)
+            ]]>
+         </Schema>
+      </Context>
+      <Constraints>
+         <Constraint criteria="data-count:2" />
+      </Constraints>
+   </Unit>
+
+   <!-- Unit 18 -->
+   <Unit name="FullJoin" desc="Select all products and categories using a full join" type="SQLSelect">
+      <Context>
+         <Data>
+            <![CDATA[
+               {[{ID:1,Name:'Product1',Price:10,CategoryName:'Category1'},{ID:2,Name:'AnotherProduct2',Price:20,CategoryName:null},{ID:null,Name:null,Price:null,CategoryName:'Category2'}]}
+            ]]>
+         </Data>
+         <Schema>
+            <![CDATA[
+               Products(ID*:INTEGER,Name:VARCHAR,Price:FLOAT)
+               Categories(ID*:INTEGER,CategoryName:VARCHAR)
+            ]]>
+         </Schema>
+      </Context>
+      <Constraints>
+         <Constraint criteria="data-count:3" />
+      </Constraints>
+   </Unit>
+
+   <!-- Unit 19 -->
+   <Unit name="CrossJoin" desc="Select all combinations of products and categories using a cross join" type="SQLSelect">
+      <Context>
+         <Data>
+            <![CDATA[
+               {[{ID:1,Name:'Product1',Price:10,CategoryName:'Category1'},{ID:1,Name:'Product1',Price:10,CategoryName:'Category2'},{ID:2,Name:'AnotherProduct2',Price:20,CategoryName:'Category1'},{ID:2,Name:'AnotherProduct2',Price:20,CategoryName:'Category2'}]}
+            ]]>
+         </Data>
+         <Schema>
+            <![CDATA[
+               Products(ID*:INTEGER,Name:VARCHAR,Price:FLOAT)
+               Categories(ID*:INTEGER,CategoryName:VARCHAR)
+            ]]>
+         </Schema>
+      </Context>
+      <Constraints>
+         <Constraint criteria="data-count:4" />
+      </Constraints>
+   </Unit>
+
+   <!-- Unit 20 -->
+   <Unit name="UnionQuery" desc="Select all products from two tables using a union" type="SQLSelect">
+      <Context>
+         <Data>
+            <![CDATA[
+               {[{ID:1,Name:'Product1',Price:10},{ID:2,Name:'AnotherProduct2',Price:20},{ID:3,Name:'Product3',Price:30}]}
+            ]]>
+         </Data>
+         <Schema>
+            <![CDATA[
+               Products(ID*:INTEGER,Name:VARCHAR,Price:FLOAT)
+               MoreProducts(ID*:INTEGER,Name:VARCHAR,Price:FLOAT)
+            ]]>
+         </Schema>
+      </Context>
+      <Constraints>
+         <Constraint criteria="data-count:3" />
+      </Constraints>
+   </Unit>
+
+   <!-- Unit 21 -->
+   <Unit name="IntersectQuery" desc="Select common products from two tables using an intersect" type="SQLSelect">
+      <Context>
+         <Data>
+            <![CDATA[
+               {[{ID:1,Name:'Product1',Price:10}]}
+            ]]>
+         </Data>
+         <Schema>
+            <![CDATA[
+               Products(ID*:INTEGER,Name:VARCHAR,Price:FLOAT)
+               MoreProducts(ID*:INTEGER,Name:VARCHAR,Price:FLOAT)
+            ]]>
+         </Schema>
+      </Context>
+      <Constraints>
+         <Constraint criteria="data-count:1" />
+      </Constraints>
+   </Unit>
+
+   <!-- Unit 22 -->
+   <Unit name="ExceptQuery" desc="Select products that are in one table but not in another using an except" type="SQLSelect">
+      <Context>
+         <Data>
+            <![CDATA[
+               {[{ID:2,Name:'AnotherProduct2',Price:20}]}
+            ]]>
+         </Data>
+         <Schema>
+            <![CDATA[
+               Products(ID*:INTEGER,Name:VARCHAR,Price:FLOAT)
+               MoreProducts(ID*:INTEGER,Name:VARCHAR,Price:FLOAT)
+            ]]>
+         </Schema>
+      </Context>
+      <Constraints>
+         <Constraint criteria="data-count:1" />
+      </Constraints>
+   </Unit>
+
+   <!-- Unit 23 -->
+   <Unit name="SubqueryInWhere" desc="Select products where price is greater than the average price using a subquery" type="SQLSelect">
+      <Context>
+         <Data>
+            <![CDATA[
+               {[{ID:2,Name:'AnotherProduct2',Price:20}]}
+            ]]>
+         </Data>
+         <Schema>
+            <![CDATA[
+               Products(ID*:INTEGER,Name:VARCHAR,Price:FLOAT)
+            ]]>
+         </Schema>
+      </Context>
+      <Constraints>
+         <Constraint criteria="data-count:1" />
+      </Constraints>
+   </Unit>
+
+   <!-- Unit 24 -->
+   <Unit name="SubqueryInFrom" desc="Select the maximum price from products using a subquery in the FROM clause" type="SQLSelect">
+      <Context>
+         <Data>
+            <![CDATA[
+               {[{MaxPrice:20}]}
+            ]]>
+         </Data>
+         <Schema>
+            <![CDATA[
+               Products(ID*:INTEGER,Name:VARCHAR,Price:FLOAT)
+            ]]>
+         </Schema>
+      </Context>
+      <Constraints>
+         <Constraint criteria="data-max:Price" />
+      </Constraints>
+   </Unit>
+
+   <!-- Unit 25 -->
+   <Unit name="ExistsClause" desc="Check if there are products with a price greater than 15 using EXISTS" type="SQLSelect">
+      <Context>
+         <Data>
+            <![CDATA[
+               {[{Exists:true}]}
+            ]]>
+         </Data>
+         <Schema>
+            <![CDATA[
+               Products(ID*:INTEGER,Name:VARCHAR,Price:FLOAT)
+            ]]>
+         </Schema>
+      </Context>
+      <Constraints>
+         <Constraint criteria="exists:true" />
+      </Constraints>
+   </Unit>
+
+   <!-- Unit 26 -->
+   <Unit name="NotExistsClause" desc="Check if there are no products with a price greater than 25 using NOT EXISTS" type="SQLSelect">
+      <Context>
+         <Data>
+            <![CDATA[
+               {[{Exists:false}]}
+            ]]>
+         </Data>
+         <Schema>
+            <![CDATA[
+               Products(ID*:INTEGER,Name:VARCHAR,Price:FLOAT)
+            ]]>
+         </Schema>
+      </Context>
+      <Constraints>
+         <Constraint criteria="exists:false" />
+      </Constraints>
+   </Unit>
+
+   <!-- Unit 27 -->
+   <Unit name="InClause" desc="Select products with specific IDs using the IN clause" type="SQLSelect">
+      <Context>
+         <Data>
+            <![CDATA[
+               {[{ID:1,Name:'Product1',Price:10},{ID:2,Name:'AnotherProduct2',Price:20}]}
+            ]]>
+         </Data>
+         <Schema>
+            <![CDATA[
+               Products(ID*:INTEGER,Name:VARCHAR,Price:FLOAT)
+            ]]>
+         </Schema>
+      </Context>
+      <Constraints>
+         <Constraint criteria="data-count:2" />
+      </Constraints>
+   </Unit>
+
+   <!-- Unit 28 -->
+   <Unit name="NotInClause" desc="Select products excluding specific IDs using the NOT IN clause" type="SQLSelect">
+      <Context>
+         <Data>
+            <![CDATA[
+               {[{ID:1,Name:'Product1',Price:10}]}
+            ]]>
+         </Data>
+         <Schema>
+            <![CDATA[
+               Products(ID*:INTEGER,Name:VARCHAR,Price:FLOAT)
+            ]]>
+         </Schema>
+      </Context>
+      <Constraints>
+         <Constraint criteria="data-count:1" />
+      </Constraints>
+   </Unit>
+
+   <!-- Unit 29 -->
+   <Unit name="BetweenClause" desc="Select products with a price between 10 and 20 using the BETWEEN clause" type="SQLSelect">
+      <Context>
+         <Data>
+            <![CDATA[
+               {[{ID:1,Name:'Product1',Price:10},{ID:2,Name:'AnotherProduct2',Price:20}]}
+            ]]>
+         </Data>
+         <Schema>
+            <![CDATA[
+               Products(ID*:INTEGER,Name:VARCHAR,Price:FLOAT)
+            ]]>
+         </Schema>
+      </Context>
+      <Constraints>
+         <Constraint criteria="data-count:2" />
+      </Constraints>
+   </Unit>
+
+   <!-- Unit 30 -->
+   <Unit name="CaseWhenClause" desc="Select products with a custom label for price using CASE WHEN" type="SQLSelect">
+      <Context>
+         <Data>
+            <![CDATA[
+               {[{ID:1,Name:'Product1',PriceCategory:'Low'},{ID:2,Name:'AnotherProduct2',PriceCategory:'High'}]}
+            ]]>
+         </Data>
+         <Schema>
+            <![CDATA[
+               Products(ID*:INTEGER,Name:VARCHAR,Price:FLOAT)
+            ]]>
+         </Schema>
+      </Context>
+      <Constraints>
+         <Constraint criteria="data-count:2" />
+      </Constraints>
+   </Unit>
+
+   <!-- Unit 31 -->
+   <Unit name="CoalesceFunction" desc="Select products with a default value for null prices using COALESCE" type="SQLSelect">
+      <Context>
+         <Data>
+            <![CDATA[
+               {[{ID:1,Name:'Product1',Price:10},{ID:2,Name:'AnotherProduct2',Price:0}]}
+            ]]>
+         </Data>
+         <Schema>
+            <![CDATA[
+               Products(ID*:INTEGER,Name:VARCHAR,Price:FLOAT)
+            ]]>
+         </Schema>
+      </Context>
+      <Constraints>
+         <Constraint criteria="data-count:2" />
+      </Constraints>
+   </Unit>
+
+   <!-- Unit 32 -->
+   <Unit name="NullIfFunction" desc="Select products with a null price if it equals a specific value using NULLIF" type="SQLSelect">
+      <Context>
+         <Data>
+            <![CDATA[
+               {[{ID:1,Name:'Product1',Price:null},{ID:2,Name:'AnotherProduct2',Price:20}]}
+            ]]>
+         </Data>
+         <Schema>
+            <![CDATA[
+               Products(ID*:INTEGER,Name:VARCHAR,Price:FLOAT)
+            ]]>
+         </Schema>
+      </Context>
+      <Constraints>
+         <Constraint criteria="data-count:2" />
+      </Constraints>
+   </Unit>
+
+   <!-- Unit 33 -->
+   <Unit name="ConcatenateFunction" desc="Concatenate product names with their prices using CONCAT" type="SQLSelect">
+      <Context>
+         <Data>
+            <![CDATA[
+               {[{ID:1,NameWithPrice:'Product1 - 10'},{ID:2,NameWithPrice:'AnotherProduct2 - 20'}]}
+            ]]>
+         </Data>
+         <Schema>
+            <![CDATA[
+               Products(ID*:INTEGER,Name:VARCHAR,Price:FLOAT)
+            ]]>
+         </Schema>
+      </Context>
+      <Constraints>
+         <Constraint criteria="data-count:2" />
+      </Constraints>
+   </Unit>
+
+   <!-- Unit 34 -->
+   <Unit name="LengthFunction" desc="Select products and calculate the length of their names using LENGTH" type="SQLSelect">
+      <Context>
+         <Data>
+            <![CDATA[
+               {[{ID:1,Name:'Product1',NameLength:8},{ID:2,Name:'AnotherProduct2',NameLength:15}]}
+            ]]>
+         </Data>
+         <Schema>
+            <![CDATA[
+               Products(ID*:INTEGER,Name:VARCHAR,Price:FLOAT)
+            ]]>
+         </Schema>
+      </Context>
+      <Constraints>
+         <Constraint criteria="data-count:2" />
+      </Constraints>
+   </Unit>
+
+   <!-- Unit 35 -->
+   <Unit name="TrimFunction" desc="Select products and remove leading spaces from their names using TRIM" type="SQLSelect">
+      <Context>
+         <Data>
+            <![CDATA[
+               {[{ID:1,Name:'Product1'},{ID:2,Name:'AnotherProduct2'}]}
+            ]]>
+         </Data>
+         <Schema>
+            <![CDATA[
+               Products(ID*:INTEGER,Name:VARCHAR,Price:FLOAT)
+            ]]>
+         </Schema>
+      </Context>
+      <Constraints>
+         <Constraint criteria="data-count:2" />
+      </Constraints>
+   </Unit>
+
+   <!-- Unit 36 -->
+   <Unit name="UpperFunction" desc="Select products and convert their names to uppercase using UPPER" type="SQLSelect">
+      <Context>
+         <Data>
+            <![CDATA[
+               {[{ID:1,Name:'PRODUCT1'},{ID:2,Name:'ANOTHERPRODUCT2'}]}
+            ]]>
+         </Data>
+         <Schema>
+            <![CDATA[
+               Products(ID*:INTEGER,Name:VARCHAR,Price:FLOAT)
+            ]]>
+         </Schema>
+      </Context>
+      <Constraints>
+         <Constraint criteria="data-count:2" />
+      </Constraints>
+   </Unit>
+
+   <!-- Unit 37 -->
+   <Unit name="LowerFunction" desc="Select products and convert their names to lowercase using LOWER" type="SQLSelect">
+      <Context>
+         <Data>
+            <![CDATA[
+               {[{ID:1,Name:'product1'},{ID:2,Name:'anotherproduct2'}]}
+            ]]>
+         </Data>
+         <Schema>
+            <![CDATA[
+               Products(ID*:INTEGER,Name:VARCHAR,Price:FLOAT)
+            ]]>
+         </Schema>
+      </Context>
+      <Constraints>
+         <Constraint criteria="data-count:2" />
+      </Constraints>
+   </Unit>
+
+   <!-- Unit 38 -->
+   <Unit name="SubstringFunction" desc="Select products and extract a substring from their names using SUBSTRING" type="SQLSelect">
+      <Context>
+         <Data>
+            <![CDATA[
+               {[{ID:1,NamePart:'Prod'},{ID:2,NamePart:'Anot'}]}
+            ]]>
+         </Data>
+         <Schema>
+            <![CDATA[
+               Products(ID*:INTEGER,Name:VARCHAR,Price:FLOAT)
+            ]]>
+         </Schema>
+      </Context>
+      <Constraints>
+         <Constraint criteria="data-count:2" />
+      </Constraints>
+   </Unit>
+
+   <!-- Unit 39 -->
+   <Unit name="ReplaceFunction" desc="Select products and replace part of their names using REPLACE" type="SQLSelect">
+      <Context>
+         <Data>
+            <![CDATA[
+               {[{ID:1,NewName:'Product_1'},{ID:2,NewName:'Another_Product_2'}]}
+            ]]>
+         </Data>
+         <Schema>
+            <![CDATA[
+               Products(ID*:INTEGER,Name:VARCHAR,Price:FLOAT)
+            ]]>
+         </Schema>
+      </Context>
+      <Constraints>
+         <Constraint criteria="data-count:2" />
+      </Constraints>
+   </Unit>
+
+   <!-- Unit 40 -->
+   <Unit name="RoundFunction" desc="Select products and round their prices using ROUND" type="SQLSelect">
+      <Context>
+         <Data>
+            <![CDATA[
+               {[{ID:1,Name:'Product1',RoundedPrice:10},{ID:2,Name:'AnotherProduct2',RoundedPrice:20}]}
+            ]]>
+         </Data>
+         <Schema>
+            <![CDATA[
+               Products(ID*:INTEGER,Name:VARCHAR,Price:FLOAT)
+            ]]>
+         </Schema>
+      </Context>
+      <Constraints>
+         <Constraint criteria="data-count:2" />
       </Constraints>
    </Unit>
 </Units>

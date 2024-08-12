@@ -177,7 +177,7 @@ def RunSQLSelectExperiment():
     path = Paths().GetDataset("AtomicSQLSelectDataset")
     ds: Dataset = DatasetXmlRepository.Load(path)
 
-    exp = ExperimentFactory().CreateExperimentByModelFilters("SqlSelect",ModelFilters(providerAbbr="ol", keyContains="llama3"),includeBaselines=False)
+    exp = ExperimentFactory().CreateExperimentByModelFilters("SqlSelect",ModelFilters(providerAbbr="ol", keyContains="codellama"),includeBaselines=False)
 
     #region baselines stubbing
     #stubModel = [item for item in exp.Models if item.Name().__contains__("Stub")][0]
@@ -195,7 +195,7 @@ def RunRegexValExperiment():
     ds: Dataset = DatasetXmlRepository.Load(path)
 
     #Exp. Context
-    exp = ExperimentFactory().CreateExperimentByModelFilters("SqlSelect",ModelFilters(keyContains="llama3-70b-8192"),includeBaselines=False)
+    exp = ExperimentFactory().CreateExperimentByModelFilters("SqlSelect",ModelFilters(keyContains="codellama"),includeBaselines=False)
 
     #region baselines stubbing
     stubs = [item for item in exp.Models if item.Name().__contains__("Stub")]
