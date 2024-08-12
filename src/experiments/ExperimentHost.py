@@ -79,7 +79,7 @@ class ExperimentHost(object):
                 #region Constraints
                 langUnitInfo:LangUnitInfo = exp.LangUnit.CreateInfo()
                 generated: str = model.Generate(f.Description,langUnitInfo)
-                passed: bool = exp.LangUnit.RunTest(generated, "", f)
+                passed: bool = exp.LangUnit.RunTest(generated, "", f) #TODO: Duplicate RunTest on Constraint and CCase/ICCase. 
 
                 dfCases.at[caseIndex, "Type"] = f.UnitType
                 dfCases.at[caseIndex, "Name"] = f.Name

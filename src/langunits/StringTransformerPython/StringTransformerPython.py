@@ -25,10 +25,15 @@ class StringTransformerPython(LangUnit):
         if match:
             function_name = match.group(1)
         else:
-            raise ValueError("Function name could not be determined from the generated code.")
+            print("Function name could not be determined from the generated code.")
+            return False
 
         # Execute the generated code
-        exec(generated_code)
+        try:
+            exec(generated_code)
+        except Exception as e:
+            print(e)
+            return False
 
         try:
             # Call the dynamically defined function
@@ -39,5 +44,6 @@ class StringTransformerPython(LangUnit):
             else:
                 print(f"Function {function_name} is not defined.")
                 return False
-        except:
-            raise Exception("Error while executing the generated code.")
+        except Exception as e:
+            print(e, "\nError while executing the generated code.")
+            return False
