@@ -62,7 +62,7 @@ class OllamaModelProvider(ModelProviderBase):
 
         #prompt
         langDesc:str = langUnitInfo.PromptText
-        instruction: str = (f"Consider yourself a function that takes the input of asked validation {langDesc} statement, and "
+        instruction: str = (f"Consider yourself a function that takes the input of asked {langDesc} statement, and "
                             f"your output should be a markdown code snippet formatted in the following schema, including "
                             f"the leading and trailing \"```{langDesc}\" and \"```\". Do not give me an explanation, only give "
                             f"me a {langDesc} expression. Do not add any additional characters.")

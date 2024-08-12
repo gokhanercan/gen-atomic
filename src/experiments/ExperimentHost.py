@@ -210,6 +210,20 @@ def RunRegexValExperiment():
     r.Print()
     # ds.Print()
 
+
+def RunStringTransformerPythonExperiment():
+    # Dataset
+    path = Paths().GetDataset("AtomicStringTransformerPythonDataset")
+    ds: Dataset = DatasetXmlRepository.Load(path)
+
+    # Exp. Context
+    exp = ExperimentFactory().CreateExperimentByModelFilters("StringTransformerPython", ModelFilters(keyContains="llama3-70b-8192"),
+                                                             includeBaselines=False)
+
+    r: ExperimentResults = ExperimentHost().Run(exp, ds, formatCode=True)
+    r.Print()
+
 if __name__ == '__main__':
-    RunSQLSelectExperiment()
+    #RunSQLSelectExperiment()
     #RunRegexValExperiment()
+    RunStringTransformerPythonExperiment()
