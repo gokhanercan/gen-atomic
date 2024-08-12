@@ -1,0 +1,519 @@
+<Units>
+    <Unit name="LowerCase" desc="convert all characters to lowercase" type="StringTransformerPython">
+        <Context>
+            <Data>
+                HI MY NAME IS MICHAEL
+            </Data>
+        </Context>
+        <CCases>
+            <CCase val="hi my name is michael"/>
+        </CCases>
+    </Unit>
+
+    <Unit name="UpperCase" desc="convert all characters to uppercase" type="StringTransformerPython">
+        <Context>
+            <Data>
+                Hello World
+            </Data>
+        </Context>
+        <CCases>
+            <CCase val="HELLO WORLD"/>
+        </CCases>
+    </Unit>
+
+    <Unit name="TitleCase" desc="convert all characters to title case" type="StringTransformerPython">
+        <Context>
+            <Data>
+                hello world
+            </Data>
+        </Context>
+        <CCases>
+            <CCase val="Hello World"/>
+        </CCases>
+    </Unit>
+
+    <Unit name="ReverseString" desc="reverse the characters in the string" type="StringTransformerPython">
+        <Context>
+            <Data>
+                Hello World
+            </Data>
+        </Context>
+        <CCases>
+            <CCase val="dlroW olleH"/>
+        </CCases>
+    </Unit>
+
+    <Unit name="ReplaceSpacesWithUnderscores" desc="replace all spaces with underscores" type="StringTransformerPython">
+        <Context>
+            <Data>
+                Hello World
+            </Data>
+        </Context>
+        <CCases>
+            <CCase val="Hello_World"/>
+        </CCases>
+    </Unit>
+
+    <Unit name="RemoveSpaces" desc="remove all spaces from the string" type="StringTransformerPython">
+        <Context>
+            <Data>
+                Hello World
+            </Data>
+        </Context>
+        <CCases>
+            <CCase val="HelloWorld"/>
+        </CCases>
+    </Unit>
+
+    <Unit name="RemoveVowels" desc="remove all vowels from the string" type="StringTransformerPython">
+        <Context>
+            <Data>
+                Hello World
+            </Data>
+        </Context>
+        <CCases>
+            <CCase val="Hll Wrld"/>
+        </CCases>
+    </Unit>
+
+    <Unit name="RepeatStringTwice" desc="repeat the string twice" type="StringTransformerPython">
+        <Context>
+            <Data>
+                Hello
+            </Data>
+        </Context>
+        <CCases>
+            <CCase val="HelloHello"/>
+        </CCases>
+    </Unit>
+
+    <Unit name="CapitalizeFirstLetter" desc="capitalize the first letter of each word" type="StringTransformerPython">
+        <Context>
+            <Data>
+                hello world
+            </Data>
+        </Context>
+        <CCases>
+            <CCase val="Hello World"/>
+        </CCases>
+    </Unit>
+
+    <Unit name="RemoveDigits" desc="remove all digits from the string" type="StringTransformerPython">
+        <Context>
+            <Data>
+                Hello 123 World
+            </Data>
+        </Context>
+        <CCases>
+            <CCase val="Hello  World"/>
+        </CCases>
+    </Unit>
+
+    <Unit name="ReplaceDigitsWithAsterisks" desc="replace all digits with asterisks" type="StringTransformerPython">
+        <Context>
+            <Data>
+                Hello 123 World
+            </Data>
+        </Context>
+        <CCases>
+            <CCase val="Hello *** World"/>
+        </CCases>
+    </Unit>
+
+    <Unit name="RemovePunctuation" desc="remove all punctuation from the string" type="StringTransformerPython">
+        <Context>
+            <Data>
+                Hello, World!
+            </Data>
+        </Context>
+        <CCases>
+            <CCase val="Hello World"/>
+        </CCases>
+    </Unit>
+
+    <Unit name="ReplacePunctuationWithSpaces" desc="replace all punctuation with spaces" type="StringTransformerPython">
+        <Context>
+            <Data>
+                Hello, World!
+            </Data>
+        </Context>
+        <CCases>
+            <CCase val="Hello  World "/>
+        </CCases>
+    </Unit>
+
+    <Unit name="AddExclamationToEnd" desc="add an exclamation mark to the end" type="StringTransformerPython">
+        <Context>
+            <Data>
+                Hello World
+            </Data>
+        </Context>
+        <CCases>
+            <CCase val="Hello World!"/>
+        </CCases>
+    </Unit>
+
+    <Unit name="DuplicateEachCharacter" desc="duplicate each character in the string" type="StringTransformerPython">
+        <Context>
+            <Data>
+                Hello
+            </Data>
+        </Context>
+        <CCases>
+            <CCase val="HHeelllloo"/>
+        </CCases>
+    </Unit>
+
+    <Unit name="ReverseEachWord" desc="reverse each word in the string" type="StringTransformerPython">
+        <Context>
+            <Data>
+                Hello World
+            </Data>
+        </Context>
+        <CCases>
+            <CCase val="olleH dlroW"/>
+        </CCases>
+    </Unit>
+
+    <Unit name="RemoveFirstCharacter" desc="remove the first character of the string" type="StringTransformerPython">
+        <Context>
+            <Data>
+                Hello World
+            </Data>
+        </Context>
+        <CCases>
+            <CCase val="ello World"/>
+        </CCases>
+    </Unit>
+
+    <Unit name="RemoveLastCharacter" desc="remove the last character of the string" type="StringTransformerPython">
+        <Context>
+            <Data>
+                Hello World
+            </Data>
+        </Context>
+        <CCases>
+            <CCase val="Hello Worl"/>
+        </CCases>
+    </Unit>
+
+    <Unit name="ReplaceSpacesWithHyphens" desc="replace all spaces with hyphens" type="StringTransformerPython">
+        <Context>
+            <Data>
+                Hello World
+            </Data>
+        </Context>
+        <CCases>
+            <CCase val="Hello-World"/>
+        </CCases>
+    </Unit>
+
+    <Unit name="ReplaceSpacesWithAsterisks" desc="replace all spaces with asterisks" type="StringTransformerPython">
+        <Context>
+            <Data>
+                Hello World
+            </Data>
+        </Context>
+        <CCases>
+            <CCase val="Hello*World"/>
+        </CCases>
+    </Unit>
+
+    <Unit name="RemoveConsonants" desc="remove all consonants from the string" type="StringTransformerPython">
+        <Context>
+            <Data>
+                Hello World
+            </Data>
+        </Context>
+        <CCases>
+            <CCase val="eo o"/>
+        </CCases>
+    </Unit>
+
+    <Unit name="ReplaceVowelsWithUnderscores" desc="replace all vowels with underscores" type="StringTransformerPython">
+        <Context>
+            <Data>
+                Hello World
+            </Data>
+        </Context>
+        <CCases>
+            <CCase val="H_ll_ W_rld"/>
+        </CCases>
+    </Unit>
+
+    <Unit name="AppendLengthToEnd" desc="append the length of the string to the end" type="StringTransformerPython">
+        <Context>
+            <Data>
+                Hello
+            </Data>
+        </Context>
+        <CCases>
+            <CCase val="Hello5"/>
+        </CCases>
+    </Unit>
+
+    <Unit name="PrependLengthToStart" desc="prepend the length of the string to the start" type="StringTransformerPython">
+        <Context>
+            <Data>
+                Hello
+            </Data>
+        </Context>
+        <CCases>
+            <CCase val="5Hello"/>
+        </CCases>
+    </Unit>
+
+    <Unit name="WrapWithParentheses" desc="wrap the string with parentheses" type="StringTransformerPython">
+        <Context>
+            <Data>
+                Hello
+            </Data>
+        </Context>
+        <CCases>
+            <CCase val="(Hello)"/>
+        </CCases>
+    </Unit>
+
+    <Unit name="WrapWithBrackets" desc="wrap the string with brackets" type="StringTransformerPython">
+        <Context>
+            <Data>
+                Hello
+            </Data>
+        </Context>
+        <CCases>
+            <CCase val="[Hello]"/>
+        </CCases>
+    </Unit>
+
+    <Unit name="WrapWithCurlyBraces" desc="wrap the string with curly braces" type="StringTransformerPython">
+        <Context>
+            <Data>
+                Hello
+            </Data>
+        </Context>
+        <CCases>
+            <CCase val="{Hello}"/>
+        </CCases>
+    </Unit>
+
+    <Unit name="ReplaceEWithThree" desc="replace all 'e' with '3'" type="StringTransformerPython">
+        <Context>
+            <Data>
+                Hello
+            </Data>
+        </Context>
+        <CCases>
+            <CCase val="H3llo"/>
+        </CCases>
+    </Unit>
+
+    <Unit name="ReplaceOWithZero" desc="replace all 'o' with '0'" type="StringTransformerPython">
+        <Context>
+            <Data>
+                Hello
+            </Data>
+        </Context>
+        <CCases>
+            <CCase val="Hell0"/>
+        </CCases>
+    </Unit>
+
+    <Unit name="ReplaceIWithOne" desc="replace all 'i' with '1'" type="StringTransformerPython">
+        <Context>
+            <Data>
+                Hi there
+            </Data>
+        </Context>
+        <CCases>
+            <CCase val="H1 there"/>
+        </CCases>
+    </Unit>
+
+    <Unit name="DuplicateEachWord" desc="duplicate each word in the string" type="StringTransformerPython">
+        <Context>
+            <Data>
+                Hello World
+            </Data>
+        </Context>
+        <CCases>
+            <CCase val="Hello Hello World World"/>
+        </CCases>
+    </Unit>
+
+    <Unit name="RemoveAllVowels" desc="remove all vowels from the string" type="StringTransformerPython">
+        <Context>
+            <Data>
+                Hello World
+            </Data>
+        </Context>
+        <CCases>
+            <CCase val="Hll Wrld"/>
+        </CCases>
+    </Unit>
+
+    <Unit name="RemoveAllConsonants" desc="remove all consonants from the string" type="StringTransformerPython">
+        <Context>
+            <Data>
+                Hello World
+            </Data>
+        </Context>
+        <CCases>
+            <CCase val="eo o"/>
+        </CCases>
+    </Unit>
+
+    <Unit name="ReverseWordOrder" desc="reverse the order of words in the string" type="StringTransformerPython">
+        <Context>
+            <Data>
+                Hello World
+            </Data>
+        </Context>
+        <CCases>
+            <CCase val="World Hello"/>
+        </CCases>
+    </Unit>
+
+    <Unit name="ReplaceAWithAt" desc="replace all 'a' with '@'" type="StringTransformerPython">
+        <Context>
+            <Data>
+                A quick brown fox
+            </Data>
+        </Context>
+        <CCases>
+            <CCase val="@ quick brown fox"/>
+        </CCases>
+    </Unit>
+
+    <Unit name="RemoveWhitespace" desc="remove all whitespace characters" type="StringTransformerPython">
+        <Context>
+            <Data>
+                Hello World
+            </Data>
+        </Context>
+        <CCases>
+            <CCase val="HelloWorld"/>
+        </CCases>
+    </Unit>
+
+    <Unit name="TrimWhitespace" desc="trim leading and trailing whitespace" type="StringTransformerPython">
+        <Context>
+            <Data>
+                Hello World
+            </Data>
+        </Context>
+        <CCases>
+            <CCase val="Hello World"/>
+        </CCases>
+    </Unit>
+
+    <Unit name="ReplaceWithUnderscores" desc="replace each character with an underscore" type="StringTransformerPython">
+        <Context>
+            <Data>
+                Hello
+            </Data>
+        </Context>
+        <CCases>
+            <CCase val="_____"/>
+        </CCases>
+    </Unit>
+
+    <Unit name="RemoveFirstWord" desc="remove the first word from the string" type="StringTransformerPython">
+        <Context>
+            <Data>
+                Hello World
+            </Data>
+        </Context>
+        <CCases>
+            <CCase val="World"/>
+        </CCases>
+    </Unit>
+
+    <Unit name="RemoveLastWord" desc="remove the last word from the string" type="StringTransformerPython">
+        <Context>
+            <Data>
+                Hello World
+            </Data>
+        </Context>
+        <CCases>
+            <CCase val="Hello"/>
+        </CCases>
+    </Unit>
+
+    <Unit name="CapitalizeVowels" desc="capitalize all vowels in the string" type="StringTransformerPython">
+        <Context>
+            <Data>
+                Hello World
+            </Data>
+        </Context>
+        <CCases>
+            <CCase val="HEllO WOrld"/>
+        </CCases>
+    </Unit>
+
+    <Unit name="CapitalizeConsonants" desc="capitalize all consonants in the string" type="StringTransformerPython">
+        <Context>
+            <Data>
+                Hello World
+            </Data>
+        </Context>
+        <CCases>
+            <CCase val="HeLLo WoRLD"/>
+        </CCases>
+    </Unit>
+
+    <Unit name="AlternateCase" desc="alternate the case of each character" type="StringTransformerPython">
+        <Context>
+            <Data>
+                Hello World
+            </Data>
+        </Context>
+        <CCases>
+            <CCase val="hELLO wORLD"/>
+        </CCases>
+    </Unit>
+
+    <Unit name="RepeatEachWordTwice" desc="repeat each word twice" type="StringTransformerPython">
+        <Context>
+            <Data>
+                Hello World
+            </Data>
+        </Context>
+        <CCases>
+            <CCase val="Hello Hello World World"/>
+        </CCases>
+    </Unit>
+
+    <Unit name="ReplaceSpacesWithPipes" desc="replace all spaces with pipes" type="StringTransformerPython">
+        <Context>
+            <Data>
+                Hello World
+            </Data>
+        </Context>
+        <CCases>
+            <CCase val="Hello|World"/>
+        </CCases>
+    </Unit>
+
+    <Unit name="SurroundWithStars" desc="surround the string with stars" type="StringTransformerPython">
+        <Context>
+            <Data>
+                Hello World
+            </Data>
+        </Context>
+        <CCases>
+            <CCase val="*Hello World*"/>
+        </CCases>
+    </Unit>
+
+    <Unit name="SurroundEachWordWithStars" desc="surround each word with stars" type="StringTransformerPython">
+        <Context>
+            <Data>
+                Hello World
+            </Data>
+        </Context>
+        <CCases>
+            <CCase val="*Hello* *World*"/>
+        </CCases>
+    </Unit>
+
+</Units>
