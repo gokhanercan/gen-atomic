@@ -6,7 +6,7 @@
 [![Demo](https://img.shields.io/badge/Streamlit_Demo-Visit-blue.svg)](https://gen-atomic.streamlit.app/)
 [![Docs](https://img.shields.io/badge/Docs-Visit-orange.svg)](https://github.com/gokhanercan/gen-atomic/blob/master/DOC.md)
 [![Version](https://img.shields.io/badge/Version-early_alpha-yellow.svg)](https://github.com/gokhanercan/gen-atomic/blob/master/DOC.md)
-[![Discord](https://dcbadge.limes.pink/api/server/bRCRNy4n4p?style=flat-square)](https://discord.gg/bRCRNy4n4p)
+[![Discord](https://dcbadge.limes.pink/api/server/bRCRNy4n4p?style=flat)](https://discord.gg/bRCRNy4n4p)
 
 
 ## What is gen-atomic?
