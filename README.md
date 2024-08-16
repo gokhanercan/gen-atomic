@@ -6,7 +6,8 @@
 [![Demo](https://img.shields.io/badge/Streamlit_Demo-Visit-blue.svg)](https://gen-atomic.streamlit.app/)
 [![Docs](https://img.shields.io/badge/Docs-Visit-orange.svg)](https://github.com/gokhanercan/gen-atomic/blob/master/DOC.md)
 [![Version](https://img.shields.io/badge/Version-early_alpha-yellow.svg)](https://github.com/gokhanercan/gen-atomic/blob/master/DOC.md)
-![Discord](https://img.shields.io/discord/1273809928305508352?style=flat-square&logo=discord&logoColor=white&label=discord&link=https%3A%2F%2Fdiscord.gg%2FahEBmMcZ)
+[![Discord](https://dcbadge.limes.pink/api/server/bRCRNy4n4p?style=flat-square)](https://discord.gg/bRCRNy4n4p)
+
 
 ## What is gen-atomic?
 Gen-atomic is an LLM-based code generation framework aims to support a wide range of atomic language units, from compiled code to semi-structured markups.
