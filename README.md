@@ -8,7 +8,6 @@
 [![Version](https://img.shields.io/badge/Version-early_alpha-yellow.svg)](https://github.com/gokhanercan/gen-atomic/blob/master/DOC.md)
 [![Discord](https://dcbadge.limes.pink/api/server/bRCRNy4n4p?style=flat)](https://discord.gg/bRCRNy4n4p)
 
-
 ## What is gen-atomic?
 Gen-atomic is an LLM-based code generation framework aims to support a wide range of atomic language units, from compiled code to semi-structured markups.
 
