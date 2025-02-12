@@ -125,8 +125,10 @@ class ModelFactory(object):
         return [k for k in self.StandaloneModelsMeta]
     def GetAllBaselineModelNames(self)->List[str]:
         return [key for key,value in self.StandaloneModelsMeta.items() if value.IsBaseline==True]       #Limited to standalone models only for now.
-    def GetAllModelKeys(self)->List[str]:       #TODO: add some filters here. ExcludeBaselines, FilterByModelName, ByProviderName etc.
+    def GetAllModelKeys(self)->List[str]:
         return [k for k,v in self.ModelIndex.items()]
+    def GetModelKeys(self, baselineFilter:Optional[bool] = None)->List[str]:       #TODO: add more filters here. ExcludeBaselines, FilterByModelName, ByProviderName etc.
+        return [k for k,v in self.ModelIndex.items() if v.IsBaseline == baselineFilter and baselineFilter is not None]
 
     #endregion
 

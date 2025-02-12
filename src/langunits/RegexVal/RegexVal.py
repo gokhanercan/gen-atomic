@@ -15,7 +15,8 @@ class RegexVal(LangUnit):
     def CheckSyntax(self, code: str):
         pass
 
-    def RunTest(self, code:str, correctCase:str, unit:Unit)->bool:
+    def RunTest(self, code:str, correctCase:str, unit:Unit)->bool:      #TODO: unit is not used. Remove it.
+        #TODO: Eval multiple test cases in a single call by accepting dataset unit(field).
         return self.validate_regex(code, correctCase)
 
     # region Regex Implementation
