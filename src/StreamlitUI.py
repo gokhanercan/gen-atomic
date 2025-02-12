@@ -26,7 +26,7 @@ bar = st.sidebar
 bar.subheader("Dataset")
 ds = bar.selectbox('Choose a dataset?',('AtomicRegexValDataset','Other'))
 dsPath = Paths().GetDataset("AtomicRegexValDataset")
-bar.write("Dataset Path: ", dsPath)
+# bar.write("Dataset Path: ", dsPath)
 ds:Dataset = DatasetXmlRepository.Load(dsPath)
 bar.write(f'Number of Samples: {len(ds.Units)}')
 units = ds.Units
@@ -73,6 +73,11 @@ userDesc:str = st.text_input("Description",unit.Description)
 # unit:UnitBase = UnitFactory().Create(field.UnitType)
 langUnit:LangUnit = LangUnitFactory().Create(unit.UnitType)
 langUnitInfo:LangUnitInfo = langUnit.CreateInfo()
+
+# def stream_parser(generated):       #TODO: Will be removed.
+#     for chunk in generated:
+#         yield chunk['message']['content']
+
 ccase = st.text_area("Correct Case", ccase)
 
 
@@ -89,3 +94,7 @@ if st.session_state.generatedCode != "":
 
 if st.button("Generate New"):
     st.session_state.generatedCode = model.Generate(userDesc, langUnitInfo)
+
+
+
+
