@@ -26,7 +26,8 @@ bar = st.sidebar
 #Dataset
 bar.subheader("Dataset")
 ds = bar.selectbox('Choose a dataset?',('AtomicRegexValDataset','Other'))
-dsPath = Paths().GetDataset("AtomicRegexValDataset")
+# dsPath = Paths().GetDataset("AtomicRegexValDataset")
+dsPath = "../data/AtomicRegexValDataset.xml"    #TODO: Temporarily hardcoded.
 bar.write("Dataset Path: ", dsPath)
 bar.write("Project Root: ", Paths().GetProjectRoot())
 bar.write("Executing Path: ", Path(__file__).resolve())
