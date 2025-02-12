@@ -66,10 +66,10 @@ See a full experiment log from the [link](Experiment.md).
 
 ## Run the Tests
 
-In the project root directory, run 'pytest' to test integrations:
+In the project root directory, run 'pytest' to test units and integrations:
 
 ```
-pytest
+pytest  --disable-warnings -v      
 ```
 
 or
