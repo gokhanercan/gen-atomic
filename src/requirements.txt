@@ -6,6 +6,6 @@ ollama
 colorama
 openai
 Deprecated
-
 groq
 scikit-learn
+antlr4-python3-runtime
