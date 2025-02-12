@@ -2,6 +2,7 @@
     #streamlit run L:\Projects\gen-atomic\src\StreamlitUI.py
 
 import sys
+from pathlib import Path
 from typing import List
 
 import streamlit as st
@@ -27,6 +28,8 @@ bar.subheader("Dataset")
 ds = bar.selectbox('Choose a dataset?',('AtomicRegexValDataset','Other'))
 dsPath = Paths().GetDataset("AtomicRegexValDataset")
 bar.write("Dataset Path: ", dsPath)
+bar.write("Project Root: ", Paths().GetProjectRoot())
+bar.write("Executing Path: ", Path(__file__).resolve())
 ds:Dataset = DatasetXmlRepository.Load(dsPath)
 bar.write(f'Number of Samples: {len(ds.Units)}')
 units = ds.Units
