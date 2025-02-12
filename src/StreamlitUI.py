@@ -26,8 +26,9 @@ bar = st.sidebar
 #Dataset
 bar.subheader("Dataset")
 ds = bar.selectbox('Choose a dataset?',('AtomicRegexValDataset','Other'))
-# dsPath = Paths().GetDataset("AtomicRegexValDataset")
-dsPath = "../data/AtomicRegexValDataset.xml"    #TODO: Temporarily hardcoded.
+dsPath = Paths().GetDataset("AtomicRegexValDataset")
+projectRoot = Paths().GetProjectRoot()
+if(projectRoot.startswith("/mount")): dsPath = "/mount/src/gen-atomic/data/AtomicRegexValDataset.xml"   #TODO: Temp
 bar.write("Dataset Path: ", dsPath)
 bar.write("Project Root: ", Paths().GetProjectRoot())
 bar.write("Executing Path: ", Path(__file__).resolve())
