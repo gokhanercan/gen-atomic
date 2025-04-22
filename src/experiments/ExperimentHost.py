@@ -191,11 +191,11 @@ def RunSQLSelectExperiment():
 
 def RunRegexValExperiment():
     #Dataset
-    path = Paths().GetDataset("AtomicSQLSelectDataset")
+    path = Paths().GetDataset("AtomicRegexValDataset")
     ds: Dataset = DatasetXmlRepository.Load(path)
 
     #Exp. Context
-    exp = ExperimentFactory().CreateExperimentByModelFilters("SqlSelect",ModelFilters(keyContains="codellama"),includeBaselines=False)
+    exp = ExperimentFactory().CreateExperimentByModelFilters("RegexVal",ModelFilters(keyContains="codellama"),includeBaselines=False)
 
     #region baselines stubbing
     stubs = [item for item in exp.Models if item.Name().__contains__("Stub")]
@@ -225,5 +225,5 @@ def RunStringTransformerPythonExperiment():
 
 if __name__ == '__main__':
     #RunSQLSelectExperiment()
-    #RunRegexValExperiment()
-    RunStringTransformerPythonExperiment()
+    RunRegexValExperiment()
+    #RunStringTransformerPythonExperiment()

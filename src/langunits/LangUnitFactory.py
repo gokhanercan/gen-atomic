@@ -20,7 +20,9 @@ class LangUnitFactory(object):
         # return LangUnitInfo(name,instance.PromptText())
 
     def Create(self, name:str)->LangUnit:
-        meta:LangUnitMeta = self.Meta[name]
+        meta:LangUnitMeta = self.Meta.get(name)
+        if meta is None:
+            raise Exception(f"LangUnitFactory.Create: Unknown LangUnit name '{name}'")
         t:ABCMeta = meta.Type
         instance:LangUnit = t.__new__(t)
         instance.__init__()
