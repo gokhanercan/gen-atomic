@@ -3,14 +3,10 @@ from unittest import TestCase
 
 
 def IsNullOrEmpty(str) -> bool:
-    """
-    Bu Helper yerine string'in not ile kontrol edebilirsin.
-    :param str:
-    :return:
-    """
-    # https://stackoverflow.com/questions/9573244/most-elegant-way-to-check-if-the-string-is-empty-in-python
     return not str
 
+def IsNullOrWhiteSpace(str) -> bool:
+    return str is None or len(str.strip()) == 0
 
 def Coelesce(*arg):
     """
@@ -33,3 +29,10 @@ class StringHelperTest(TestCase):
 
     def test_Coelesce_PassEmpties(self):
         self.assertEqual("Str2", Coelesce("", "", "Str2", "Str3", "", "None"))
+
+
+    def test_IsNullOrWhiteSpace_DetectSingleWhitespace(self):
+        self.assertTrue(IsNullOrWhiteSpace(" "))
+
+    def test_IsNullOrWhiteSpace_DetectMultiplesWhitespaces(self):
+        self.assertTrue(IsNullOrWhiteSpace("   "))
