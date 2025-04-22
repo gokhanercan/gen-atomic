@@ -71,12 +71,14 @@ class OllamaModelProvider(ModelProviderBase):
         print(f"\nP:{promptColored}")
         print(Fore.RESET)
 
+        #model call
         response = client.generate(model=self.ModelName(), prompt=prompt)        #phi3,llama2,llama3,deepseek-coder,codegemma,starcoder2  ref:https://ollama.com/library?sort=popular
         answer = response['response']
 
+        #test oracle
         sql_pattern = rf"```{langDesc}(.*?)```"
         match = re.search(sql_pattern, answer, re.DOTALL)  # re.DOTALL allows matching newlines
-        print(f"Full Output:\n{answer}\n")
+        print(f"Full Output:\n{answer}\n")      #TODO:Remove model specific outputs.
 
         if match:
             extracted_sql = match.group(1)

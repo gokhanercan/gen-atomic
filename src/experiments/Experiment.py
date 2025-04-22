@@ -4,7 +4,6 @@ from langunits.LangUnit import LangUnit
 from langunits.LangUnitFactory import LangUnitFactory
 from models.ModelBase import ModelBase
 from models.ModelFactory import ModelFactory, ModelFilters
-# from providers.ProviderFactory import ProviderFactory
 from utility import StringHelper
 
 
@@ -12,7 +11,7 @@ class Experiment(object):
     def __init__(self, langUnit:LangUnit, models:List[ModelBase] = None) -> None:
         super().__init__()
         self.LangUnit:LangUnit = langUnit #We support single LangUnit per Experiment
-        self.Models:List[ModelBase] = models
+        self.Models:List[ModelBase] = models    #TODO: That should be model configuration including Prompting and other settings!
         self.Name:Optional[str] = None
 
     def GetName(self)->str:

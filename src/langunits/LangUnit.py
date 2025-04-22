@@ -18,7 +18,7 @@ class LangUnitMeta(object):
 @dataclass
 class LangUnitInfo(object):
     Name:str
-    PromptText:str
+    PromptText:str      #This is default text. TODO: rename
 
 class LangUnit(ABC):
 
