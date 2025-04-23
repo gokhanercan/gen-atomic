@@ -1,8 +1,7 @@
 from abc import ABC, abstractmethod
-
-from langunits.LangUnit import LangUnitInfo
+from typing import Union
+from prompting.Prompt import Prompt
 from utility import StringHelper
-from utility.StringHelper import StringHelperTest
 
 
 class PromptingBase(ABC):
@@ -11,34 +10,45 @@ class PromptingBase(ABC):
     #TODO: Add PromptDecorators like EmotionPrompt or ZeroCOT. WE should not need classes for those simple implementations.
     """
 
-    def __init__(self, prompt:str) -> None:      #langUnit:LangUnitInfo
+    def __init__(self, prompt: Union[str, Prompt]) -> None:
         super().__init__()
-        if StringHelper.IsNullOrWhiteSpace(prompt): raise ValueError("Prompt cannot be empty or whitespace.")
-        self.Prompt: str = prompt       #TODO: Add id and defaultPrompt support. Provide PromptFactory.
+        if isinstance(prompt, str):
+            if StringHelper.IsNullOrWhiteSpace(prompt):
+                raise ValueError("Prompt cannot be empty or whitespace.")
+            self.prompt: Prompt = Prompt(prompt)
+        elif isinstance(prompt, Prompt):
+            self.prompt: Prompt = prompt
+        else:
+            raise TypeError("Invalid type for prompt")
 
-    #region Names and Identities
-    def Name(self)->str:
+    # region Names and Identities
+    def name(self) -> str:
         return str(type(self).__name__)
-    def PlainName(self)->str:
-        return self.Name().replace("Prompting","")
-    def Key(self):          #Implementations should override this.
-        return f"{self.PlainName()}_t:{self.GetPromptHash()}"
+
+    def plain_name(self) -> str:
+        return self.name().replace("Prompting", "").lower()
+
+    def key(self):
+        return f"{self.plain_name()}_{self.prompt.key()}"
+
     def __repr__(self) -> str:
-        return f"M[{self.Key()}]"
+        return self.key()
+
     def __str__(self) -> str:
-        return f"M[{self.Key()}]"
+        return self.key()
+
+    # endregion
 
     @abstractmethod
-    def Generate(self):
+    def generate(self):
         pass
-
-    def GetPromptHash(self)->str:
-        import hashlib
-        sha1 = hashlib.sha1(self.Prompt.encode('utf-8')).hexdigest()
-        return sha1[:7]
 
 
 class PromptingInfo(object):
 
-    def __init__(self, plainName:str) -> None:
-        self.PlainName = plainName
+    def __init__(self, plain_name: str) -> None:
+        self.plain_name: str = plain_name
+
+
+if __name__ == '__main__':
+    PromptingBase("Hello")

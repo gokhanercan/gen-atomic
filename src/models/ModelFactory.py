@@ -42,7 +42,7 @@ class ModelFactory(object):
         return index
 
     #region Model Instance Creators
-    def CreateModelByKey(self, key:str)->ModelBase:
+    def CreateModelByKey(self, key: str)-> ModelBase:
         meta:ModelMeta = self.ModelIndex[key]
         if(meta.IsStandalone):
             m: ModelBase = self.CreateModel(meta.Name)
