@@ -44,7 +44,7 @@ class PromptingBase(ABC):
         pass
 
 
-class PromptingInfo(object):
+class PromptingInfo(object):        # TODO: Support early prompting discovery.
 
     def __init__(self, plain_name: str) -> None:
         self.plain_name: str = plain_name

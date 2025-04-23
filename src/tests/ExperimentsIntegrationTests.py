@@ -32,7 +32,7 @@ class ExperimentsIntegrationTest(TestCase):
 
         r:ExperimentResults = host.Run(exp,ds)
         r.Print(False)
-        self.assertTrue(0 <= r.OverallAccuracy[0] <= 100)
+        self.assertTrue(0 <= r.OverallAccuracy.iloc[0] <= 100)
 
 if __name__ == "__main__":
     unittest.main()

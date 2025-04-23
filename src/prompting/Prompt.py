@@ -22,14 +22,14 @@ class Prompt:
             return f"id:{self.pid}"
 
 
-if __name__ == '__main__':
-    print(Prompt("Hello prompt!").key())
-    print(Prompt("Hello prompt!","p1001").key())
-
-
 class PromptTests(TestCase):
     def test_Key_TextValue_HashTextAsKey(self):
         self.assertEqual(Prompt("Hello prompt!").key(), "t:0b290fd")
 
-    def test_key_Prompt_TextReference_UseIdasKey(self):
+    def test_key_Prompt_TextReference_UseIdAsKey(self):
         self.assertEqual(Prompt("Hello prompt!","p1001").key(), "id:p1001")
+
+
+if __name__ == '__main__':
+    print(Prompt("Hello prompt!").key())
+    print(Prompt("Hello prompt!","p1001").key())

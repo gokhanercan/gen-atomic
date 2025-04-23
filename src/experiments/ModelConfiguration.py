@@ -1,3 +1,5 @@
+from unittest import TestCase
+
 from models.ModelBase import ModelBase
 from models.ModelFactory import ModelFactory
 from models.StubModel import StubModel
@@ -18,6 +20,11 @@ class ModelConfiguration(object):
 
     def key(self):
         return f"M({self.model.Key()})P({self.prompting.key()})"
+
+
+class ModelConfigurationTests(TestCase):
+    def test_Key_TextValue_HashTextAsKey(self):
+        self.assertEqual(ModelConfiguration(StubModel("test"), DirectPrompting("Hello prompt!")).key(), "M(np.stub)P(direct_t:0b290fd)")
 
 
 if __name__ == '__main__':
