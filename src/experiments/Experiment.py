@@ -1,5 +1,6 @@
 from typing import List, Optional
 
+from experiments.ModelConfiguration import ModelConfiguration
 from langunits.LangUnit import LangUnit
 from langunits.LangUnitFactory import LangUnitFactory
 from models.ModelBase import ModelBase
@@ -11,7 +12,8 @@ class Experiment(object):
     def __init__(self, langUnit:LangUnit, models:List[ModelBase] = None) -> None:
         super().__init__()
         self.LangUnit:LangUnit = langUnit #We support single LangUnit per Experiment
-        self.Models:List[ModelBase] = models    #TODO: That should be model configuration including Prompting and other settings!
+        self.Models:List[ModelBase] = models    #TODO:OBSOLETE:That should be model configuration including Prompting and other settings!
+        self.ModelConfigs:List[ModelConfiguration] = []
         self.Name:Optional[str] = None
 
     def GetName(self)->str:
