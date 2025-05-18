@@ -104,4 +104,4 @@ Currently, datasets are version controlled. Please send a pull request for now (
 
 # Architecture
 
-<img src="docs/architecture.svg" alt="SVG Logo"/>
+<img src="docs/arch.svg"/>
