@@ -101,3 +101,7 @@ Excited to have you onboard! Here's how you can contribute:
 ## To Datasets
 
 Currently, datasets are version controlled. Please send a pull request for now (see 'src/data' folder). We are planning to use a data versioning system for this.
+
+# Architecture
+
+<img src="docs/architecture.svg" alt="SVG Logo"/>
