@@ -47,12 +47,14 @@ promptingNames = [p.plain_name for p in promptings]
 selPrompting:PromptingInfo = bar.selectbox("Prompting Methods", promptings, format_func=lambda p: p.plain_name)
 selPromptingImpl:PromptingBase = None
 bar.markdown(f"<span style='font-size: 0.9em' title='This information is coming from the docstrings of the implementations'><i>{selPrompting.doc}</i></span>", unsafe_allow_html=True)
-bar.divider()
 
 # Dynamic Configurations
-bar.subheader("Dynamic Configurations")
+anyDynamicConfig:bool = selPrompting.key == "direct"
+if(anyDynamicConfig):
+    bar.divider()
+    bar.subheader("Dynamic Configurations")
 if(selPrompting.key == "direct"):
-    with bar.expander("DirectPrompting", expanded=True):        # UI support provided manually for DirectPrompting for now!
+    with bar.expander("DirectPrompting (direct)", expanded=True):        # UI support provided manually for DirectPrompting for now!
         is_ref_prompt = st.toggle("Is a Reference Prompt", value=True)
         prompt: Prompt = None
         if is_ref_prompt:
