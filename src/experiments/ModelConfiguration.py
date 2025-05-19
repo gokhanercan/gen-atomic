@@ -1,7 +1,6 @@
 from unittest import TestCase
 
 from models.ModelBase import ModelBase
-from models.ModelFactory import ModelFactory
 from models.StubModel import StubModel
 from prompting.Prompt import Prompt
 from prompting.PromptingBase import PromptingBase
@@ -57,5 +56,5 @@ if __name__ == '__main__':
     # print(ModelConfiguration(ModelFactory().CreateModelByKey("ol.llama3"), DirectPrompting("Hello prompt!")).key())
 
     # Implicit prompting with a stub model
-    # print(ModelConfiguration(StubModel("test"), DirectPrompting("Another prompt!")).Key())  # Explicit prompting
-    #print(ModelConfiguration(StubModel("test")).Key())                                     # Implicit prompting TODO: Delete
+    # print(ModelConfiguration(StubModel("test"), DirectPrompting("Another prompt!")).Key())    # Explicit prompting
+    # print(ModelConfiguration(StubModel("test")).Key())                                         # Implicit prompting TODO: Delete

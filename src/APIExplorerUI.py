@@ -77,7 +77,7 @@ st.dataframe(df, hide_index=True)
 
 # Static Key
 def render_static_key():
-    smc: StaticModelConfiguration = StaticModelConfiguration(modelFactory.CreateModelByKey(selModelKey), static_prompting_key=selPrompting.key)
+    smc: StaticModelConfiguration = StaticModelConfiguration(selModelKey, static_prompting_key=selPrompting.key)
     st.markdown("**Model Configuration Key (Static)**")
     st.code(smc.key())
 render_static_key()
@@ -91,4 +91,3 @@ try:
 except:
     st.warning("There is no UI support for the selected configuration. Please check the selected model and prompting method.")
     st.stop()
-    
