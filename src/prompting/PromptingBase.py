@@ -1,7 +1,6 @@
 from abc import ABC, abstractmethod
-from typing import Union
-from prompting.Prompt import Prompt
-from utility import StringHelper
+from typing import Union, Type, Optional
+from pydantic import BaseModel
 
 
 class PromptingBase(ABC):
@@ -17,8 +16,11 @@ class PromptingBase(ABC):
     def plain_name(self) -> str:
         return self.name().replace("Prompting", "").lower()
 
+    def static_key(self) -> str:
+        return f"{self.plain_name()}"
+
     def key(self):
-        return f"{self.plain_name()}_{self.prompt.key()}"
+        return f"{self.plain_name()}"
 
     def __repr__(self) -> str:
         return self.key()
@@ -33,11 +35,13 @@ class PromptingBase(ABC):
         pass
 
 
-class PromptingInfo(object):        # TODO: Support early prompting discovery.
-
-    def __init__(self, plain_name: str) -> None:
-        self.plain_name: str = plain_name
+class PromptingInfo(BaseModel):
+    key: str
+    plain_name: str
+    type: Optional[Type] = None
+    doc: str = None
 
 
 if __name__ == '__main__':
-    PromptingBase("Hello")
+    # print(PromptingInfo(plain_name="test"))
+    pass

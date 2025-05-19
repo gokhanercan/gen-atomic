@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Run Streamlit and keep terminal open if it fails
-streamlit run --server.runOnSave true src/APIExplorerUI.py
+streamlit run --server.runOnSave true src/APIExplorerUI.py --server.port 8501
 
 # Capture exit code
 exit_code=$?

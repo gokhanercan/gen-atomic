@@ -21,6 +21,12 @@ class DirectPrompting(PromptingBase):
         else:
             raise TypeError("Invalid type for prompt")
 
+    def key(self):
+        if hasattr(self,"prompt"):      #dynamic key
+            return f"{self.plain_name()}_{self.prompt.key()}"
+        else:
+            return super().static_key()
+
     def generate(self):
         pass
 
