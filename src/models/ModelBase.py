@@ -32,6 +32,7 @@ class ModelInfo(object):
 class ModelProviderMeta:
     Name: str
     Type: ABCMeta
+    Abbreviation: str
 @dataclass
 class StandaloneModelMeta:
     Name: str

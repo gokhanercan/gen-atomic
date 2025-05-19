@@ -121,6 +121,8 @@ class ModelFactory(object):
 
     def GetAllModelProviderNames(self)->List[str]:
         return [k for k in self.ModelProvidersMeta]
+    def GetAllModelProviderInfos(self)->List[ModelProviderMeta]:
+        return [v for k,v in self.ModelProvidersMeta.items()]
     def GetAllStandaloneModelNames(self)->List[str]:
         return [k for k in self.StandaloneModelsMeta]
     def GetAllBaselineModelNames(self)->List[str]:
@@ -164,7 +166,9 @@ class ModelFactory(object):
         metas: dict[str, ModelProviderMeta] = {}
         for t in types:
             name: str = t.__name__
-            meta = ModelProviderMeta(name, t)
+            mp: ModelProviderBase = t.__new__(t)
+            mp.__init__()
+            meta = ModelProviderMeta(name, t, mp.ProviderAbbreviation())
             metas[name] = meta
         return metas
     # endregion
