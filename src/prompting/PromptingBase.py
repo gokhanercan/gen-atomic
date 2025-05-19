@@ -10,17 +10,6 @@ class PromptingBase(ABC):
     #TODO: Add PromptDecorators like EmotionPrompt or ZeroCOT. WE should not need classes for those simple implementations.
     """
 
-    def __init__(self, prompt: Union[str, Prompt]) -> None:
-        super().__init__()
-        if isinstance(prompt, str):
-            if StringHelper.IsNullOrWhiteSpace(prompt):
-                raise ValueError("Prompt cannot be empty or whitespace.")
-            self.prompt: Prompt = Prompt(prompt)
-        elif isinstance(prompt, Prompt):
-            self.prompt: Prompt = prompt
-        else:
-            raise TypeError("Invalid type for prompt")
-
     # region Names and Identities
     def name(self) -> str:
         return str(type(self).__name__)

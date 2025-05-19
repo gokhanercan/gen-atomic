@@ -14,6 +14,8 @@ from experiments.ModelConfiguration import ModelConfiguration
 from langunits.LangUnitFactory import LangUnitFactory
 from models.ModelBase import ModelProviderMeta
 from models.ModelFactory import ModelFactory, ModelFilters
+from prompting.Prompt import Prompt
+from prompting.PromptingBase import PromptingBase
 from prompting.direct.DirectPrompting import DirectPrompting
 
 # region Sidebar
@@ -40,35 +42,36 @@ modelKeys:List[str] = modelFactory.FindKeysByFilters(ModelFilters(providerAbbr=N
 selModelKey = bar.selectbox("Effective Model Keys", modelKeys)
 
 # Prompting
-# bar.markdown("---")
-# bar.subheader("Prompting")
 bar.divider()
-with bar.container():
-    promptingNames = ["Direct", "Few Shot", "CoT"]
-    default_p_index = promptingNames.index("Direct")
-    selPrompting:str = bar.selectbox("Prompting Methods", promptingNames, index=default_p_index)
+promptingNames = ["Direct", "Few Shot", "CoT"]      #TODO: Load from factory
+default_p_index = promptingNames.index("Direct")
+selPrompting:str = bar.selectbox("Prompting Methods", promptingNames, index=default_p_index)
+is_ref_prompt = bar.toggle("Is Reference Prompt", value=True)
+prompt:Prompt = None
+if is_ref_prompt:
+    selPromptID: str = bar.selectbox("Prompt ID", ["DF", "P101", "P102"], index=0)      #TODO:Load from prompts repo
+    prompt = Prompt("text is the prompt template text",selPromptID)
+else:
+    selPrompt:str = bar.text_input("Custom Prompt", "This is a sample prompt.", key="prompt")
+    prompt = Prompt(selPrompt)
+prompting:PromptingBase = DirectPrompting(prompt)
 
-selPrompt:str = bar.text_input("Sample Prompt", "This is a sample prompt.", key="prompt")
 # endregion
 
 # region Main
 st.subheader("Model Configuration")
 data = {
     'Name': ['Provider', 'ModelKey', 'Prompting'],
-    'Val': [selModelProvider.Name.replace("- All -","-"), selModelKey,selPrompting],
+    'Value': [selModelProvider.Name.replace("- All -","-"), selModelKey,selPrompting],
 }
 df = pd.DataFrame(data)
 st.dataframe(df, hide_index=True)
 # st.markdown("**Model Configuration**")
 modelFactory:ModelFactory = ModelFactory()
-mc:ModelConfiguration = ModelConfiguration(model=modelFactory.CreateModelByKey(selModelKey), prompting=DirectPrompting(selPrompt))
+mc:ModelConfiguration = ModelConfiguration(model=modelFactory.CreateModelByKey(selModelKey), prompting=prompting)
 modelConfigKey:str = selModelKey
 # st.markdown(f"**Model Configuration Key:** {modelConfigKey}")
 st.markdown("**Model Configuration Key**")
 st.code(mc.key())
 # endregion
-
-
-
-
 
