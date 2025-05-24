@@ -10,15 +10,17 @@ from colorama import Fore
 
 from langunits.LangUnit import LangUnitInfo
 from models.ModelFactory import ModelFactory, ModelFilters
+from prompting.prompting_factory import PromptingFactory
 from utility.FormatHelper import FormatHelper
 from utility.Paths import Paths
 
 
 class ExperimentResults(object):
 
-    def __init__(self, experimentName:str, **kwargs) -> None:
+    def __init__(self, experimentName:str, experimentKey:str, **kwargs) -> None:
         super().__init__()
         self.ExperimentName:str = experimentName
+        self.ExperimentKey:str = experimentKey
         self.ModelResults:Dict[str,DataFrame] = {}
         self.Results:DataFrame = Optional[DataFrame]
         self.OverallAccuracy:List = Optional[List]
@@ -48,20 +50,24 @@ class ExperimentResults(object):
             experimentHeader = f"-- {self.ExperimentName.upper()} EXPERIMENT --"
             print("\n" + experimentHeader)
             print(tabulate(self.Results, headers="keys", tablefmt='psql', floatfmt=".2f"))
+            print(f"{self.ExperimentKey}")
 
 
 class ExperimentHost(object):
 
     def Run(self, exp: Experiment, ds:Dataset, formatCode:bool = False):
+        if(exp.model_configs.__len__() == 0): raise Exception("No model configuration(s) defined in the experiment!")
         start_time = time.time()
-        print(f"Running experiment on {ds.Name} dataset with {str(len(exp.Models))} model configuration(s) ...")
+        print(f"\nRunning experiment on {ds.Name} dataset with {str(len(exp.model_configs))} model configuration(s) ...")
+        print("ModelConfigs:", exp.model_configs)
 
         modelResults:Dict[str,DataFrame] = {}
 
         dfAggr = DataFrame()
-        for model in exp.Models:
+        for mc in exp.model_configs.model_configs:
             model_start_time = time.time()
-            print(f"\tRunning model {model.Key()} on {ds.Name} dataset ...")
+            model = mc.model
+            print(f"\tRunning model '{model.Key()} on '{ds.Name}' dataset ...")
             dfCases: DataFrame = DataFrame()
             fieldIndex: int = 1
             caseIndex: int = 1
@@ -162,7 +168,7 @@ class ExperimentHost(object):
 
         overallAccuracy:List = dfAggr.iloc[-1]
 
-        r = ExperimentResults(exp.GetName(), OverallAccuracy=overallAccuracy)
+        r = ExperimentResults(exp.plain_name(), exp.key(), OverallAccuracy=overallAccuracy)
         r.ModelResults = modelResults
         r.Results = dfAggr
         return r
@@ -177,7 +183,9 @@ def RunSQLSelectExperiment():
     path = Paths().GetDataset("AtomicSQLSelectDataset")
     ds: Dataset = DatasetXmlRepository.Load(path)
 
-    exp = ExperimentFactory().CreateExperimentByModelFilters("SqlSelect",ModelFilters(providerAbbr="ol", keyContains="codellama"),includeBaselines=False)
+    exp = ExperimentFactory().create_experiment_by_model_filters("SqlSelect", ModelFilters(providerAbbr="ol",
+                                                                                           keyContains="codellama"),
+                                                                 include_baselines=False)
 
     #region baselines stubbing
     #stubModel = [item for item in exp.Models if item.Name().__contains__("Stub")][0]
@@ -195,16 +203,18 @@ def RunRegexValExperiment():
     ds: Dataset = DatasetXmlRepository.Load(path)
 
     #Exp. Context
-    exp = ExperimentFactory().CreateExperimentByModelFilters("RegexVal",ModelFilters(keyContains="codellama"),includeBaselines=False)
+    exp_factory = ExperimentFactory("RegexVal", PromptingFactory().create_default("RegexVal"))
+    exp:Experiment = exp_factory.create_single_model_experiment("np.stub")
+    # exp = ExperimentFactory().CreateExperimentByModelFilters("RegexVal", ModelFilters(keyContains="codellama"),includeBaselines=False)
 
-    #region baselines stubbing
-    stubs = [item for item in exp.Models if item.Name().__contains__("Stub")]
+    # region baselines stubbing
+    stubs = [item for item in exp.get_models() if item.Name().__contains__("Stub")]
     if(stubs):
         stubModel = stubs[0]
         fixedRegex: str = r"""^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$"""
         stubModel.StubUnit = fixedRegex  # type: ignore
         stubModel.StubName = "EmailStub"
-    #endregion
+    # endregion
 
     r:ExperimentResults = ExperimentHost().Run(exp, ds, formatCode=True)
     r.Print()
@@ -217,11 +227,13 @@ def RunStringTransformerPythonExperiment():
     ds: Dataset = DatasetXmlRepository.Load(path)
 
     # Exp. Context
-    exp = ExperimentFactory().CreateExperimentByModelFilters("StringTransformerPython", ModelFilters(keyContains="llama3-70b-8192"),
-                                                             includeBaselines=False)
+    exp = ExperimentFactory().create_experiment_by_model_filters("StringTransformerPython",
+                                                                 ModelFilters(keyContains="llama3-70b-8192"),
+                                                                 include_baselines=False)
 
     r: ExperimentResults = ExperimentHost().Run(exp, ds, formatCode=True)
     r.Print()
+
 
 if __name__ == '__main__':
     #RunSQLSelectExperiment()

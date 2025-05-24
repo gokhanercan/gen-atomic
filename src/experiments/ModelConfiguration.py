@@ -1,6 +1,8 @@
+from typing import List
 from unittest import TestCase
 
 from models.ModelBase import ModelBase
+from models.RandomModel import RandomModel
 from models.StubModel import StubModel
 from prompting.Prompt import Prompt
 from prompting.PromptingBase import PromptingBase
@@ -16,6 +18,10 @@ class StaticModelConfiguration:
 
     def key(self):
         return f"M({self.static_model_key })P({self.static_prompting_key})"
+    def __str__(self) -> str:
+        return self.key()
+    def __repr__(self) -> str:
+        return self.key()
 
 class StaticModelConfigurationTests(TestCase):
     def test_TwoStaticKeys_Concat(self):
@@ -26,9 +32,8 @@ class ModelConfiguration(object):
     """
     Represents a dynamic model configuration with a specific hyperparameter set.
     """
-
-    prompting: PromptingBase
     model: ModelBase
+    prompting: PromptingBase
 
     def __init__(self, model: ModelBase, prompting: PromptingBase):
         super().__init__()
@@ -36,15 +41,66 @@ class ModelConfiguration(object):
         self.prompting = prompting
 
     def static_key(self):
-        return f"M({self.model.Key()})P({self.prompting.static_key()})"     #TODO: Impl static key for models
+        return f"M({self.model.Key()})P({self.prompting.static_key()})"
 
     def key(self):
         return f"M({self.model.Key()})P({self.prompting.key()})"
+
+    def __str__(self) -> str:
+        try:
+            return self.key()
+        except Exception:
+            return self.static_key()
+
+    def __repr__(self) -> str:
+        return self.__str__()
 
 
 class ModelConfigurationTests(TestCase):
     def test_Key_TextValue_HashTextAsKey(self):
         self.assertEqual(ModelConfiguration(StubModel("test"), DirectPrompting(Prompt("Hello prompt!"))).key(), "M(np.stub)P(direct_t:0b290fd)")
+
+class ModelConfigurations(object):
+    def __init__(self, model_configs: List[ModelConfiguration]):
+        super().__init__()
+        self.model_configs = model_configs
+
+    def __len__(self):
+        return len(self.model_configs)
+
+    def key(self):
+        if(len(self.model_configs) == 0):
+            return "MCS()"
+        else:
+            config_keys:str = "|".join([model_config.key() for model_config in sorted(self.model_configs, key=lambda mc:mc.key())])
+            return f"MCS({config_keys})"
+    def __str__(self) -> str:
+        return self.key()
+    def __repr__(self) -> str:
+        return self.key()
+
+    def get_models(self) -> List[ModelBase]:
+        """
+        Returns the reference of models in this experiment.
+        :return: List[ModelBase]
+        """
+        if self.model_configs is None:
+            raise ValueError("Model configurations are not set.")
+        return [m.model for m in self.model_configs]
+
+class ModelConfigurationsTests(TestCase):
+    def test_MultipleConfigs_ReturnKeysByAlphabeticOrder(self):
+        key:str = ModelConfigurations(
+            [
+                ModelConfiguration(
+                    StubModel("test"), DirectPrompting(Prompt("Hello prompt!", "p1")),
+                ),
+                ModelConfiguration(
+                    RandomModel(), DirectPrompting(Prompt("Hello prompt!", "p1"))
+                ),
+            ]
+        ).key()
+        self.assertEqual("MCS(M(np.random)P(direct_id:p1)|M(np.stub)P(direct_id:p1))",key)
 
 
 if __name__ == '__main__':

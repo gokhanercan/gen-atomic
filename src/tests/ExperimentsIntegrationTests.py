@@ -1,6 +1,8 @@
 import unittest
 from unittest import TestCase
 
+import pytest
+
 from api.API import API
 from data.Dataset import Dataset
 from data.DatasetXmlRepository import DatasetXmlRepository
@@ -17,15 +19,16 @@ class APISmokeTests(TestCase):
             self.fail(f"Some API getters failed with exception: {e}")
 
 class ExperimentsIntegrationTest(TestCase):
+    # @pytest.mark.skip(reason="Temporarily disabled for prompting refactoring")
     def test_ExperimentHost_AtomicDataset_RunExperiment(self):
         host:ExperimentHost = ExperimentHost()
 
         path:str = Paths().GetDataset("AtomicRegexValDataset")
         ds: Dataset = DatasetXmlRepository.Load(path)
-        exp:Experiment = ExperimentFactory().CreateExperimentWithBaselineModels("RegexVal")
+        exp:Experiment = ExperimentFactory("RegexVal").create_experiment_with_baseline_models()
 
         # customize stub
-        stubModel = [item for item in exp.Models if item.Name().__contains__("Stub")][0]
+        stubModel = [item for item in exp.get_models() if item.Name().__contains__("Stub")][0]
         fixedRegex: str = r"""^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$"""
         stubModel.StubUnit = fixedRegex  # type: ignore
         stubModel.StubName = "EmailStub"

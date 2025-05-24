@@ -60,11 +60,11 @@ class ModelMeta:
             return False        #We can't define baseline model by providers
 
 class ModelBase(ABC):
-    def __init__(self) -> None:
+    def __init__(self, modelMeta:ModelMeta | None = None) -> None:
         super().__init__()
-        self.ModelMeta:Optional[ModelMeta] = None     #TODO: Index sets it!
+        self.ModelMeta:ModelMeta | None = modelMeta    #TODO: Index sets it!
 
-    #region Names and Identities
+    # region Names and Identities
     def Name(self)->str:
         return str(type(self).__name__)
     def PlainName(self)->str:
@@ -81,6 +81,7 @@ class ModelBase(ABC):
         return f"M[{self.Key()}]"
     def GetModelConf(self)->ModelInfo:
         return ModelInfo(self.PlainName(), self.ProviderName(), self.ProviderAbbreviation())
+    # endregion
 
     @abstractmethod
     def Generate(self, description: str, langUnitInfo:LangUnitInfo) -> str:

@@ -1,4 +1,5 @@
 from prompting.PromptingBase import PromptingInfo, PromptingBase
+from prompting.impl.DirectPrompting import DirectPrompting
 from utility import Discovery
 
 
@@ -25,6 +26,12 @@ class PromptingFactory(object):
 
     def get_all_prompting_keys(self) -> list[str]:
         return [m.key for m in self.get_all_prompting_meta()]
+
+    def create_default(self, lang_unit_name:str) -> PromptingBase:
+        return DirectPrompting("p1")     #TODO: Load pid per langunit and model here
+
+    def create_direct_prompt(self, pid:str) -> PromptingBase:
+        return DirectPrompting(pid)
 
 
 if __name__ == '__main__':
