@@ -178,6 +178,8 @@ class ExperimentHost(object):
         minutes, seconds = divmod(remainder, 60)
         return "{:02}:{:02}:{:02}".format(int(hours), int(minutes), int(seconds))
 
+# region Sample Experiments
+
 def RunSQLSelectExperiment():
     #Dataset
     path = Paths().GetDataset("AtomicSQLSelectDataset")
@@ -222,20 +224,19 @@ def RunRegexValExperiment():
 
 
 def RunStringTransformerPythonExperiment():
-    # Dataset
     path = Paths().GetDataset("AtomicStringTransformerPythonDataset")
     ds: Dataset = DatasetXmlRepository.Load(path)
 
-    # Exp. Context
-    exp = ExperimentFactory().create_experiment_by_model_filters("StringTransformerPython",
-                                                                 ModelFilters(keyContains="llama3-70b-8192"),
+    exp = ExperimentFactory("StringTransformerPython").create_experiment_by_model_filters(
+                                                                 ModelFilters(keyContains="llama3"),
                                                                  include_baselines=False)
 
     r: ExperimentResults = ExperimentHost().Run(exp, ds, formatCode=True)
     r.Print()
+# endregion
 
 
 if __name__ == '__main__':
-    RunSQLSelectExperiment()
+    # RunSQLSelectExperiment()
     # RunRegexValExperiment()
-    # RunStringTransformerPythonExperiment()
+    RunStringTransformerPythonExperiment()
