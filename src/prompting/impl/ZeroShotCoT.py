@@ -9,9 +9,8 @@ class ZeroShotCoTPrompting(DirectPrompting):
     Encourages the model to think step-by-step without giving any examples.
     """
 
-    def __init__(self, prompt: Union[str, Prompt]) -> None:
-        super().__init__(self,prompt)
-
+    def __init__(self, prompt: Prompt) -> None:
+        super().__init__(prompt)
 
     def generate(self):
         #TODO: Mutate the prompt to add the zero-shot CoT instruction

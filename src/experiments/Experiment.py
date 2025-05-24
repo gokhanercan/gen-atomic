@@ -7,7 +7,7 @@ from langunits.LangUnitFactory import LangUnitFactory
 from models.ModelBase import ModelBase
 from models.ModelFactory import ModelFactory, ModelFilters
 from models.StubModel import StubModel
-from prompting.PromptingBase import PromptingBase
+from prompting.PromptingBase import PromptingBase, PromptingInfo
 from prompting.impl.DirectPrompting import DirectPrompting
 from prompting.prompting_factory import PromptingFactory
 from utility import StringHelper
@@ -114,6 +114,26 @@ class ExperimentFactory(object):
         mcs: ModelConfigurations = ModelConfigurations([ModelConfiguration(m,prompting or self.default_prompting) for m in models])
         exp: Experiment = Experiment(unit,mcs)
         return exp
+
+    def create_model_experiment_with_all_default_promptings(self, model_key:str) -> Experiment:
+        """
+        Creates an experiment with a single model, and all promptings with their default settings and prompt texts.
+        :param model_key:
+        :return:
+        """
+        model: ModelBase = ModelFactory().CreateModelByKey(model_key)
+        p_factory = PromptingFactory()
+        lang_unit: LangUnit = LangUnitFactory().Create(self.lang_unit_name)
+        p_metas:list[PromptingInfo] = p_factory.get_all_prompting_meta()
+        mcs:ModelConfigurations = ModelConfigurations(
+            [
+                ModelConfiguration(model,p_factory.create_prompting_instance(p.key, lang_unit.CreateInfo()))
+                for p in p_metas
+            ]
+        )
+        return Experiment(lang_unit, mcs)
+
+
 
 class ExperimentFactoryTests(TestCase):
 

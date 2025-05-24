@@ -10,6 +10,7 @@ from colorama import Fore
 
 from langunits.LangUnit import LangUnitInfo
 from models.ModelFactory import ModelFactory, ModelFilters
+from models.StubModel import StubModel
 from prompting.prompting_factory import PromptingFactory
 from utility.FormatHelper import FormatHelper
 from utility.Paths import Paths
@@ -207,7 +208,6 @@ def RunRegexValExperiment():
     #Exp. Context
     exp_factory = ExperimentFactory("RegexVal", PromptingFactory().create_default("RegexVal"))
     exp:Experiment = exp_factory.create_single_model_experiment("np.stub")
-    # exp = ExperimentFactory().CreateExperimentByModelFilters("RegexVal", ModelFilters(keyContains="codellama"),includeBaselines=False)
 
     # region baselines stubbing
     stubs = [item for item in exp.get_models() if item.Name().__contains__("Stub")]
@@ -222,7 +222,6 @@ def RunRegexValExperiment():
     r.Print()
     # ds.Print()
 
-
 def RunStringTransformerPythonExperiment():
     path = Paths().GetDataset("AtomicStringTransformerPythonDataset")
     ds: Dataset = DatasetXmlRepository.Load(path)
@@ -233,10 +232,27 @@ def RunStringTransformerPythonExperiment():
 
     r: ExperimentResults = ExperimentHost().Run(exp, ds, formatCode=True)
     r.Print()
+
+def RunRegexValExperimentComparingPrompts():
+    path = Paths().GetDataset("AtomicRegexValDataset")
+    ds: Dataset = DatasetXmlRepository.Load(path)
+
+    exp_factory = ExperimentFactory("RegexVal")
+    exp: Experiment = exp_factory.create_model_experiment_with_all_default_promptings("np.stub")
+
+    stubs = [item for item in exp.get_models() if isinstance(item, StubModel)]
+    StubModel.fake_email(stubs)
+
+    r: ExperimentResults = ExperimentHost().Run(exp, ds, formatCode=True)
+    print(exp)
+    r.Print()
+
 # endregion
 
 
 if __name__ == '__main__':
+    RunRegexValExperimentComparingPrompts()
     # RunSQLSelectExperiment()
     # RunRegexValExperiment()
-    RunStringTransformerPythonExperiment()
+    # RunStringTransformerPythonExperiment()
+

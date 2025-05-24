@@ -4,13 +4,20 @@ from utility.StringHelper import Coelesce
 
 
 class StubModel(ModelBase, BaselineModel):
-    def __init__(self, stubUnit:str = None) -> None:
+    def __init__(self, stubUnit: str = None) -> None:
         super().__init__()
         self.StubUnit = stubUnit
         self.StubName = None
 
-    def Generate(self, description: str, langUnitInfo:LangUnitInfo) -> str:
+    def Generate(self, description: str, langUnitInfo: LangUnitInfo) -> str:
         return Coelesce(self.StubUnit, f"Stub code for description '{description}'")  # type: ignore
 
     def ModelName(self):
         return StringHelper.Coelesce(self.StubName, super().Name())
+
+    @staticmethod
+    def fake_email(stubs: list['StubModel']):
+        fixed_regex: str = r"""^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$"""
+        for stub in stubs:
+            stub.StubUnit = fixed_regex  # type: ignore
+            stub.StubName = "EmailStub"

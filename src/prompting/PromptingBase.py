@@ -1,9 +1,13 @@
-from abc import ABC, abstractmethod
-from typing import Union, Type, Optional
-from pydantic import BaseModel
+from abc import ABC, abstractmethod, ABCMeta
+# from __future__ import annotations
+from typing import Union, Type, Optional, Generic, TypeVar
+from annotated_types import T
+from pydantic import BaseModel, ConfigDict
+
+from langunits.LangUnit import LangUnitInfo
 
 
-class PromptingBase(ABC):
+class PromptingBase(ABC, Generic[T]):
     """
     Base class for all prompting classes.
     #TODO: Add PromptDecorators like EmotionPrompt or ZeroCOT. WE should not need classes for those simple implementations.
@@ -31,6 +35,14 @@ class PromptingBase(ABC):
     # endregion
 
     @abstractmethod
+    def create_default_instance(self, lang_unit_info:LangUnitInfo) -> T:
+        """
+        Creates a default prompt for this prompting class.
+        :return: str
+        """
+        pass
+
+    @abstractmethod
     def generate(self):
         pass
 
@@ -38,8 +50,10 @@ class PromptingBase(ABC):
 class PromptingInfo(BaseModel):
     key: str
     plain_name: str
-    type: Optional[Type] = None
+    type: ABCMeta
     doc: str = None
+
+    model_config = ConfigDict(arbitrary_types_allowed=True) # This is needed to allow non-pydantic types, ABCMeta in this case.
 
 
 if __name__ == '__main__':

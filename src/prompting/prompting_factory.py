@@ -1,3 +1,6 @@
+from abc import ABCMeta
+
+from langunits.LangUnit import LangUnitInfo
 from prompting.PromptingBase import PromptingInfo, PromptingBase
 from prompting.impl.DirectPrompting import DirectPrompting
 from utility import Discovery
@@ -15,8 +18,7 @@ class PromptingFactory(object):
         for t in types:
             name: str = t.__name__
             p: PromptingBase = t.__new__(t)
-            # p.__init__()      #we don't need to call __init__ here, as we are creating static metadata only.
-            key:str = p.key()
+            key:str = p.static_key()    # TODO: static or dynamic key?
             meta = PromptingInfo(key=key, plain_name=p.plain_name(), type=t, doc=t.__doc__)
             metas[key] = meta
         return metas
@@ -32,6 +34,18 @@ class PromptingFactory(object):
 
     def create_direct_prompt(self, pid:str) -> PromptingBase:
         return DirectPrompting(pid)
+
+    def create_prompting_instance(self, p_key:str, lang_unit_info:LangUnitInfo) -> PromptingBase:
+        info:PromptingInfo = self.promptings_meta.get(p_key, None)
+        if(info is None):
+            raise ValueError(f"Prompting with key '{p_key}' not found.")
+
+        t = info.type      #TODO: This Type is MetaABC in ModelFactory, but throws error here. Why?
+        p: PromptingBase = t.__new__(t)
+        if (t != type(p)):
+            raise TypeError(f"Type mismatch: Expected {t}, got {type(p)}")
+        p = p.create_default_instance(lang_unit_info)
+        return p
 
 
 if __name__ == '__main__':

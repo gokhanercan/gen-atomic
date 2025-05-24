@@ -121,7 +121,8 @@ class ModelFactory(object):
         t:ABCMeta = self.StandaloneModelsMeta[modelName].Type
         m:ModelBase = t.__new__(t)
         m.__init__()
-        if(modelMeta): m.ModelMeta = modelMeta
+        if(modelMeta):
+            m.ModelMeta = modelMeta
         return m
 
     # endregion

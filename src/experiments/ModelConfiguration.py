@@ -61,7 +61,7 @@ class ModelConfigurationTests(TestCase):
         self.assertEqual(ModelConfiguration(StubModel("test"), DirectPrompting(Prompt("Hello prompt!"))).key(), "M(np.stub)P(direct_t:0b290fd)")
 
 class ModelConfigurations(object):
-    def __init__(self, model_configs: List[ModelConfiguration]):
+    def __init__(self, model_configs: List[ModelConfiguration]) -> None:
         super().__init__()
         self.model_configs = model_configs
 
