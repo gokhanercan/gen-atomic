@@ -183,7 +183,7 @@ def RunSQLSelectExperiment():
     path = Paths().GetDataset("AtomicSQLSelectDataset")
     ds: Dataset = DatasetXmlRepository.Load(path)
 
-    exp = ExperimentFactory().create_experiment_by_model_filters("SqlSelect", ModelFilters(providerAbbr="ol",
+    exp = ExperimentFactory("SqlSelect").create_experiment_by_model_filters(ModelFilters(providerAbbr="ol",
                                                                                            keyContains="codellama"),
                                                                  include_baselines=False)
 
@@ -236,6 +236,6 @@ def RunStringTransformerPythonExperiment():
 
 
 if __name__ == '__main__':
-    #RunSQLSelectExperiment()
-    RunRegexValExperiment()
-    #RunStringTransformerPythonExperiment()
+    RunSQLSelectExperiment()
+    # RunRegexValExperiment()
+    # RunStringTransformerPythonExperiment()
