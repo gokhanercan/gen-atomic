@@ -54,18 +54,24 @@ class PromptingFactory(object):
         for t in types:
             name: str = t.__name__
             d: PromptDecoratorBase = t.__new__(t)
-            # print(t)
-            # print(type(t))
             key:str = d.static_key()
             meta = PromptDecoratorInfo(key=key, plain_name=d.plain_name(), type=t, doc=t.__doc__)
             metas[key] = meta
         return metas
 
     def get_all_prompt_decorator_meta(self) -> list[PromptDecoratorInfo]:
-        return [v for k,v in self.prompt_decorator_meta.items()]
+        return [v for k,v in sorted(self.prompt_decorator_meta.items())]
 
     def get_all_prompt_decorator_keys(self) -> list[str]:
         return [m.key for m in self.get_all_prompt_decorator_meta()]
+
+    def create_prompt_decorator_instance(self, d_key:str) -> PromptDecoratorBase:
+        info:PromptDecoratorInfo = self.prompt_decorator_meta.get(d_key, None)
+        if(info is None):
+            raise ValueError(f"PromptDecorator with key '{d_key}' not found.")
+        t = info.type
+        pd: PromptDecoratorBase = t.__new__(t)
+        return pd
 
     # end region
 

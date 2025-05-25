@@ -21,6 +21,9 @@ class PromptDecoratorBase:
     def static_key(self) -> str:
         return f"{self.plain_name()}"
 
+    def key(self) -> str:
+        return f"{self.static_key()}"
+
     def __repr__(self) -> str:
         return self.static_key()
 

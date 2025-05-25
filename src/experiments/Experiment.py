@@ -139,8 +139,7 @@ class ExperimentFactoryTests(TestCase):
 
     def test_create_single_model_experiment__defaults_checkDefaults(self):
         exp:Experiment = ExperimentFactory("RegexVal",
-                                           default_prompting=DirectPrompting("direct")).create_single_model_experiment(
-            "np.stub")
+                            default_prompting=DirectPrompting("direct")).create_single_model_experiment("np.stub")
 
         self.assertEqual(exp.LangUnit.Name(), "RegexVal")
         self.assertIsNotNone (exp.get_model_by_key("np.stub"))

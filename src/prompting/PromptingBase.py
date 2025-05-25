@@ -55,6 +55,7 @@ class PromptingBase(ABC, Generic[T]):
     def apply_decorators(p:Prompt, prompt_decorators:list[PromptDecoratorBase])->Prompt:
         """
         Applies a decorator to the prompt.
+        :param p:
         :param prompt_decorators:
         :param decorator: The decorator to apply.
         :return: The decorated prompt.

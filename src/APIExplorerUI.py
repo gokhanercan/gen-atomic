@@ -15,6 +15,7 @@ from models.ModelBase import ModelProviderMeta
 from models.ModelFactory import ModelFactory, ModelFilters
 from prompting.Prompt import Prompt
 from prompting.PromptingBase import PromptingBase, PromptingInfo
+from prompting.decorators.prompt_decorator_base import PromptDecoratorInfo, PromptDecoratorBase
 from prompting.impl.DirectPrompting import DirectPrompting
 from prompting.prompting_factory import PromptingFactory
 
@@ -42,11 +43,16 @@ modelKeys:List[str] = modelFactory.FindKeysByFilters(ModelFilters(providerAbbr=N
 selModelKey = bar.selectbox("Effective Model Keys", modelKeys)
 
 # Prompting
-promptings:[PromptingInfo] = PromptingFactory().get_all_prompting_meta()
+p_factory = PromptingFactory()
+promptings:list[PromptingInfo] = p_factory.get_all_prompting_meta()
 promptingNames = [p.plain_name for p in promptings]
 selPrompting:PromptingInfo = bar.selectbox("Prompting Methods", promptings, format_func=lambda p: p.plain_name)
 selPromptingImpl:PromptingBase = None
 bar.markdown(f"<span style='font-size: 0.9em' title='This information is coming from the docstrings of the implementations'><i>{selPrompting.doc}</i></span>", unsafe_allow_html=True)
+
+# Prompt Decorators
+decoratorsInfos:list[PromptDecoratorInfo] = p_factory.get_all_prompt_decorator_meta()
+selectedDecorators:list[PromptDecoratorInfo] = bar.multiselect('Prompt Decorators', decoratorsInfos, format_func=lambda d: d.plain_name, help="Select decorators to apply on the prompt. These will be applied in the order they are selected.")
 
 # Dynamic Configurations
 anyDynamicConfig:bool = selPrompting.key == "direct"
@@ -63,7 +69,9 @@ if(selPrompting.key == "direct"):
         else:
             selPrompt: str = st.text_input("Custom Prompt", "This is a sample prompt.", key="prompt")
             prompt = Prompt(selPrompt)
-        selPromptingImpl: PromptingBase = DirectPrompting(prompt)
+        decorators:list[PromptDecoratorBase] = [p_factory.create_prompt_decorator_instance(d.key) for d in selectedDecorators]
+        st.write(decorators)
+        selPromptingImpl: PromptingBase = DirectPrompting(prompt, decorators)           # TODO: A real DI engine required here.
 # endregion
 
 # endregion  #sidebar end
@@ -71,8 +79,9 @@ if(selPrompting.key == "direct"):
 # region Main Content
 st.subheader("Model Configuration")
 data = {
-    'Name': ['Provider Name', 'Static ModelKey', 'Static PromptingKey'],
-    'Value': [selModelProvider.Name.replace("- All -","-"), selModelKey, selPrompting.plain_name],
+    'Name': ['Provider Name', 'Static ModelKey', 'Static PromptingKey', 'Static Prompt Decorator Keys'],
+    'Value': [selModelProvider.Name.replace("- All -","-"), selModelKey, selPrompting.plain_name,
+              ", ".join([d.key for d in selectedDecorators]) if len(selectedDecorators) > 0 else "None"],
 }
 df = pd.DataFrame(data)
 st.dataframe(df, hide_index=True)
@@ -86,10 +95,14 @@ render_static_key()
 
 # Dynamic Key
 try:
-    mc: ModelConfiguration = ModelConfiguration(model=modelFactory.CreateModelByKey(selModelKey), prompting=selPromptingImpl)
+    mc: ModelConfiguration = ModelConfiguration(
+        model=modelFactory.CreateModelByKey(selModelKey),
+        prompting=selPromptingImpl
+    )
     modelConfigKey: str = selModelKey
     st.markdown("**Model Configuration Key (Dynamic)**")
     st.code(mc.key())
-except:
+except Exception as e:
     st.warning("There is no UI support for the selected configuration. Please check the selected model and prompting method.")
+    st.error(f"Error: {e}")
     st.stop()

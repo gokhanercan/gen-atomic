@@ -27,10 +27,17 @@ class DirectPrompting(PromptingBase):
         self.prompt_decorators:list[PromptDecoratorBase] = prompt_decorators
 
     def key(self):
+        key:str = ""
         if hasattr(self,"prompt"):      #dynamic key
-            return f"{self.plain_name()}_{self.prompt.key()}"
+            key = f"{self.plain_name()}_{self.prompt.key()}"
         else:
-            return super().static_key()
+            key = super().static_key()
+
+        # Apply decorators
+        if self.prompt_decorators:
+            for d in sorted(self.prompt_decorators, key=lambda x: x.key()):
+                key = d.decorate_key(key)
+        return key
 
     def generate(self):
         pass

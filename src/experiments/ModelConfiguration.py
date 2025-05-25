@@ -18,8 +18,10 @@ class StaticModelConfiguration:
 
     def key(self):
         return f"M({self.static_model_key })P({self.static_prompting_key})"
+
     def __str__(self) -> str:
         return self.key()
+
     def __repr__(self) -> str:
         return self.key()
 
