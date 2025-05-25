@@ -72,8 +72,7 @@ class PromptingFactory(object):
         t = info.type
         pd: PromptDecoratorBase = t.__new__(t)
         return pd
-
-    # end region
+    # endregion
 
 
 if __name__ == '__main__':

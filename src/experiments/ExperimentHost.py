@@ -225,8 +225,7 @@ def RunRegexValExperimentComparingPrompts():
     ds: Dataset = DatasetXmlRepository.Load(path)
 
     exp_factory = ExperimentFactory("RegexVal")
-    exp: Experiment = exp_factory.create_model_experiment_with_all_default_promptings("np.stub")
-
+    exp: Experiment = exp_factory.create_model_experiment_with_all_default_promptings("np.stub",True)
     stubs = [item for item in exp.get_models() if isinstance(item, StubModel)]
     StubModel.fake_email(stubs)
 

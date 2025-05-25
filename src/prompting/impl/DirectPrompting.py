@@ -24,6 +24,8 @@ class DirectPrompting(PromptingBase):
             self.prompt: Prompt = prompt
         else:
             raise TypeError("Invalid type for prompt")
+        if prompt_decorators is None:
+            prompt_decorators = []
         self.prompt_decorators:list[PromptDecoratorBase] = prompt_decorators
 
     def key(self):

@@ -1,3 +1,4 @@
+import copy
 from typing import List, Optional
 from unittest import TestCase
 
@@ -8,10 +9,11 @@ from models.ModelBase import ModelBase
 from models.ModelFactory import ModelFactory, ModelFilters
 from models.StubModel import StubModel
 from prompting.PromptingBase import PromptingBase, PromptingInfo
+from prompting.decorators.prompt_decorator_base import PromptDecoratorBase, PromptDecoratorInfo
 from prompting.impl.DirectPrompting import DirectPrompting
 from prompting.prompting_factory import PromptingFactory
 from utility import StringHelper
-
+from itertools import combinations
 
 class Experiment(object):
     # def __init__(self, langUnit: LangUnit, models: List[ModelBase] = None) -> None:
@@ -126,13 +128,25 @@ class ExperimentFactory(object):
         p_factory = PromptingFactory()
         lang_unit: LangUnit = LangUnitFactory().Create(self.lang_unit_name)
         p_metas:list[PromptingInfo] = p_factory.get_all_prompting_meta()
-        mcs:ModelConfigurations = ModelConfigurations(
-            [
-                ModelConfiguration(model,p_factory.create_prompting_instance(p.key, lang_unit.CreateInfo()))
-                for p in p_metas
-            ]
-        )
-        return Experiment(lang_unit, mcs)
+        mcs:list[ModelConfiguration] = []
+        for p_meta in p_metas:
+            p:PromptingBase = p_factory.create_prompting_instance(p_meta.key, lang_unit.CreateInfo())
+            if(isinstance(p, DirectPrompting) and create_decorator_variations):
+                dp:DirectPrompting = p
+                mcs.append(ModelConfiguration(model, dp))    # no decorators variant
+                pds = list(p_factory.prompt_decorator_meta.values())
+                pd_combinations = []
+                for r in range(1, len(pds) + 1):
+                    pd_combinations.extend(combinations(pds, r))
+                for pd_comb in pd_combinations:
+                    p_variant:DirectPrompting = copy.deepcopy(dp)
+                    for pd in pd_comb:
+                        pd:PromptDecoratorBase = p_factory.create_prompt_decorator_instance(pd.key)
+                        p_variant.prompt_decorators.append(pd)
+                    mcs.append(ModelConfiguration(model, p_variant))
+            else:
+                mcs.append(ModelConfiguration(model,p))
+        return Experiment(lang_unit, ModelConfigurations(mcs))
 
 
 class ExperimentFactoryTests(TestCase):

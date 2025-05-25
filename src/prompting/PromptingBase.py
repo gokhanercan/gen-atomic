@@ -63,7 +63,7 @@ class PromptingBase(ABC, Generic[T]):
         if prompt_decorators is None or len(prompt_decorators) == 0:
             return p
         import copy
-        pNew:Prompt = copy.copy(p)
+        pNew:Prompt = copy.deepcopy(p)
         for decorator in prompt_decorators:
             decorator.decorate(pNew)
         return pNew
