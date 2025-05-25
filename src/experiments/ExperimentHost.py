@@ -8,7 +8,9 @@ from pandas import DataFrame  # type: ignore
 from tabulate import tabulate  # type: ignore
 from colorama import Fore
 
-from langunits.LangUnit import LangUnitInfo
+from experiments.ModelConfiguration import ModelConfigurations, ModelConfiguration
+from langunits.LangUnit import LangUnitInfo, LangUnit
+from langunits.LangUnitFactory import LangUnitFactory
 from models.ModelFactory import ModelFactory, ModelFilters
 from models.StubModel import StubModel
 from prompting.prompting_factory import PromptingFactory
@@ -18,24 +20,25 @@ from utility.Paths import Paths
 
 class ExperimentResults(object):
 
-    def __init__(self, experimentName:str, experimentKey:str, **kwargs) -> None:
+    def __init__(self, experimentName: str, experimentKey: str, **kwargs) -> None:
         super().__init__()
-        self.ExperimentName:str = experimentName
-        self.ExperimentKey:str = experimentKey
-        self.ModelResults:Dict[str,DataFrame] = {}
-        self.Results:DataFrame = Optional[DataFrame]
-        self.OverallAccuracy:List = Optional[List]
+        self.ExperimentName: str = experimentName
+        self.ExperimentKey: str = experimentKey
+        self.ModelResults: Dict[str, DataFrame] = {}
+        self.Results: DataFrame = Optional[DataFrame]
+        self.OverallAccuracy: List = Optional[List]
+        self.ModelKeys: List = Optional[List]
         for key, value in kwargs.items():
             setattr(self, key, value)
 
-    def Print(self, ignoreFakeModelReports = True):
-        if(self.ModelResults is not None):
+    def Print(self, ignoreFakeModelReports=True):
+        if (self.ModelResults is not None):
             fakeModelNames = ModelFactory().GetAllBaselineModelNames()
-            for modelConf,df in self.ModelResults.items():
-                if(ignoreFakeModelReports):
-                    if(fakeModelNames.__contains__(modelConf)): continue
-                    if(modelConf.__contains__("Stub")): continue
-                    if(modelConf.__contains__("Random")): continue
+            for modelConf, df in self.ModelResults.items():
+                if (ignoreFakeModelReports):
+                    if (fakeModelNames.__contains__(modelConf)): continue
+                    if (modelConf.__contains__("Stub")): continue
+                    if (modelConf.__contains__("Random")): continue
                 print(f"\n-- {modelConf.upper()} MODEL RESULTS --")
                 #region styling
                 # for index, row in df.iterrows():
@@ -47,22 +50,26 @@ class ExperimentResults(object):
                 #         df.at[index, 'Case'] = f"{Fore.RED}{row['Case']}{Fore.RESET}"
                 #endregion
                 print(tabulate(df, headers="keys", tablefmt='grid', floatfmt=".2f"))
-        if(self.Results is not None):
+        if (self.Results is not None):
             experimentHeader = f"-- {self.ExperimentName.upper()} EXPERIMENT --"
             print("\n" + experimentHeader)
             print(tabulate(self.Results, headers="keys", tablefmt='psql', floatfmt=".2f"))
             print(f"{self.ExperimentKey}")
+        if (self.ModelKeys):
+            print(f"-- MODEL KEYS --")
+            print(tabulate(self.ModelKeys, headers=[], tablefmt='psql',floatfmt=".2f"))
 
 
 class ExperimentHost(object):
 
-    def Run(self, exp: Experiment, ds:Dataset, formatCode:bool = False):
-        if(exp.model_configs.__len__() == 0): raise Exception("No model configuration(s) defined in the experiment!")
+    def Run(self, exp: Experiment, ds: Dataset, formatCode: bool = False):
+        if (exp.model_configs.__len__() == 0): raise Exception("No model configuration(s) defined in the experiment!")
         start_time = time.time()
-        print(f"\nRunning experiment on {ds.Name} dataset with {str(len(exp.model_configs))} model configuration(s) ...")
+        print(
+            f"\nRunning experiment on {ds.Name} dataset with {str(len(exp.model_configs))} model configuration(s) ...")
         print("ModelConfigs:", exp.model_configs)
 
-        modelResults:Dict[str,DataFrame] = {}
+        modelResults: Dict[str, DataFrame] = {}
 
         dfAggr = DataFrame()
         for mc in exp.model_configs.model_configs:
@@ -84,14 +91,16 @@ class ExperimentHost(object):
 
             for f in ds.Units:
                 #region Constraints
-                langUnitInfo:LangUnitInfo = exp.LangUnit.CreateInfo()
-                generated: str = model.Generate(f.Description,langUnitInfo)
-                passed: bool = exp.LangUnit.RunTest(generated, "", f) #TODO: Duplicate RunTest on Constraint and CCase/ICCase. 
+                langUnitInfo: LangUnitInfo = exp.LangUnit.CreateInfo()
+                generated: str = model.Generate(f.Description, langUnitInfo)
+                passed: bool = exp.LangUnit.RunTest(generated, "",
+                                                    f)  #TODO: Duplicate RunTest on Constraint and CCase/ICCase.
 
                 dfCases.at[caseIndex, "Type"] = f.UnitType
                 dfCases.at[caseIndex, "Name"] = f.Name
                 dfCases.at[caseIndex, "Passed"] = "OK" if passed else "X"
-                dfCases.at[caseIndex, "Generated Code"] = FormatHelper.ShortenCode(generated,20) if formatCode else generated
+                dfCases.at[caseIndex, "Generated Code"] = FormatHelper.ShortenCode(generated,
+                                                                                   20) if formatCode else generated
                 if (passed):
                     passedCaseCount = passedCaseCount + 1
                     ccPassed = ccPassed + 1
@@ -109,9 +118,10 @@ class ExperimentHost(object):
                     dfCases.at[caseIndex, "Type"] = f.UnitType
                     dfCases.at[caseIndex, "Name"] = f.Name
                     dfCases.at[caseIndex, "Case"] = "CC-> " + cc
-                    passed:bool = exp.LangUnit.RunTest(generated, cc, f)
+                    passed: bool = exp.LangUnit.RunTest(generated, cc, f)
                     dfCases.at[caseIndex, "Passed"] = "OK" if passed else "X"
-                    dfCases.at[caseIndex, "Generated Code"] = FormatHelper.ShortenCode(generated, 20) if formatCode else generated
+                    dfCases.at[caseIndex, "Generated Code"] = FormatHelper.ShortenCode(generated,
+                                                                                       20) if formatCode else generated
                     if (passed):
                         passedCaseCount = passedCaseCount + 1
                         ccPassed = ccPassed + 1
@@ -125,9 +135,10 @@ class ExperimentHost(object):
                     dfCases.at[caseIndex, "Type"] = f.UnitType
                     dfCases.at[caseIndex, "Name"] = f.Name
                     dfCases.at[caseIndex, "Case"] = "IC-> " + icc
-                    passed:bool = not exp.LangUnit.RunTest(generated, icc, f)  # type: ignore
+                    passed: bool = not exp.LangUnit.RunTest(generated, icc, f)  # type: ignore
                     dfCases.at[caseIndex, "Passed"] = "OK" if passed else "X"
-                    dfCases.at[caseIndex, "Generated Code"] = FormatHelper.ShortenCode(generated, 20) if formatCode else generated
+                    dfCases.at[caseIndex, "Generated Code"] = FormatHelper.ShortenCode(generated,
+                                                                                       20) if formatCode else generated
                     if (passed):
                         passedCaseCount = passedCaseCount + 1
                         icPassed = icPassed + 1
@@ -159,24 +170,25 @@ class ExperimentHost(object):
             # Calculate precision, recall, and F1-score
             dfAggr.at["Precision", accuracyColName] = precision_score(y_true, y_pred, zero_division=0) * 100
             dfAggr.at["Recall", accuracyColName] = recall_score(y_true, y_pred, zero_division=0) * 100
-            dfAggr.at["F1 Score", accuracyColName] =  f1_score(y_true, y_pred, zero_division=0) * 100
+            dfAggr.at["F1 Score", accuracyColName] = f1_score(y_true, y_pred, zero_division=0) * 100
             # endregion
 
         end_time = time.time()
         elapsed_time = end_time - start_time
         print(f"Experiment is completed in {self.format_time(elapsed_time)} seconds.", )
 
-        overallAccuracy:List = dfAggr.iloc[-1]
-
+        overallAccuracy: List = dfAggr.iloc[-1]
         r = ExperimentResults(exp.plain_name(), exp.key(), OverallAccuracy=overallAccuracy)
         r.ModelResults = modelResults
         r.Results = dfAggr
+        r.ModelKeys = [[mc.key()] for mc in exp.model_configs.model_configs]
         return r
 
-    def format_time(self,seconds):
+    def format_time(self, seconds):
         hours, remainder = divmod(seconds, 3600)
         minutes, seconds = divmod(remainder, 60)
         return "{:02}:{:02}:{:02}".format(int(hours), int(minutes), int(seconds))
+
 
 # region Sample Experiments
 
@@ -186,12 +198,13 @@ def RunSQLSelectExperiment():
     ds: Dataset = DatasetXmlRepository.Load(path)
 
     exp = ExperimentFactory("SqlSelect").create_experiment_by_model_filters(ModelFilters(providerAbbr="ol",
-                                                                                           keyContains="codellama"),
-                                                                 include_baselines=False)
+                                                                                         keyContains="codellama"),
+                                                                            include_baselines=False)
 
     r: ExperimentResults = ExperimentHost().Run(exp, ds, formatCode=False)
     r.Print()
     ds.Print()
+
 
 def RunRegexValExperiment():
     #Dataset
@@ -200,32 +213,34 @@ def RunRegexValExperiment():
 
     #Exp. Context
     exp_factory = ExperimentFactory("RegexVal", PromptingFactory().create_default("RegexVal"))
-    exp:Experiment = exp_factory.create_single_model_experiment("np.stub")
+    exp: Experiment = exp_factory.create_single_model_experiment("np.stub")
 
     stubs = [item for item in exp.get_models() if isinstance(item, StubModel)]
     StubModel.fake_email(stubs)
 
-    r:ExperimentResults = ExperimentHost().Run(exp, ds, formatCode=True)
+    r: ExperimentResults = ExperimentHost().Run(exp, ds, formatCode=True)
     r.Print()
     # ds.Print()
+
 
 def RunStringTransformerPythonExperiment():
     path = Paths().GetDataset("AtomicStringTransformerPythonDataset")
     ds: Dataset = DatasetXmlRepository.Load(path)
 
     exp = ExperimentFactory("StringTransformerPython").create_experiment_by_model_filters(
-                                                                 ModelFilters(keyContains="llama3"),
-                                                                 include_baselines=False)
+        ModelFilters(keyContains="llama3"),
+        include_baselines=False)
 
     r: ExperimentResults = ExperimentHost().Run(exp, ds, formatCode=True)
     r.Print()
 
-def RunRegexValExperimentComparingPrompts():
+
+def run_regex_val_experiment_comparing_prompts():
     path = Paths().GetDataset("AtomicRegexValDataset")
     ds: Dataset = DatasetXmlRepository.Load(path)
 
     exp_factory = ExperimentFactory("RegexVal")
-    exp: Experiment = exp_factory.create_model_experiment_with_all_default_promptings("np.stub",True)
+    exp: Experiment = exp_factory.create_model_experiment_with_all_default_promptings("np.stub", True)
     stubs = [item for item in exp.get_models() if isinstance(item, StubModel)]
     StubModel.fake_email(stubs)
 
@@ -233,12 +248,31 @@ def RunRegexValExperimentComparingPrompts():
     print(exp)
     r.Print()
 
+
+def run_manually_defined_regex_val_experiment():
+    path = Paths().GetDataset("AtomicRegexValDataset")
+    ds: Dataset = DatasetXmlRepository.Load(path)
+    lang_unit_name = "RegexVal"
+    lang_unit: LangUnit = LangUnitFactory().Create(lang_unit_name)
+    exp_factory: ExperimentFactory = ExperimentFactory(lang_unit_name)
+    mcs = ModelConfigurations([]
+                              + exp_factory.create_model_configurations_with_all_default_promptings("np.stub", True)
+                              + exp_factory.create_model_configurations_with_all_default_promptings("np.random", True)
+                              )
+    exp: Experiment = Experiment(lang_unit, mcs)
+    stubs = [item for item in exp.get_models() if isinstance(item, StubModel)]
+    StubModel.fake_email(stubs)
+
+    r: ExperimentResults = ExperimentHost().Run(exp, ds, formatCode=True)
+    r.Print()
+
+
 # endregion
 
 
 if __name__ == '__main__':
-    RunRegexValExperimentComparingPrompts()
+    run_manually_defined_regex_val_experiment()
+    # RunRegexValExperimentComparingPrompts()
     # RunSQLSelectExperiment()
     # RunRegexValExperiment()
     # RunStringTransformerPythonExperiment()
-

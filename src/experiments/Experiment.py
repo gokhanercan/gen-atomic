@@ -117,6 +117,32 @@ class ExperimentFactory(object):
         exp: Experiment = Experiment(unit,mcs)
         return exp
 
+    def create_model_configurations_with_all_default_promptings(
+            self, model_key: str,create_decorator_variations: bool = False) -> List[ModelConfiguration]:
+        model: ModelBase = ModelFactory().CreateModelByKey(model_key)
+        p_factory = PromptingFactory()
+        lang_unit: LangUnit = LangUnitFactory().Create(self.lang_unit_name)
+        p_metas: list[PromptingInfo] = p_factory.get_all_prompting_meta()
+        mcs: list[ModelConfiguration] = []
+        for p_meta in p_metas:
+            p: PromptingBase = p_factory.create_prompting_instance(p_meta.key, lang_unit.CreateInfo())
+            if (isinstance(p, DirectPrompting) and create_decorator_variations):
+                dp: DirectPrompting = p
+                mcs.append(ModelConfiguration(model, dp))  # no decorators variant
+                pds = list(p_factory.prompt_decorator_meta.values())
+                pd_combinations = []
+                for r in range(1, len(pds) + 1):
+                    pd_combinations.extend(combinations(pds, r))
+                for pd_comb in pd_combinations:
+                    p_variant: DirectPrompting = copy.deepcopy(dp)
+                    for pd in pd_comb:
+                        pd: PromptDecoratorBase = p_factory.create_prompt_decorator_instance(pd.key)
+                        p_variant.prompt_decorators.append(pd)
+                    mcs.append(ModelConfiguration(model, p_variant))
+            else:
+                mcs.append(ModelConfiguration(model, p))
+        return mcs
+
     def create_model_experiment_with_all_default_promptings(self, model_key:str, create_decorator_variations:bool = False) -> Experiment:
         """
         Creates an experiment with a single model, and all promptings with their default settings and prompt texts.
@@ -124,30 +150,8 @@ class ExperimentFactory(object):
         :param model_key:
         :return:
         """
-        model: ModelBase = ModelFactory().CreateModelByKey(model_key)
-        p_factory = PromptingFactory()
         lang_unit: LangUnit = LangUnitFactory().Create(self.lang_unit_name)
-        p_metas:list[PromptingInfo] = p_factory.get_all_prompting_meta()
-        mcs:list[ModelConfiguration] = []
-        for p_meta in p_metas:
-            p:PromptingBase = p_factory.create_prompting_instance(p_meta.key, lang_unit.CreateInfo())
-            if(isinstance(p, DirectPrompting) and create_decorator_variations):
-                dp:DirectPrompting = p
-                mcs.append(ModelConfiguration(model, dp))    # no decorators variant
-                pds = list(p_factory.prompt_decorator_meta.values())
-                pd_combinations = []
-                for r in range(1, len(pds) + 1):
-                    pd_combinations.extend(combinations(pds, r))
-                for pd_comb in pd_combinations:
-                    p_variant:DirectPrompting = copy.deepcopy(dp)
-                    for pd in pd_comb:
-                        pd:PromptDecoratorBase = p_factory.create_prompt_decorator_instance(pd.key)
-                        p_variant.prompt_decorators.append(pd)
-                    mcs.append(ModelConfiguration(model, p_variant))
-            else:
-                mcs.append(ModelConfiguration(model,p))
-        return Experiment(lang_unit, ModelConfigurations(mcs))
-
+        return Experiment(lang_unit, ModelConfigurations(self.create_model_configurations_with_all_default_promptings(model_key, create_decorator_variations)))
 
 class ExperimentFactoryTests(TestCase):
 
