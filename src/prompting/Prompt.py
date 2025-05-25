@@ -1,7 +1,6 @@
 from typing import Optional
 from unittest import TestCase
 
-
 class Prompt:
 
     def __init__(self, text:str, pid:Optional[str] = None) -> None:

@@ -1,22 +1,28 @@
+import inspect
 import unittest
 from unittest import TestCase
-
-import pytest
 
 from api.API import API
 from data.Dataset import Dataset
 from data.DatasetXmlRepository import DatasetXmlRepository
 from experiments.Experiment import Experiment, ExperimentFactory
 from experiments.ExperimentHost import ExperimentHost, ExperimentResults
+from models.StubModel import StubModel
 from utility.Paths import Paths
 
 class APISmokeTests(TestCase):
-    def test_API_RunAllGetters(self):
-        try:
-            print(API().GetAllModelProviderNames())
-            print(API().GetAllLangUnitNames())
-        except Exception as e:
-            self.fail(f"Some API getters failed with exception: {e}")
+    def test_api_run_all_get_functions(self):
+        api = API()
+        for name, method in inspect.getmembers(api, predicate=inspect.ismethod):
+            if name.lower().startswith("get"):
+                sig = inspect.signature(method)
+                if all(p.default != inspect.Parameter.empty or p.kind == inspect.Parameter.VAR_POSITIONAL
+                       or p.kind == inspect.Parameter.VAR_KEYWORD
+                       for p in sig.parameters.values()):
+                    # Safe to call if all parameters have defaults or are *args/**kwargs
+                    result = method()
+                    assert isinstance(result, list)
+                    assert all(isinstance(x, str) for x in result), f"{name} did not return List[str]"
 
 class ExperimentsIntegrationTest(TestCase):
     # @pytest.mark.skip(reason="Temporarily disabled for prompting refactoring")
@@ -27,11 +33,8 @@ class ExperimentsIntegrationTest(TestCase):
         ds: Dataset = DatasetXmlRepository.Load(path)
         exp:Experiment = ExperimentFactory("RegexVal").create_experiment_with_baseline_models()
 
-        # customize stub
-        stubModel = [item for item in exp.get_models() if item.Name().__contains__("Stub")][0]
-        fixedRegex: str = r"""^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$"""
-        stubModel.StubUnit = fixedRegex  # type: ignore
-        stubModel.StubName = "EmailStub"
+        stubs = [item for item in exp.get_models() if isinstance(item, StubModel)]
+        StubModel.fake_email(stubs)
 
         r:ExperimentResults = host.Run(exp,ds)
         r.Print(False)

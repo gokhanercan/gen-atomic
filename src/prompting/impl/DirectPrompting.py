@@ -1,8 +1,11 @@
+from __future__ import annotations
+
 from typing import Union, __all__
 
 from langunits.LangUnit import LangUnitInfo
 from prompting.Prompt import Prompt
 from prompting.PromptingBase import PromptingBase
+from prompting.decorators.prompt_decorator_base import PromptDecoratorBase
 from utility import StringHelper
 
 
@@ -11,7 +14,7 @@ class DirectPrompting(PromptingBase):
     DirectPrompting is a simple/vanilla prompting class that uses a single prompt string.
     """
 
-    def __init__(self, prompt: Prompt) -> None:
+    def __init__(self, prompt: Prompt, prompt_decorators:list[PromptDecoratorBase] | None = None) -> None:
         super().__init__()
         if isinstance(prompt, str):
             if StringHelper.IsNullOrWhiteSpace(prompt):
@@ -21,6 +24,7 @@ class DirectPrompting(PromptingBase):
             self.prompt: Prompt = prompt
         else:
             raise TypeError("Invalid type for prompt")
+        self.prompt_decorators:list[PromptDecoratorBase] = prompt_decorators
 
     def key(self):
         if hasattr(self,"prompt"):      #dynamic key

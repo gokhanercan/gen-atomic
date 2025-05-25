@@ -26,9 +26,14 @@ class API(object):
     def get_all_prompting_keys(self) -> List[str]:
         return PromptingFactory().get_all_prompting_keys()
 
+    def get_all_prompt_decorator_keys(self) -> List[str]:
+        return PromptingFactory().get_all_prompt_decorator_keys()
+
 
 if __name__ == '__main__':
-    Print("LangUnits",      API().GetAllLangUnitNames())
-    Print("ModelProviders", API().GetAllModelProviderNames())
-    Print("ModelKeys",      API().GetAllModelKeys())
-    Print("PromptingKeys",  API().get_all_prompting_keys())
+    Print("LangUnits",          API().GetAllLangUnitNames())
+    Print("ModelProviders",     API().GetAllModelProviderNames())
+    Print("ModelKeys",          API().GetAllModelKeys())
+    Print("PromptingKeys",      API().get_all_prompting_keys())
+    Print("PromptDecorators",   API().get_all_prompt_decorator_keys())
+

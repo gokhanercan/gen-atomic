@@ -1,10 +1,15 @@
 from abc import ABC, abstractmethod, ABCMeta
 # from __future__ import annotations
 from typing import Union, Type, Optional, Generic, TypeVar
+from unittest import TestCase
+from unittest.mock import Mock
+
 from annotated_types import T
 from pydantic import BaseModel, ConfigDict
 
 from langunits.LangUnit import LangUnitInfo
+from prompting.Prompt import Prompt
+from prompting.decorators.prompt_decorator_base import PromptDecoratorBase
 
 
 class PromptingBase(ABC, Generic[T]):
@@ -46,6 +51,44 @@ class PromptingBase(ABC, Generic[T]):
     def generate(self):
         pass
 
+    @staticmethod
+    def apply_decorators(p:Prompt, prompt_decorators:list[PromptDecoratorBase])->Prompt:
+        """
+        Applies a decorator to the prompt.
+        :param prompt_decorators:
+        :param decorator: The decorator to apply.
+        :return: The decorated prompt.
+        """
+        if prompt_decorators is None or len(prompt_decorators) == 0:
+            return p
+        import copy
+        pNew:Prompt = copy.copy(p)
+        for decorator in prompt_decorators:
+            decorator.decorate(pNew)
+        return pNew
+
+class PromptingBaseTests(TestCase):
+
+    def test_apply_decorators__no_decorators_donothing(self):
+        p = Prompt("Hello prompt!")
+        decorators: list[PromptDecoratorBase] = []
+        pNew = PromptingBase.apply_decorators(p, decorators)
+        self.assertEqual(p, pNew, "Applying no decorators should return the same prompt.")
+
+    def test_apply_decorators__multiple_decorators__apply(self):
+        p = Prompt("Hello prompt!")
+        def fake1_func(p:Prompt):
+            p.text = p.text + " - Postfix"
+        fake1 = Mock(spec=PromptDecoratorBase)
+        fake1.decorate.side_effect = fake1_func
+        def fake2_func(p:Prompt):
+            p.text = "Prefix - " + p.text
+        fake2 = Mock(spec=PromptDecoratorBase)
+        fake2.decorate.side_effect = fake2_func
+
+        pNew = PromptingBase.apply_decorators(p, [fake1,fake2])
+
+        self.assertEqual("Prefix - Hello prompt! - Postfix", pNew.text)
 
 class PromptingInfo(BaseModel):
     key: str
@@ -57,5 +100,4 @@ class PromptingInfo(BaseModel):
 
 
 if __name__ == '__main__':
-    # print(PromptingInfo(plain_name="test"))
     pass

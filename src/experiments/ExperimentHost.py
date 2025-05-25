@@ -68,7 +68,7 @@ class ExperimentHost(object):
         for mc in exp.model_configs.model_configs:
             model_start_time = time.time()
             model = mc.model
-            print(f"\tRunning model '{model.Key()} on '{ds.Name}' dataset ...")
+            print(f"\tRunning model config '{mc.key()} on '{ds.Name}' dataset ...")
             dfCases: DataFrame = DataFrame()
             fieldIndex: int = 1
             caseIndex: int = 1
@@ -142,10 +142,10 @@ class ExperimentHost(object):
 
             model_end_time = time.time()
             model_elapsed_time = model_end_time - model_start_time
-            print(f"\tExperiment for model {model.Key()} is completed in {self.format_time(model_elapsed_time)} seconds.", )
+            print(f"\tExperiment for mc {mc.key()} is completed in {self.format_time(model_elapsed_time)} seconds.", )
             modelResults[model.Key()] = dfCases
 
-            accuracyColName = f"{model.Key()} (%)"
+            accuracyColName = f"{mc.key()} (%)"
             #if(ccCount + icCount + len(f.Conditions) == 0): raise Exception("No cases defined in the dataset!") TODO: commented because of a lack of Conditions implementation
             ccAccuracy: float = (float(ccPassed) / float(ccCount)) * 100 if ccCount > 0 else 0
             dfAggr.at["CorrectCase", accuracyColName] = ccAccuracy
@@ -153,15 +153,14 @@ class ExperimentHost(object):
             overallAccuracy: float = (float(passedCaseCount) / float(totalCaseCount)) * 100 if totalCaseCount > 0 else 0
             dfAggr.at["Overall", accuracyColName] = overallAccuracy
 
-            #region Precision, Recall, F1 Score
-
+            # region Precision, Recall, F1 Score
             from sklearn.metrics import precision_score, recall_score, f1_score
 
             # Calculate precision, recall, and F1-score
             dfAggr.at["Precision", accuracyColName] = precision_score(y_true, y_pred, zero_division=0) * 100
             dfAggr.at["Recall", accuracyColName] = recall_score(y_true, y_pred, zero_division=0) * 100
             dfAggr.at["F1 Score", accuracyColName] =  f1_score(y_true, y_pred, zero_division=0) * 100
-            #endregion
+            # endregion
 
         end_time = time.time()
         elapsed_time = end_time - start_time
@@ -190,12 +189,6 @@ def RunSQLSelectExperiment():
                                                                                            keyContains="codellama"),
                                                                  include_baselines=False)
 
-    #region baselines stubbing
-    #stubModel = [item for item in exp.Models if item.Name().__contains__("Stub")][0]
-    #stubModel.StubUnit = "select * from Products"
-    #stubModel.StubName = "SQLStub"
-    #endregion
-
     r: ExperimentResults = ExperimentHost().Run(exp, ds, formatCode=False)
     r.Print()
     ds.Print()
@@ -209,14 +202,8 @@ def RunRegexValExperiment():
     exp_factory = ExperimentFactory("RegexVal", PromptingFactory().create_default("RegexVal"))
     exp:Experiment = exp_factory.create_single_model_experiment("np.stub")
 
-    # region baselines stubbing
-    stubs = [item for item in exp.get_models() if item.Name().__contains__("Stub")]
-    if(stubs):
-        stubModel = stubs[0]
-        fixedRegex: str = r"""^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$"""
-        stubModel.StubUnit = fixedRegex  # type: ignore
-        stubModel.StubName = "EmailStub"
-    # endregion
+    stubs = [item for item in exp.get_models() if isinstance(item, StubModel)]
+    StubModel.fake_email(stubs)
 
     r:ExperimentResults = ExperimentHost().Run(exp, ds, formatCode=True)
     r.Print()

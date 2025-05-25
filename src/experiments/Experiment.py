@@ -115,9 +115,10 @@ class ExperimentFactory(object):
         exp: Experiment = Experiment(unit,mcs)
         return exp
 
-    def create_model_experiment_with_all_default_promptings(self, model_key:str) -> Experiment:
+    def create_model_experiment_with_all_default_promptings(self, model_key:str, create_decorator_variations:bool = False) -> Experiment:
         """
         Creates an experiment with a single model, and all promptings with their default settings and prompt texts.
+        :param create_decorator_variations: If true, creates all possible prompt compositions.
         :param model_key:
         :return:
         """
@@ -132,7 +133,6 @@ class ExperimentFactory(object):
             ]
         )
         return Experiment(lang_unit, mcs)
-
 
 
 class ExperimentFactoryTests(TestCase):

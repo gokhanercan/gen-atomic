@@ -1,7 +1,6 @@
-from abc import ABCMeta
-
 from langunits.LangUnit import LangUnitInfo
 from prompting.PromptingBase import PromptingInfo, PromptingBase
+from prompting.decorators.prompt_decorator_base import PromptDecoratorInfo, PromptDecoratorBase
 from prompting.impl.DirectPrompting import DirectPrompting
 from utility import Discovery
 
@@ -11,6 +10,7 @@ class PromptingFactory(object):
     def __init__(self) -> None:
         super().__init__()
         self.promptings_meta: dict[str, PromptingInfo] = self.discover_promptings()
+        self.prompt_decorator_meta: dict[str, PromptDecoratorInfo] = self.discover_prompt_decorators()
 
     def discover_promptings(self) -> dict[str, PromptingInfo]:
         types = Discovery.find_subclasses("prompting",PromptingBase,"impl")
@@ -47,10 +47,37 @@ class PromptingFactory(object):
         p = p.create_default_instance(lang_unit_info)
         return p
 
+    # region Decorators
+    def discover_prompt_decorators(self) -> dict[str, PromptDecoratorInfo]:
+        types = Discovery.find_subclasses("prompting.decorators",PromptDecoratorBase,"impl")
+        metas: dict[str, PromptDecoratorInfo] = {}
+        for t in types:
+            name: str = t.__name__
+            d: PromptDecoratorBase = t.__new__(t)
+            # print(t)
+            # print(type(t))
+            key:str = d.static_key()
+            meta = PromptDecoratorInfo(key=key, plain_name=d.plain_name(), type=t, doc=t.__doc__)
+            metas[key] = meta
+        return metas
+
+    def get_all_prompt_decorator_meta(self) -> list[PromptDecoratorInfo]:
+        return [v for k,v in self.prompt_decorator_meta.items()]
+
+    def get_all_prompt_decorator_keys(self) -> list[str]:
+        return [m.key for m in self.get_all_prompt_decorator_meta()]
+
+    # end region
+
 
 if __name__ == '__main__':
 
     factory = PromptingFactory()
-    print("PromptingFactory", factory.promptings_meta)
-    print("meta",factory.get_all_prompting_meta())
-    print("keys",factory.get_all_prompting_keys())
+    print("\n")
+    print("Prompting.Meta",factory.get_all_prompting_meta())
+    print("Prompting.Keys",factory.get_all_prompting_keys())
+
+    # Decorators
+    print("\n")
+    print("PromptDecorator.Meta", factory.get_all_prompt_decorator_meta())
+    print("PromptDecorator.Keys", factory.get_all_prompt_decorator_keys())
