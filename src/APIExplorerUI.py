@@ -70,7 +70,6 @@ if(selPrompting.key == "direct"):
             selPrompt: str = st.text_input("Custom Prompt", "This is a sample prompt.", key="prompt")
             prompt = Prompt(selPrompt)
         decorators:list[PromptDecoratorBase] = [p_factory.create_prompt_decorator_instance(d.key) for d in selectedDecorators]
-        st.write(decorators)
         selPromptingImpl: PromptingBase = DirectPrompting(prompt, decorators)           # TODO: A real DI engine required here.
 # endregion
 

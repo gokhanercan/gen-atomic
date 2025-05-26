@@ -155,7 +155,7 @@ class ExperimentFactory(object):
 
 class ExperimentFactoryTests(TestCase):
 
-    def test_create_single_model_experiment__defaults_checkDefaults(self):
+    def test_create_single_model_experiment__defaults_check_defaults(self):
         exp:Experiment = ExperimentFactory("RegexVal",
                             default_prompting=DirectPrompting("direct")).create_single_model_experiment("np.stub")
 
@@ -165,13 +165,14 @@ class ExperimentFactoryTests(TestCase):
         self.assertEqual(1,exp.model_configs.__len__())
         self.assertEqual(DirectPrompting, type(exp.model_configs.model_configs[0].prompting))
 
-    def test_create_provider_experiment__todoname(self):
-        exp:Experiment = ExperimentFactory("RegexVal",default_prompting=DirectPrompting("direct")).create_provider_experiment("np")
+    def test_create_provider_experiment__customprompting__init_all(self):
+        exp:Experiment = (ExperimentFactory("RegexVal",default_prompting=DirectPrompting("direct"))
+                          .create_provider_experiment("np"))
 
         self.assertEqual(exp.LangUnit.Name(), "RegexVal")
-        self.assertIsNotNone (exp.get_model_by_key("np.stub"))
+        self.assertIsNotNone(exp.get_model_by_key("np.stub"))
         self.assertEqual(StubModel,type(exp.get_model_by_key("np.stub")))
-        self.assertEqual(2,exp.model_configs.__len__()) #stub and random
+        self.assertEqual(2,exp.model_configs.__len__())  #stub and random
         self.assertEqual(DirectPrompting, type(exp.model_configs.model_configs[0].prompting))
 
 
@@ -179,11 +180,11 @@ if __name__ == '__main__':
 
     lang_unit_name:str = "SqlSelect"
     e:Experiment = Experiment(LangUnitFactory().Create(lang_unit_name),
-                              ModelConfigurations(
-                                    [
-                                    ModelConfiguration(ModelFactory().CreateModelByKey("np.stub"),PromptingFactory().create_default(lang_unit_name)),
-                                    ModelConfiguration(ModelFactory().CreateModelByKey("np.random"),PromptingFactory().create_default(lang_unit_name))
-                                    ]
-                              )
-                   )
+              ModelConfigurations(
+                    [
+                    ModelConfiguration(ModelFactory().CreateModelByKey("np.stub"),PromptingFactory().create_default(lang_unit_name)),
+                    ModelConfiguration(ModelFactory().CreateModelByKey("np.random"),PromptingFactory().create_default(lang_unit_name))
+                    ]
+              )
+    )
     print(e)
