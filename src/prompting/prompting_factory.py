@@ -1,4 +1,5 @@
 from langunits.LangUnit import LangUnitInfo
+from prompting.Prompt import Prompt
 from prompting.PromptingBase import PromptingInfo, PromptingBase
 from prompting.decorators.prompt_decorator_base import PromptDecoratorInfo, PromptDecoratorBase
 from prompting.impl.DirectPrompting import DirectPrompting
@@ -29,11 +30,22 @@ class PromptingFactory(object):
     def get_all_prompting_keys(self) -> list[str]:
         return [m.key for m in self.get_all_prompting_meta()]
 
+    _UNITLESS_PROMPT: str = (       #TODO: Load from the prompt repository
+        f"Consider yourself a function that takes the input of asked [LANG_UNIT_DESC] statement, and "
+                        f"your output should be a markdown code snippet formatted in the following schema, including "
+                        f"the leading and trailing \"```[LANG_UNIT_DESC]\" and \"```\". Do not give me an explanation, only give "
+                        f"me a [LANG_UNIT_DESC] expression. Do not add any additional characters."
+                        f" Asked [LANG_UNIT_DESC] statement: '[DESC]'."
+    )
+
+
     def create_default(self, lang_unit_name:str) -> PromptingBase:
-        return DirectPrompting("p1")     #TODO: Load pid per langunit and model here
+        default_prompt:Prompt = Prompt(self._UNITLESS_PROMPT,"p1")
+        return DirectPrompting(default_prompt)     #TODO: Load pid per langunit and model here
 
     def create_direct_prompt(self, pid:str) -> PromptingBase:
-        return DirectPrompting(pid)
+        default_prompt: Prompt = Prompt(self._UNITLESS_PROMPT, pid)
+        return DirectPrompting(default_prompt)  # TODO: Load pid per langunit and model here
 
     def create_prompting_instance(self, p_key:str, lang_unit_info:LangUnitInfo) -> PromptingBase:
         info:PromptingInfo = self.promptings_meta.get(p_key, None)

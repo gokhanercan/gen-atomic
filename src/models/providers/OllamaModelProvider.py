@@ -7,6 +7,7 @@ import subprocess
 import ollama
 from colorama import init, Fore, Back, Style
 from data.Dataset import *
+from models.ModelBase import GenResponse, GenRequest
 from models.providers.ModelProviderBase import ModelProviderBase
 
 class OllamaModelProvider(ModelProviderBase):
@@ -32,10 +33,12 @@ class OllamaModelProvider(ModelProviderBase):
 
     @staticmethod
     def ModelNameList()->List[str]:       #str:ModelNames
-        return ["codellama","llama3"]
+        return ["codellama","llama3","llama2"]
         #TODO: Dynamically fetch list of models supported by Ollama. After implementing this drop static support and self.ModelConfigurations signature.
         #return ["codellama","llama3","phi3","codegemma","codellama:70b","llama3:70b","starcoder2","gemma","tinyllama"]
         #return ["codellama", "codellama:70b", "phi3", "llama3:7b", "llama2"]  # ? :
+        # phi3,llama2,llama3,deepseek-coder,codegemma,starcoder2  ref:https://ollama.com/library?sort=popular
+
     def ModelNames(self):   #str:ModelNames
         return OllamaModelProvider.ModelNameList()
 
@@ -72,26 +75,25 @@ class OllamaModelProvider(ModelProviderBase):
         print(Fore.RESET)
 
         #model call
-        response = client.generate(model=self.ModelName(), prompt=prompt)        #phi3,llama2,llama3,deepseek-coder,codegemma,starcoder2  ref:https://ollama.com/library?sort=popular
+        response = client.generate(model=self.ModelName(), prompt=prompt)
         answer = response['response']
-
-        #test oracle
-        sql_pattern = rf"```{langDesc}(.*?)```"
-        match = re.search(sql_pattern, answer, re.DOTALL)  # re.DOTALL allows matching newlines
-        print(f"Full Output:\n{answer}\n")      #TODO:Remove model specific outputs.
-
-        if match:
-            extracted_sql = match.group(1)
-            print(f"Extracted {langDesc} pattern: {Fore.CYAN}{extracted_sql}{Fore.RESET}")
-            answer = extracted_sql.strip()
-        else:
-            print(f"Couldn't find {langDesc} pattern between ```")
 
         #ollama_server_process.terminate()       #TODO: Manage the connection. Do not terminate on every call.
 
         gencode:str = str(answer).strip().replace("Regex: ","").replace("regexp","").replace("```","").replace("`","").replace("SQL: ","")      #TODO: Output parsers here please!
         print(f"A: {Fore.CYAN}{gencode}{Fore.RESET}")
         return gencode
+
+    def _generate_impl(self, req:GenRequest) -> GenResponse:
+        client = ollama.Client('http://localhost:11434')  # TODO:Specify full URL with port
+
+        response = client.generate(model=self.ModelName(), prompt=req.final_prompt)
+        answer = response['response']
+        # ollama_server_process.terminate()       #TODO: Manage the connection. Do not terminate on every call.
+        # TODO: Output parsers here please!
+        generated: str = str(answer).strip().replace("Regex: ", "").replace("regexp", "").replace("```", "").replace("`","").replace("SQL: ", "")
+        return GenResponse(req.lang_unit_info,generated)
+
 
 if __name__ == "__main__":
     answer = OllamaModelProvider('codellama').Generate("generate me an email regex, do not give me an explanation",

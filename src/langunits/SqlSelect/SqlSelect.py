@@ -1,6 +1,6 @@
 from typing import List
 from data.Dataset import Unit
-from langunits.LangUnit import LangUnit, UnitType
+from langunits.LangUnit import LangUnit, UnitType, EvalRequest, EvalResponse
 
 
 class SqlSelect(LangUnit):
@@ -87,6 +87,21 @@ class SqlSelect(LangUnit):
 
         return result
     #endregion
+
+    def run_test(self, eval_req:EvalRequest, correct_case:str)->EvalResponse:
+        # test oracle
+        sql_pattern = rf"```{eval_req.lang_unit_info.Name}(.*?)```"
+        import re
+        match = re.search(sql_pattern, eval_req.generated, re.DOTALL)  # re.DOTALL allows matching newlines
+        print(f"Full Output:\n{eval_req.generated}\n")  # TODO:Remove model specific outputs.
+
+        if match:
+            extracted_sql = match.group(1)
+            # print(f"Extracted {langDesc} pattern: {Fore.CYAN}{extracted_sql}{Fore.RESET}")
+            answer = extracted_sql.strip()
+        else:
+            print(f"Couldn't find {eval_req.lang_unit_info.Name} pattern between ```")
+
 
     def RunTest(self, code:str, correctCase:str, unit:Unit)->bool:
         import sqlite3

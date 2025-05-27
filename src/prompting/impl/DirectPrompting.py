@@ -1,8 +1,8 @@
 from __future__ import annotations
-
-from typing import Union, __all__
+from deprecated import deprecated
 
 from langunits.LangUnit import LangUnitInfo
+from models.ModelBase import GenResponse, GenRequest
 from prompting.Prompt import Prompt
 from prompting.PromptingBase import PromptingBase
 from prompting.decorators.prompt_decorator_base import PromptDecoratorBase
@@ -11,7 +11,7 @@ from utility import StringHelper
 
 class DirectPrompting(PromptingBase):
     """
-    DirectPrompting is a simple/vanilla prompting class that uses a single prompt string.
+    DirectPrompting is a simple/vanilla prompting that uses a single prompt in a single request.
     """
 
     def __init__(self, prompt: Prompt, prompt_decorators:list[PromptDecoratorBase] | None = None) -> None:
@@ -28,9 +28,9 @@ class DirectPrompting(PromptingBase):
             prompt_decorators = []
         self.prompt_decorators:list[PromptDecoratorBase] = prompt_decorators
 
-    def key(self):
+    def key(self)->str:
         key:str = ""
-        if hasattr(self,"prompt"):      #dynamic key
+        if hasattr(self,"prompt"):      # dynamic key
             key = f"{self.plain_name()}_{self.prompt.key()}"
         else:
             key = super().static_key()
@@ -41,16 +41,31 @@ class DirectPrompting(PromptingBase):
                 key = d.decorate_key(key)
         return key
 
-    def generate(self):
-        pass
+    def _generate(self, req: GenRequest) -> GenResponse:
+        eff_prompt: Prompt = PromptingBase.apply_decorators(self.prompt, self.prompt_decorators)
+        lang_unit_desc: str = req.lang_unit_info.PromptText
+        final_prompt: str = (eff_prompt.text
+                             .replace("[DESC]",req.description)
+                             .replace("[LANG_UNIT_DESC]", lang_unit_desc)
+        )
+
+        # promptColored: str = f"{instruction}\nAsked {lang_desc} statement: {Fore.BLUE}{description}{Fore.RESET}."
+        # print(f"\nP:{promptColored}")
+        # print(Fore.RESET)
+
+        # model call
+        req2:GenRequest = req.clone_to_final_prompt(final_prompt)
+        res:GenResponse = req.gen_model.generate(req2)
+        return res
+
 
     # region Defaults
-
     def _create_default_prompt(self,lang_unit_info:LangUnitInfo) -> Prompt:
         """
         Creates a default prompt for this prompting class.
         :return: Prompt
         """
+        # TODO: Load from the prompt repository
         lang_desc: str = lang_unit_info.PromptText
         instruction: str = (f"Consider yourself a function that takes the input of asked {lang_desc} statement, and "
                             f"your output should be a markdown code snippet formatted in the following schema, including "
@@ -65,5 +80,4 @@ class DirectPrompting(PromptingBase):
 
 
 if __name__ == '__main__':
-    # DirectPrompting("Hello")
     DirectPrompting(Prompt("Hello prompt!"))

@@ -16,15 +16,9 @@ from utility import StringHelper
 from itertools import combinations
 
 class Experiment(object):
-    # def __init__(self, langUnit: LangUnit, models: List[ModelBase] = None) -> None:
     def __init__(self, langUnit:LangUnit, model_configs:ModelConfigurations = None) -> None:
-        self.LangUnit:LangUnit = langUnit #We support single LangUnit per Experiment
-        # self.Models:List[ModelBase] = models    #TODO:OBSOLETE:That should be model configuration including Prompting and other settings!
+        self.LangUnit:LangUnit = langUnit # we support single LangUnit per Experiment
         self.model_configs:ModelConfigurations = model_configs      #TODO: Too many model_configs drama!
-        # self.Name:Optional[str] = None
-
-    # def GetName(self)->str:
-    #     return StringHelper.Coelesce(self.Name,self.LangUnit.Name())
 
     def get_models(self) -> List[ModelBase]:
         """
@@ -61,7 +55,6 @@ class Experiment(object):
             return f"E[{self.LangUnit}_{self.model_configs.key()}]"
         except Exception as e:
             return f"E[{self.LangUnit.Name()}]"
-        # return f"{self.LangUnit.Name()}_{self.GetName()}"
 
 
 class ExperimentFactory(object):
@@ -180,11 +173,11 @@ if __name__ == '__main__':
 
     lang_unit_name:str = "SqlSelect"
     e:Experiment = Experiment(LangUnitFactory().Create(lang_unit_name),
-              ModelConfigurations(
-                    [
-                    ModelConfiguration(ModelFactory().CreateModelByKey("np.stub"),PromptingFactory().create_default(lang_unit_name)),
-                    ModelConfiguration(ModelFactory().CreateModelByKey("np.random"),PromptingFactory().create_default(lang_unit_name))
-                    ]
-              )
+          ModelConfigurations(
+                [
+                ModelConfiguration(ModelFactory().CreateModelByKey("np.stub"),PromptingFactory().create_default(lang_unit_name)),
+                ModelConfiguration(ModelFactory().CreateModelByKey("np.random"),PromptingFactory().create_default(lang_unit_name))
+                ]
+          )
     )
     print(e)

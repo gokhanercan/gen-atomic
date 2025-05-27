@@ -9,8 +9,9 @@ class StubModel(ModelBase, BaselineModel):
         self.StubUnit = stubUnit
         self.StubName = None
 
-    def Generate(self, description: str, langUnitInfo: LangUnitInfo) -> str:
-        return Coelesce(self.StubUnit, f"Stub code for description '{description}'")  # type: ignore
+    def _generate_impl(self, req: GenRequest) -> GenResponse:
+        generated:str = Coelesce(self.StubUnit, f"Stub code for description '{req.description}'")  # type: ignore
+        return GenResponse(req.lang_unit_info,generated)
 
     def ModelName(self):
         return StringHelper.Coelesce(self.StubName, super().Name())

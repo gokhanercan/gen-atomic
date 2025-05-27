@@ -8,6 +8,7 @@ from annotated_types import T
 from pydantic import BaseModel, ConfigDict
 
 from langunits.LangUnit import LangUnitInfo
+from models.ModelBase import GenResponse, GenRequest
 from prompting.Prompt import Prompt
 from prompting.decorators.prompt_decorator_base import PromptDecoratorBase
 
@@ -48,13 +49,13 @@ class PromptingBase(ABC, Generic[T]):
         pass
 
     @abstractmethod
-    def generate(self):
+    def _generate(self, req: GenRequest) -> GenResponse:
         pass
 
     @staticmethod
     def apply_decorators(p:Prompt, prompt_decorators:list[PromptDecoratorBase])->Prompt:
         """
-        Applies a decorator to the prompt.
+        Applies a decorator to the prompt and return the decorated prompt.
         :param p:
         :param prompt_decorators:
         :param decorator: The decorator to apply.

@@ -6,11 +6,11 @@ from data.DatasetXmlRepository import DatasetXmlRepository
 from experiments.Experiment import Experiment, ExperimentFactory
 from pandas import DataFrame  # type: ignore
 from tabulate import tabulate  # type: ignore
-from colorama import Fore
 
-from experiments.ModelConfiguration import ModelConfigurations, ModelConfiguration
-from langunits.LangUnit import LangUnitInfo, LangUnit
+from experiments.ModelConfiguration import ModelConfigurations
+from langunits.LangUnit import LangUnitInfo, EvalRequest, LangUnit
 from langunits.LangUnitFactory import LangUnitFactory
+from models.ModelBase import GenResponse, GenRequest
 from models.ModelFactory import ModelFactory, ModelFilters
 from models.StubModel import StubModel
 from prompting.prompting_factory import PromptingFactory
@@ -56,7 +56,7 @@ class ExperimentResults(object):
             print(tabulate(self.Results, headers="keys", tablefmt='psql', floatfmt=".2f"))
             print(f"{self.ExperimentKey}")
         if (self.ModelKeys):
-            print(f"-- MODEL KEYS --")
+            print(f"\n-- MODEL KEYS --")
             print(tabulate(self.ModelKeys, headers=[], tablefmt='psql',floatfmt=".2f"))
 
 
@@ -90,17 +90,28 @@ class ExperimentHost(object):
             y_pred: List[int] = []
 
             for f in ds.Units:
-                #region Constraints
                 langUnitInfo: LangUnitInfo = exp.LangUnit.CreateInfo()
-                generated: str = model.Generate(f.Description, langUnitInfo)
-                passed: bool = exp.LangUnit.RunTest(generated, "",
-                                                    f)  #TODO: Duplicate RunTest on Constraint and CCase/ICCase.
+
+                #gen2
+                res:GenResponse = mc.prompting._generate(
+                    GenRequest(lang_unit_info=langUnitInfo,
+                                description=f.Description,
+                                gen_model=model,
+                                final_prompt=None
+                    )
+                )
+                generated: str = res.raw_generated
+                passed: bool = True
+
+                # region Eval Constraints
+                # exp.LangUnit.run_test(EvalRequest(generated,"",f,langUnitInfo)).passed
+                # generated: str = model.Generate(f.Description, langUnitInfo)
+                # passed: bool = exp.LangUnit.RunTest(generated, "",f) # TODO: Duplicate RunTest on Constraint and CCase/ICCase.
 
                 dfCases.at[caseIndex, "Type"] = f.UnitType
                 dfCases.at[caseIndex, "Name"] = f.Name
                 dfCases.at[caseIndex, "Passed"] = "OK" if passed else "X"
-                dfCases.at[caseIndex, "Generated Code"] = FormatHelper.ShortenCode(generated,
-                                                                                   20) if formatCode else generated
+                dfCases.at[caseIndex, "Generated Code"] = FormatHelper.ShortenCode(generated,20) if formatCode else generated
                 if (passed):
                     passedCaseCount = passedCaseCount + 1
                     ccPassed = ccPassed + 1
@@ -118,10 +129,9 @@ class ExperimentHost(object):
                     dfCases.at[caseIndex, "Type"] = f.UnitType
                     dfCases.at[caseIndex, "Name"] = f.Name
                     dfCases.at[caseIndex, "Case"] = "CC-> " + cc
-                    passed: bool = exp.LangUnit.RunTest(generated, cc, f)
+                    passed: bool = exp.LangUnit.run_test(EvalRequest(generated, cc,f,langUnitInfo)).passed
                     dfCases.at[caseIndex, "Passed"] = "OK" if passed else "X"
-                    dfCases.at[caseIndex, "Generated Code"] = FormatHelper.ShortenCode(generated,
-                                                                                       20) if formatCode else generated
+                    dfCases.at[caseIndex, "Generated Code"] = FormatHelper.ShortenCode(generated,20) if formatCode else generated
                     if (passed):
                         passedCaseCount = passedCaseCount + 1
                         ccPassed = ccPassed + 1
@@ -131,14 +141,14 @@ class ExperimentHost(object):
                     caseIndex += 1
                     y_true.append(1)
                     y_pred.append(int(passed))
+
                 for icc in f.IncorrectCases:
                     dfCases.at[caseIndex, "Type"] = f.UnitType
                     dfCases.at[caseIndex, "Name"] = f.Name
                     dfCases.at[caseIndex, "Case"] = "IC-> " + icc
-                    passed: bool = not exp.LangUnit.RunTest(generated, icc, f)  # type: ignore
+                    passed: bool = not exp.LangUnit.run_test(EvalRequest(generated,icc,f,langUnitInfo)).passed  # type: ignore
                     dfCases.at[caseIndex, "Passed"] = "OK" if passed else "X"
-                    dfCases.at[caseIndex, "Generated Code"] = FormatHelper.ShortenCode(generated,
-                                                                                       20) if formatCode else generated
+                    dfCases.at[caseIndex, "Generated Code"] = FormatHelper.ShortenCode(generated,20) if formatCode else generated
                     if (passed):
                         passedCaseCount = passedCaseCount + 1
                         icPassed = icPassed + 1
@@ -191,20 +201,17 @@ class ExperimentHost(object):
 
 
 # region Sample Experiments
-
 def RunSQLSelectExperiment():
-    #Dataset
     path = Paths().GetDataset("AtomicSQLSelectDataset")
     ds: Dataset = DatasetXmlRepository.Load(path)
 
-    exp = ExperimentFactory("SqlSelect").create_experiment_by_model_filters(ModelFilters(providerAbbr="ol",
-                                                                                         keyContains="codellama"),
-                                                                            include_baselines=False)
+    exp = ExperimentFactory("SqlSelect").create_experiment_by_model_filters(
+        ModelFilters(providerAbbr="ol",keyContains="codellama"),include_baselines=False
+    )
 
     r: ExperimentResults = ExperimentHost().Run(exp, ds, formatCode=False)
     r.Print()
     ds.Print()
-
 
 def RunRegexValExperiment():
     #Dataset
@@ -222,7 +229,6 @@ def RunRegexValExperiment():
     r.Print()
     # ds.Print()
 
-
 def RunStringTransformerPythonExperiment():
     path = Paths().GetDataset("AtomicStringTransformerPythonDataset")
     ds: Dataset = DatasetXmlRepository.Load(path)
@@ -234,13 +240,12 @@ def RunStringTransformerPythonExperiment():
     r: ExperimentResults = ExperimentHost().Run(exp, ds, formatCode=True)
     r.Print()
 
-
-def run_regex_val_experiment_comparing_prompts():
-    path = Paths().GetDataset("AtomicRegexValDataset")
+def run_model_experiment_comparing_prompts(lang_unit_name:str="RegexVal", ds_name:str="AtomicRegexValDataset", model_key: str = "np.stub"):
+    path = Paths().GetDataset(ds_name)
     ds: Dataset = DatasetXmlRepository.Load(path)
 
-    exp_factory = ExperimentFactory("RegexVal")
-    exp: Experiment = exp_factory.create_model_experiment_with_all_default_promptings("np.stub", True)
+    exp_factory = ExperimentFactory(lang_unit_name)
+    exp: Experiment = exp_factory.create_model_experiment_with_all_default_promptings(model_key, True)
     stubs = [item for item in exp.get_models() if isinstance(item, StubModel)]
     StubModel.fake_email(stubs)
 
@@ -248,16 +253,17 @@ def run_regex_val_experiment_comparing_prompts():
     print(exp)
     r.Print()
 
-
-def run_manually_defined_regex_val_experiment():
+def run_manually_defined_experiment():
     path = Paths().GetDataset("AtomicRegexValDataset")
     ds: Dataset = DatasetXmlRepository.Load(path)
-    lang_unit_name = "RegexVal"
+    lang_unit_name:str = "RegexVal"
     lang_unit: LangUnit = LangUnitFactory().Create(lang_unit_name)
     exp_factory: ExperimentFactory = ExperimentFactory(lang_unit_name)
+    model_key: str = "np.stub"
+    exp = exp_factory.create_single_model_experiment(model_key,PromptingFactory().create_default(lang_unit_name))
     mcs = ModelConfigurations([]
-                              + exp_factory.create_model_configurations_with_all_default_promptings("np.stub", True)
-                              + exp_factory.create_model_configurations_with_all_default_promptings("np.random", True)
+                              + exp_factory.create_model_configurations_with_all_default_promptings(model_key, True)
+                              # + exp_factory.create_model_configurations_with_all_default_promptings("np.random", True)
                               )
     exp: Experiment = Experiment(lang_unit, mcs)
     stubs = [item for item in exp.get_models() if isinstance(item, StubModel)]
@@ -266,13 +272,12 @@ def run_manually_defined_regex_val_experiment():
     r: ExperimentResults = ExperimentHost().Run(exp, ds, formatCode=True)
     r.Print()
 
-
 # endregion
 
 
 if __name__ == '__main__':
-    run_manually_defined_regex_val_experiment()
-    # RunRegexValExperimentComparingPrompts()
+    run_manually_defined_experiment()
+    run_model_experiment_comparing_prompts("RegexVal","AtomicRegexValDataset","np.stub")
     # RunSQLSelectExperiment()
     # RunRegexValExperiment()
     # RunStringTransformerPythonExperiment()
