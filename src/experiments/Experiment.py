@@ -1,70 +1,183 @@
+import copy
 from typing import List, Optional
+from unittest import TestCase
 
+from experiments.ModelConfiguration import ModelConfiguration, ModelConfigurations
 from langunits.LangUnit import LangUnit
 from langunits.LangUnitFactory import LangUnitFactory
 from models.ModelBase import ModelBase
 from models.ModelFactory import ModelFactory, ModelFilters
+from models.StubModel import StubModel
+from prompting.PromptingBase import PromptingBase, PromptingInfo
+from prompting.decorators.prompt_decorator_base import PromptDecoratorBase, PromptDecoratorInfo
+from prompting.impl.DirectPrompting import DirectPrompting
+from prompting.prompting_factory import PromptingFactory
 from utility import StringHelper
-
+from itertools import combinations
 
 class Experiment(object):
-    def __init__(self, langUnit:LangUnit, models:List[ModelBase] = None) -> None:
-        super().__init__()
-        self.LangUnit:LangUnit = langUnit #We support single LangUnit per Experiment
-        self.Models:List[ModelBase] = models    #TODO: That should be model configuration including Prompting and other settings!
-        self.Name:Optional[str] = None
+    def __init__(self, langUnit:LangUnit, model_configs:ModelConfigurations = None) -> None:
+        self.LangUnit:LangUnit = langUnit # we support single LangUnit per Experiment
+        self.model_configs:ModelConfigurations = model_configs      #TODO: Too many model_configs drama!
 
-    def GetName(self)->str:
-        return StringHelper.Coelesce(self.Name,self.LangUnit.Name())
+    def get_models(self) -> List[ModelBase]:
+        """
+        Returns the flat list of model references in the experiment.
+        :return: List[ModelBase]
+        """
+        if self.model_configs is None:
+            raise ValueError("Model configurations are not set.")
+        return self.model_configs.get_models()
+
+    def get_model_by_key(self, model_key:str) -> ModelBase:
+        """
+        Returns the model reference by its model key.
+        :return: ModelBase
+        """
+        if self.model_configs is None:
+            raise ValueError("Model configurations are not set.")
+        return [m for m in self.model_configs.get_models() if m.Key() == model_key][0]
+
+    def __repr__(self) -> str:
+        try:
+            return self.key()
+        except Exception:
+            return "<Experiment (repr failed)>"
 
     def __str__(self) -> str:
-        return f"E[{self.LangUnit}]"
-    def __repr__(self) -> str:
-        return self.__str__()
+        return self.__repr__()
+
+    def plain_name(self) -> str:
+        return f"{self.LangUnit.Name()}"
+
+    def key(self) -> str:
+        try:
+            return f"E[{self.LangUnit}_{self.model_configs.key()}]"
+        except Exception as e:
+            return f"E[{self.LangUnit.Name()}]"
 
 
 class ExperimentFactory(object):
-    def __init__(self) -> None:
+
+    def __init__(self, lang_unit_name:str, default_prompting:PromptingBase = None) -> None:
         super().__init__()
+        self.lang_unit_name: str = lang_unit_name
+        if(default_prompting is None):
+            default_prompting = PromptingFactory().create_default(self.lang_unit_name)
+        self.default_prompting:PromptingBase = default_prompting
 
-    @staticmethod
-    def CreateExperimentWithAllModels(langUnitName:str)->Experiment:
-        unit:LangUnit = LangUnitFactory().Create(langUnitName)
+    def create_experiment_with_all_models(self, prompting:PromptingBase | None = None)->Experiment:
+        unit:LangUnit = LangUnitFactory().Create(self.lang_unit_name)
         models:List[ModelBase] = ModelFactory().CreateAllModels()
-        exp:Experiment = Experiment(unit,models)
+        eff_prompting: PromptingBase = prompting or self.default_prompting
+        mcs = ModelConfigurations([ModelConfiguration(m, eff_prompting) for m in models])
+        exp:Experiment = Experiment(unit,mcs)
         return exp
 
-    @staticmethod
-    def CreateExperimentByModelFilters(langUnitName:str, mf:ModelFilters, includeBaselines:bool = False):
-        unit: LangUnit = LangUnitFactory().Create(langUnitName)
-        modelFactory = ModelFactory()
-        models: List[ModelBase] = modelFactory.CreateModelsByFilters(mf)
-        if (includeBaselines): models += modelFactory.CreateBaselineModels()
-        exp: Experiment = Experiment(unit, models)
+    def create_experiment_by_model_filters(self, mf:ModelFilters, include_baselines:bool = False, prompting: PromptingBase | None = None):
+        unit: LangUnit = LangUnitFactory().Create(self.lang_unit_name)
+        model_factory = ModelFactory()
+        models: List[ModelBase] = model_factory.CreateModelsByFilters(mf)
+        if (include_baselines):
+            models += model_factory.CreateBaselineModels()
+        eff_prompting:PromptingBase = prompting or self.default_prompting
+        mcs = ModelConfigurations([ModelConfiguration(m,eff_prompting) for m in models])
+        exp: Experiment = Experiment(unit,mcs)
         return exp
 
-    @staticmethod
-    def CreateExperimentWithBaselineModels(langUnitName:str)->Experiment:
-        unit:LangUnit = LangUnitFactory().Create(langUnitName)
+    def create_experiment_with_baseline_models(self, prompting:PromptingBase | None = None)->Experiment:
+        unit:LangUnit = LangUnitFactory().Create(self.lang_unit_name)
         models:List[ModelBase] = ModelFactory().CreateModelsByFilters(ModelFilters(isBaseline=True))
-        exp:Experiment = Experiment(unit,models)
+        eff_prompting: PromptingBase = prompting or self.default_prompting
+        mcs = ModelConfigurations([ModelConfiguration(m, eff_prompting) for m in models])
+        exp:Experiment = Experiment(unit,mcs)
         return exp
 
-    @staticmethod
-    def CreateSingleModelExperiment(langUnitName:str, modelKey:str) -> Experiment:
-        unit:LangUnit = LangUnitFactory().Create(langUnitName)
-        model: ModelBase = ModelFactory().CreateModelByKey(modelKey)
-        exp: Experiment = Experiment(unit, [model])
+    def create_single_model_experiment(self, model_key:str, prompting:PromptingBase | None = None) -> Experiment:
+        unit:LangUnit = LangUnitFactory().Create(self.lang_unit_name)
+        model: ModelBase = ModelFactory().CreateModelByKey(model_key)
+        mcs: ModelConfigurations = ModelConfigurations([ModelConfiguration(model, prompting or self.default_prompting)])
+        exp: Experiment = Experiment(unit, mcs)
         return exp
 
-    @staticmethod
-    def CreateProviderExperiment(langUnitName:str, providerAbbr:str, includeBaselines:bool = False) -> Experiment:
-        unit:LangUnit = LangUnitFactory().Create(langUnitName)
-        modelFactory = ModelFactory()
-        models: List[ModelBase] = modelFactory.CreateModelsByFilters(ModelFilters(providerAbbr=providerAbbr))
-        if(includeBaselines): models += modelFactory.CreateBaselineModels()
-        exp: Experiment = Experiment(unit,models)
+    def create_provider_experiment(self, provider_abbr:str, prompting: PromptingBase | None = None, include_baselines:bool = False) -> Experiment:
+        unit:LangUnit = LangUnitFactory().Create(self.lang_unit_name)
+        model_factory = ModelFactory()
+        models: List[ModelBase] = model_factory.CreateModelsByFilters(ModelFilters(providerAbbr=provider_abbr))
+        if(include_baselines):
+            models += model_factory.CreateBaselineModels()
+        mcs: ModelConfigurations = ModelConfigurations([ModelConfiguration(m,prompting or self.default_prompting) for m in models])
+        exp: Experiment = Experiment(unit,mcs)
         return exp
+
+    def create_model_configurations_with_all_default_promptings(
+            self, model_key: str,create_decorator_variations: bool = False) -> List[ModelConfiguration]:
+        model: ModelBase = ModelFactory().CreateModelByKey(model_key)
+        p_factory = PromptingFactory()
+        lang_unit: LangUnit = LangUnitFactory().Create(self.lang_unit_name)
+        p_metas: list[PromptingInfo] = p_factory.get_all_prompting_meta()
+        mcs: list[ModelConfiguration] = []
+        for p_meta in p_metas:
+            p: PromptingBase = p_factory.create_prompting_instance(p_meta.key, lang_unit.CreateInfo())
+            if (isinstance(p, DirectPrompting) and create_decorator_variations):
+                dp: DirectPrompting = p
+                mcs.append(ModelConfiguration(model, dp))  # no decorators variant
+                pds = list(p_factory.prompt_decorator_meta.values())
+                pd_combinations = []
+                for r in range(1, len(pds) + 1):
+                    pd_combinations.extend(combinations(pds, r))
+                for pd_comb in pd_combinations:
+                    p_variant: DirectPrompting = copy.deepcopy(dp)
+                    for pd in pd_comb:
+                        pd: PromptDecoratorBase = p_factory.create_prompt_decorator_instance(pd.key)
+                        p_variant.prompt_decorators.append(pd)
+                    mcs.append(ModelConfiguration(model, p_variant))
+            else:
+                mcs.append(ModelConfiguration(model, p))
+        return mcs
+
+    def create_model_experiment_with_all_default_promptings(self, model_key:str, create_decorator_variations:bool = False) -> Experiment:
+        """
+        Creates an experiment with a single model, and all promptings with their default settings and prompt texts.
+        :param create_decorator_variations: If true, creates all possible prompt compositions.
+        :param model_key:
+        :return:
+        """
+        lang_unit: LangUnit = LangUnitFactory().Create(self.lang_unit_name)
+        return Experiment(lang_unit, ModelConfigurations(self.create_model_configurations_with_all_default_promptings(model_key, create_decorator_variations)))
+
+class ExperimentFactoryTests(TestCase):
+
+    def test_create_single_model_experiment__defaults_check_defaults(self):
+        exp:Experiment = ExperimentFactory("RegexVal",
+                            default_prompting=DirectPrompting("direct")).create_single_model_experiment("np.stub")
+
+        self.assertEqual(exp.LangUnit.Name(), "RegexVal")
+        self.assertIsNotNone (exp.get_model_by_key("np.stub"))
+        self.assertEqual(StubModel,type(exp.get_model_by_key("np.stub")))
+        self.assertEqual(1,exp.model_configs.__len__())
+        self.assertEqual(DirectPrompting, type(exp.model_configs.model_configs[0].prompting))
+
+    def test_create_provider_experiment__customprompting__init_all(self):
+        exp:Experiment = (ExperimentFactory("RegexVal",default_prompting=DirectPrompting("direct"))
+                          .create_provider_experiment("np"))
+
+        self.assertEqual(exp.LangUnit.Name(), "RegexVal")
+        self.assertIsNotNone(exp.get_model_by_key("np.stub"))
+        self.assertEqual(StubModel,type(exp.get_model_by_key("np.stub")))
+        self.assertEqual(2,exp.model_configs.__len__())  #stub and random
+        self.assertEqual(DirectPrompting, type(exp.model_configs.model_configs[0].prompting))
+
 
 if __name__ == '__main__':
-    print(ExperimentFactory().CreateExperimentWithAllModels("SqlSelect"))
+
+    lang_unit_name:str = "SqlSelect"
+    e:Experiment = Experiment(LangUnitFactory().Create(lang_unit_name),
+          ModelConfigurations(
+                [
+                ModelConfiguration(ModelFactory().CreateModelByKey("np.stub"),PromptingFactory().create_default(lang_unit_name)),
+                ModelConfiguration(ModelFactory().CreateModelByKey("np.random"),PromptingFactory().create_default(lang_unit_name))
+                ]
+          )
+    )
+    print(e)

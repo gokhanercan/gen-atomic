@@ -1,6 +1,6 @@
 from typing import List
 from data.Dataset import Unit
-from langunits.LangUnit import LangUnit, UnitType
+from langunits.LangUnit import LangUnit, UnitType, EvalRequest, EvalResponse
 
 
 class SqlSelect(LangUnit):
@@ -88,10 +88,28 @@ class SqlSelect(LangUnit):
         return result
     #endregion
 
+    def run_test(self, eval_req:EvalRequest, correct_case:str)->EvalResponse:
+        # test oracle
+        sql_pattern = rf"```{eval_req.lang_unit_info.Name}(.*?)```"
+        import re
+        match = re.search(sql_pattern, eval_req.generated, re.DOTALL)  # re.DOTALL allows matching newlines
+        print(f"Full Output:\n{eval_req.generated}\n")  # TODO:Remove model specific outputs.
+
+        if match:
+            extracted_sql = match.group(1)
+            # print(f"Extracted {langDesc} pattern: {Fore.CYAN}{extracted_sql}{Fore.RESET}")
+            answer = extracted_sql.strip()
+        else:
+            print(f"Couldn't find {eval_req.lang_unit_info.Name} pattern between ```")
+
+
     def RunTest(self, code:str, correctCase:str, unit:Unit)->bool:
         import sqlite3
-        schema, column_names, column_type_dict, table_name = self.createSchema(unit.Context.Schema)
-        result = self.createData(unit.Context.Data, column_names, column_type_dict)
+        try:
+            schema, column_names, column_type_dict, table_name = self.createSchema(unit.Context.Schema)
+            result = self.createData(unit.Context.Data, column_names, column_type_dict)
+        except Exception as e:
+            raise RuntimeError(f"\033[91mError in creating schema or data for the case: {e}. Check the dataset schema and data format.\033[0m\nContent.Schema: {unit.Context.Schema}.from UnitName: {unit.Name}.\nContent.Data: {unit.Context.Data} from UnitName: {unit.Name}")
 
         try:
             with sqlite3.connect(':memory:') as connection:
@@ -113,7 +131,7 @@ class SqlSelect(LangUnit):
                     print(row)
 
         except sqlite3.Error as e:
-            print(f"An error occurred: {e}")
+            print(f"An error occurred trying to execute the generated code: {e}")
             return False
 
         #EVAL

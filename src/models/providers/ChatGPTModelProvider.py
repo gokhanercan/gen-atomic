@@ -6,6 +6,7 @@ from models.ModelBase import ModelBase
 from colorama import init, Fore, Back, Style
 from data.Dataset import *
 from models.providers.ModelProviderBase import ModelProviderBase
+from models.ModelBase import GenResponse, GenRequest
 
 
 class ChatGPTModelProvider(ModelProviderBase):
@@ -58,6 +59,9 @@ class ChatGPTModelProvider(ModelProviderBase):
         gencode:str = str(answer).strip().replace("Regex: ","").replace("```","").replace("`","")      #TODO: Output parsers here please!
         print(f"A: {Fore.CYAN}{gencode}{Fore.RESET}")
         return gencode
+
+    def _generate_impl(self, req:GenRequest) -> GenResponse:
+        pass
 
 if __name__ == "__main__":
     answer = ChatGPTModelProvider('gpt-3.5-turbo').Generate("Generic email address", LangUnitInfo("RegexVal","regular expression for validation"))

@@ -9,10 +9,10 @@ class RandomModel(ModelBase, BaselineModel):
         super().__init__()
         self.Length = length
 
-    def Generate(self, description: str, langUnitInfo:LangUnitInfo) -> str:
+    def _generate_impl(self, req: GenRequest) -> GenResponse:
         chars = string.ascii_letters + string.digits + string.punctuation + ' '
         text = ''.join(random.choice(chars) for _ in range(self.Length))
-        return text
+        return GenResponse(req.lang_unit_info, text)
 
 
 if __name__ == "__main__":

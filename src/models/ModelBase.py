@@ -1,3 +1,4 @@
+import copy
 from abc import ABC, abstractmethod, ABCMeta
 from dataclasses import field
 
@@ -23,8 +24,10 @@ class ModelInfo(object):
     def Key(self)->str:
         abbr:str = StringHelper.Coelesce(self.ProviderAbbreviation,"np")
         return f"{abbr.lower()}.{self.PlainName.lower()}"
+
     def __str__(self) -> str:
         return self.Key()
+
     def __repr__(self) -> str:
         return self.Key()
 
@@ -32,11 +35,14 @@ class ModelInfo(object):
 class ModelProviderMeta:
     Name: str
     Type: ABCMeta
+    Abbreviation: str
+
 @dataclass
 class StandaloneModelMeta:
     Name: str
     Type: ABCMeta
     IsBaseline: bool = field(default = False)
+
 @dataclass
 class ModelMeta:
     """
@@ -59,11 +65,11 @@ class ModelMeta:
             return False        #We can't define baseline model by providers
 
 class ModelBase(ABC):
-    def __init__(self) -> None:
+    def __init__(self, modelMeta:ModelMeta | None = None) -> None:
         super().__init__()
-        self.ModelMeta:Optional[ModelMeta] = None     #TODO: Index sets it!
+        self.ModelMeta:ModelMeta | None = modelMeta    #TODO: Index sets it!
 
-    #region Names and Identities
+    # region Names and Identities
     def Name(self)->str:
         return str(type(self).__name__)
     def PlainName(self)->str:
@@ -80,7 +86,38 @@ class ModelBase(ABC):
         return f"M[{self.Key()}]"
     def GetModelConf(self)->ModelInfo:
         return ModelInfo(self.PlainName(), self.ProviderName(), self.ProviderAbbreviation())
+    # endregion
+
+    def generate(self, req:'GenRequest') -> 'GenResponse':
+        res:GenResponse = self._generate_impl(req)
+        return res
 
     @abstractmethod
-    def Generate(self, description: str, langUnitInfo:LangUnitInfo) -> str:
+    def _generate_impl(self, req:'GenRequest') -> 'GenResponse':
         pass
+
+@dataclass
+class GenRequest:
+    lang_unit_info: LangUnitInfo
+    description: str
+    gen_model: ModelBase        # The model which is responsible for generation. Managers and Evaluators will be different.
+    final_prompt: str | None
+
+    def clone(self):
+        """
+        Creates the deep copy of this request.
+        :return:
+        """
+        c = copy.deepcopy(self)
+        return c
+
+    def clone_to_final_prompt(self, final_prompt:str) -> 'GenRequest':
+        c = self.clone()
+        c.final_prompt = final_prompt
+        return c
+
+@dataclass
+class GenResponse:
+    lang_unit_info: LangUnitInfo
+    raw_generated: str
+

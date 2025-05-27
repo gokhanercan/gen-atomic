@@ -21,7 +21,7 @@ class ModelFactory(object):
     def _BuildModelIndex(self)->dict[str,ModelMeta]:
         index: dict[str:ModelMeta] = {}
 
-        #Standalones
+        # Standalone ones
         for k,v in self.StandaloneModelsMeta.items():
             sMeta:StandaloneModelMeta = v
             sModel:ModelBase = self.CreateModel(sMeta.Name)
@@ -30,7 +30,7 @@ class ModelFactory(object):
             index[key] = meta
             sModel.ModelMeta = meta
 
-        #Provider Models
+        # Provider Models
         for k, v in self.ModelProvidersMeta.items():
             mpMeta: ModelProviderMeta = v
             models: List[ModelBase] = self.CreateModelsByProvider(mpMeta.Name)
@@ -41,11 +41,11 @@ class ModelFactory(object):
                 m.ModelMeta = meta
         return index
 
-    #region Model Instance Creators
-    def CreateModelByKey(self, key:str)->ModelBase:
+    # region Model Instance Creators
+    def CreateModelByKey(self, key: str) -> ModelBase:
         meta:ModelMeta = self.ModelIndex[key]
         if(meta.IsStandalone):
-            m: ModelBase = self.CreateModel(meta.Name)
+            m: ModelBase = self.CreateModel(meta.Name,meta)
             return m
         else:
             mp:ModelProviderBase = self.CreateModelProvider(meta.ModelProviderMeta.Name, meta.PlainName)
@@ -53,7 +53,7 @@ class ModelFactory(object):
 
     def FindKeysByFilters(self,mf:ModelFilters):
         filtered:dict[str,ModelMeta] = self.ModelIndex
-        #region Apply filters
+        # region Apply filters
         def filterProviderAbbr(filter:str,meta:ModelMeta):
             return filter == meta.Key.split('.')[0]
         def filterProviderName(filter:str,meta:ModelMeta):
@@ -61,7 +61,7 @@ class ModelFactory(object):
             return False
         def filterKeyContains(filter:str,meta:ModelMeta):
             return meta.Key.__contains__(filter)
-        #endregion
+        # endregion
 
         if mf.providerAbbr:
             filtered = {k:v for k,v in filtered.items() if filterProviderAbbr(mf.providerAbbr,v)}
@@ -73,35 +73,41 @@ class ModelFactory(object):
             filtered = {k: v for k, v in filtered.items() if v.IsBaseline == mf.isBaseline}
 
         return filtered
+
     def CreateModelsByFilters(self, mf:ModelFilters)->List[ModelBase]:
         filtered:dict[str,ModelMeta] = self.FindKeysByFilters(mf)
         return [self.CreateModelByKey(k) for k,v in filtered.items()]
 
     def CreateAllModels(self)->List[ModelBase]:
         return [self.CreateModelByKey(k) for k,v in self.ModelIndex.items()]
+
     def CreateStandaloneModels(self)->List[ModelBase]:
         models:List[ModelBase] = []
         for modelName in self.GetAllStandaloneModelNames():
             m:ModelBase = self.CreateModel(modelName)
             models.append(m)
         return models
+
     def CreateBaselineModels(self)->List[ModelBase]:
         models:List[ModelBase] = []
         for modelName in self.GetAllBaselineModelNames():
             m:ModelBase = self.CreateModel(modelName)
             models.append(m)
         return models
+
     def CreateModelProviders(self)->List[ModelProviderBase]:
         providers:List[ModelProviderBase] = []
         for mpName in self.GetAllModelProviderNames():
             mp:ModelProviderBase = self.CreateModelProvider(mpName)
             providers.append(mp)
         return providers
+
     def CreateModelProvider(self, providerName:str, modelName:Optional[str] = None)->ModelProviderBase:
         t:ABCMeta = self.ModelProvidersMeta[providerName].Type
         mp:ModelProviderBase = t.__new__(t)
         mp.__init__(modelName)
         return mp
+
     def CreateModelsByProvider(self, providerName:str)->List[ModelProviderBase]:
         p:ModelProviderBase = self.CreateModelProvider(providerName)
         modelNames = p.ModelNames()
@@ -110,17 +116,23 @@ class ModelFactory(object):
             mp:ModelProviderBase = self.CreateModelProvider(providerName,modelName)
             mps.append(mp)
         return mps
-    def CreateModel(self, modelName:str)->ModelBase:
+
+    def CreateModel(self, modelName:str, modelMeta:ModelMeta | None = None)->ModelBase:
         t:ABCMeta = self.StandaloneModelsMeta[modelName].Type
         m:ModelBase = t.__new__(t)
         m.__init__()
+        if(modelMeta):
+            m.ModelMeta = modelMeta
         return m
-    #endregion
+
+    # endregion
 
     #region Queries
 
     def GetAllModelProviderNames(self)->List[str]:
         return [k for k in self.ModelProvidersMeta]
+    def GetAllModelProviderInfos(self)->List[ModelProviderMeta]:
+        return [v for k,v in self.ModelProvidersMeta.items()]
     def GetAllStandaloneModelNames(self)->List[str]:
         return [k for k in self.StandaloneModelsMeta]
     def GetAllBaselineModelNames(self)->List[str]:
@@ -164,7 +176,9 @@ class ModelFactory(object):
         metas: dict[str, ModelProviderMeta] = {}
         for t in types:
             name: str = t.__name__
-            meta = ModelProviderMeta(name, t)
+            mp: ModelProviderBase = t.__new__(t)
+            mp.__init__()
+            meta = ModelProviderMeta(name, t, mp.ProviderAbbreviation())
             metas[name] = meta
         return metas
     # endregion

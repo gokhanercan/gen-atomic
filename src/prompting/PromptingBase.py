@@ -1,44 +1,105 @@
-from abc import ABC, abstractmethod
+from abc import ABC, abstractmethod, ABCMeta
+# from __future__ import annotations
+from typing import Union, Type, Optional, Generic, TypeVar
+from unittest import TestCase
+from unittest.mock import Mock
+
+from annotated_types import T
+from pydantic import BaseModel, ConfigDict
 
 from langunits.LangUnit import LangUnitInfo
-from utility import StringHelper
-from utility.StringHelper import StringHelperTest
+from models.ModelBase import GenResponse, GenRequest
+from prompting.Prompt import Prompt
+from prompting.decorators.prompt_decorator_base import PromptDecoratorBase
 
 
-class PromptingBase(ABC):
+class PromptingBase(ABC, Generic[T]):
     """
     Base class for all prompting classes.
     #TODO: Add PromptDecorators like EmotionPrompt or ZeroCOT. WE should not need classes for those simple implementations.
     """
 
-    def __init__(self, prompt:str) -> None:      #langUnit:LangUnitInfo
-        super().__init__()
-        if StringHelper.IsNullOrWhiteSpace(prompt): raise ValueError("Prompt cannot be empty or whitespace.")
-        self.Prompt: str = prompt       #TODO: Add id and defaultPrompt support. Provide PromptFactory.
-
-    #region Names and Identities
-    def Name(self)->str:
+    # region Names and Identities
+    def name(self) -> str:
         return str(type(self).__name__)
-    def PlainName(self)->str:
-        return self.Name().replace("Prompting","")
-    def Key(self):          #Implementations should override this.
-        return f"{self.PlainName()}_t:{self.GetPromptHash()}"
+
+    def plain_name(self) -> str:
+        return self.name().replace("Prompting", "").lower()
+
+    def static_key(self) -> str:
+        return f"{self.plain_name()}"
+
+    def key(self):
+        return f"{self.plain_name()}"
+
     def __repr__(self) -> str:
-        return f"M[{self.Key()}]"
+        return self.key()
+
     def __str__(self) -> str:
-        return f"M[{self.Key()}]"
+        return self.key()
+
+    # endregion
 
     @abstractmethod
-    def Generate(self):
+    def create_default_instance(self, lang_unit_info:LangUnitInfo) -> T:
+        """
+        Creates a default prompt for this prompting class.
+        :return: str
+        """
         pass
 
-    def GetPromptHash(self)->str:
-        import hashlib
-        sha1 = hashlib.sha1(self.Prompt.encode('utf-8')).hexdigest()
-        return sha1[:7]
+    @abstractmethod
+    def _generate(self, req: GenRequest) -> GenResponse:
+        pass
+
+    @staticmethod
+    def apply_decorators(p:Prompt, prompt_decorators:list[PromptDecoratorBase])->Prompt:
+        """
+        Applies a decorator to the prompt and return the decorated prompt.
+        :param p:
+        :param prompt_decorators:
+        :param decorator: The decorator to apply.
+        :return: The decorated prompt.
+        """
+        if prompt_decorators is None or len(prompt_decorators) == 0:
+            return p
+        import copy
+        pNew:Prompt = copy.deepcopy(p)
+        for decorator in prompt_decorators:
+            decorator.decorate(pNew)
+        return pNew
+
+class PromptingBaseTests(TestCase):
+
+    def test_apply_decorators__no_decorators_donothing(self):
+        p = Prompt("Hello prompt!")
+        decorators: list[PromptDecoratorBase] = []
+        pNew = PromptingBase.apply_decorators(p, decorators)
+        self.assertEqual(p, pNew, "Applying no decorators should return the same prompt.")
+
+    def test_apply_decorators__multiple_decorators__apply(self):
+        p = Prompt("Hello prompt!")
+        def fake1_func(p:Prompt):
+            p.text = p.text + " - Postfix"
+        fake1 = Mock(spec=PromptDecoratorBase)
+        fake1.decorate.side_effect = fake1_func
+        def fake2_func(p:Prompt):
+            p.text = "Prefix - " + p.text
+        fake2 = Mock(spec=PromptDecoratorBase)
+        fake2.decorate.side_effect = fake2_func
+
+        pNew = PromptingBase.apply_decorators(p, [fake1,fake2])
+
+        self.assertEqual("Prefix - Hello prompt! - Postfix", pNew.text)
+
+class PromptingInfo(BaseModel):
+    key: str
+    plain_name: str
+    type: ABCMeta
+    doc: str = None
+
+    model_config = ConfigDict(arbitrary_types_allowed=True)  # This is needed to allow non-pydantic types, ABCMeta in this case.
 
 
-class PromptingInfo(object):
-
-    def __init__(self, plainName:str) -> None:
-        self.PlainName = plainName
+if __name__ == '__main__':
+    pass
