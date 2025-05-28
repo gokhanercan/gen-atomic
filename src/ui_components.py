@@ -1,16 +1,13 @@
 import streamlit as st
 
-from meta import __version__
+from meta import __version__, get_version_on_platform
 
 
 # region Components
 def add_version_info():
-    import platform
     import sys
-    lib_version:str = __version__
-    python_version_platform = platform.python_version()
     python_version_sys = sys.version
-    add_bottom_right_footer_text(f"v{lib_version} on {python_version_platform}", python_version_sys)
+    add_bottom_right_footer_text(get_version_on_platform(), python_version_sys)
 # endregion
 
 # region Layout Helpers

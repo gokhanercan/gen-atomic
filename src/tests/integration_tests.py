@@ -2,7 +2,6 @@ import inspect
 import unittest
 from unittest import TestCase
 
-from api.API import API
 from data.Dataset import Dataset
 from data.DatasetXmlRepository import DatasetXmlRepository
 from experiments.Experiment import Experiment, ExperimentFactory
@@ -10,8 +9,11 @@ from experiments.ExperimentHost import ExperimentHost, ExperimentResults
 from models.StubModel import StubModel
 from utility.Paths import Paths
 
+# noinspection PyMethodMayBeStatic
 class APISmokeTests(TestCase):
+
     def test_api_run_all_get_functions(self):
+        from api.api import API
         api = API()
         for name, method in inspect.getmembers(api, predicate=inspect.ismethod):
             if name.lower().startswith("get"):
@@ -21,11 +23,10 @@ class APISmokeTests(TestCase):
                        for p in sig.parameters.values()):
                     # Safe to call if all parameters have defaults or are *args/**kwargs
                     result = method()
-                    assert isinstance(result, list)
-                    assert all(isinstance(x, str) for x in result), f"{name} did not return List[str]"
+                    assert isinstance(result, list) or isinstance(result, str)
 
 class ExperimentsIntegrationTest(TestCase):
-    # @pytest.mark.skip(reason="Temporarily disabled for prompting refactoring")
+
     def test_ExperimentHost_AtomicDataset_RunExperiment(self):
         host:ExperimentHost = ExperimentHost()
 

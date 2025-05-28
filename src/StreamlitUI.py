@@ -81,7 +81,6 @@ langUnitInfo:LangUnitInfo = langUnit.CreateInfo()
 
 ccase = st.text_area("Correct Case", ccase)
 
-
 # if st.button("Generate"):
 # st.session_state.generatedCode = st.text_area("Generated Code", st.session_state.generatedCode)
 if (st.session_state.generatedCode == ""):
