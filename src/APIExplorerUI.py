@@ -1,5 +1,5 @@
 # List available providers and models here letting users to copy and paste keys and possible model configurations.
-
+import platform
 import sys
 from pathlib import Path
 from typing import List
@@ -18,6 +18,10 @@ from prompting.PromptingBase import PromptingBase, PromptingInfo
 from prompting.decorators.prompt_decorator_base import PromptDecoratorInfo, PromptDecoratorBase
 from prompting.impl.DirectPrompting import DirectPrompting
 from prompting.prompting_factory import PromptingFactory
+from ui_components import add_version_info
+
+# Layout
+add_version_info()
 
 # region Sidebar
 st.title("API Explorer")
@@ -25,6 +29,7 @@ st.sidebar.markdown("<h1 style='border1:1px solid red; margin-top:-50px;'>Resour
 bar = st.sidebar
 api = API()
 modelFactory = ModelFactory()
+
 
 # langUnitNames = api.GetAllLangUnitNames()
 # default_lang_index = langUnitNames.index("RegexVal")
