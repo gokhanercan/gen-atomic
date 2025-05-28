@@ -7,7 +7,7 @@ from typing import List
 import pandas as pd
 import streamlit as st
 
-from api.API import API
+from api.api import API
 from data.Dataset import Dataset, Unit
 from experiments.ModelConfiguration import ModelConfiguration, StaticModelConfiguration
 from langunits.LangUnitFactory import LangUnitFactory
