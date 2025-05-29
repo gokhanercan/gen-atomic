@@ -32,6 +32,10 @@ jobs:
         pip install "scipy>=1.10,<1.12"
         pip install flake8 pytest
         pip install -r src/requirements.txt
+    - name: Run Black (check only)
+      continue-on-error: true
+      run: |
+        black --check . || echo "::warning file=black::Code style violations found"
     - name: Lint with flake8
       run: |
         # stop the build if there are Python syntax errors or undefined names
