@@ -30,15 +30,14 @@ bar = st.sidebar
 api = API()
 modelFactory = ModelFactory()
 
-
 # langUnitNames = api.GetAllLangUnitNames()
 # default_lang_index = langUnitNames.index("RegexVal")
 # selLangUnit = bar.selectbox('LangUnits',langUnitNames, index=default_lang_index)
 
 # Model Provider
 modelProviderInfos = modelFactory.GetAllModelProviderInfos()
-modelProviderInfos.append( ModelProviderMeta("[No Provider]", None,"np"))
-modelProviderInfos.append( ModelProviderMeta("- All -", None,""))
+modelProviderInfos.append(ModelProviderMeta("[No Provider]", None,"np"))
+modelProviderInfos.append(ModelProviderMeta("- All -", None,""))
 selModelProvider = bar.selectbox('Model Providers',modelProviderInfos,  format_func=lambda u: u.Name + " (" + u.Abbreviation + ")" if u.Abbreviation != "" else u.Name, index=len(modelProviderInfos)-1)
 selModelProviderAbbr = selModelProvider.Abbreviation
 allProviders:bool = selModelProviderAbbr == ""
@@ -48,12 +47,21 @@ modelKeys:List[str] = modelFactory.FindKeysByFilters(ModelFilters(providerAbbr=N
 selModelKey = bar.selectbox("Effective Model Keys", modelKeys)
 
 # Prompting
-p_factory = PromptingFactory()
+@st.cache_resource
+def get_prompting_factory():
+    return PromptingFactory()
+p_factory = get_prompting_factory()
 promptings:list[PromptingInfo] = p_factory.get_all_prompting_meta()
 promptingNames = [p.plain_name for p in promptings]
-selPrompting:PromptingInfo = bar.selectbox("Prompting Methods", promptings, format_func=lambda p: p.plain_name)
+selPrompting:PromptingInfo = bar.selectbox("Prompting Methods", promptings,
+                                           format_func=lambda p: p.plain_name if hasattr(p, 'plain_name') else str(p)
+                                           )
 selPromptingImpl:PromptingBase = None
-bar.markdown(f"<span style='font-size: 0.9em' title='This information is coming from the docstrings of the implementations'><i>{selPrompting.doc}</i></span>", unsafe_allow_html=True)
+if (selPrompting.doc):
+    bar.markdown(f"<span style='font-size: 0.9em' "
+             f"title='This information is coming from the docstrings of the implementations'><i>"
+             f"{selPrompting.doc}</i></span>", unsafe_allow_html=True
+    )
 
 # Prompt Decorators
 decoratorsInfos:list[PromptDecoratorInfo] = p_factory.get_all_prompt_decorator_meta()
@@ -110,3 +118,4 @@ except Exception as e:
     st.warning("There is no UI support for the selected configuration. Please check the selected model and prompting method.")
     st.error(f"Error: {e}")
     st.stop()
+

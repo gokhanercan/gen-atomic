@@ -43,7 +43,7 @@ from fastapi import FastAPI
 api:API = API()
 app = FastAPI(title="genatomic-api", description="gen-atomic fastapi implementation", version=api.get_version())
 
-@app.get("/version")
+@app.get("/version1")
 def get_version() -> str:
     return api.get_version()
 

@@ -1,24 +1,55 @@
+import sys
 import os
 import subprocess
 
 def run_streamlit():
-    os.environ["PYTHONPATH"] = "./src"
-    subprocess.run(["streamlit", "run", "src/APIExplorerUI.py", "--server.port", "8501", "--server.runOnSave", "true"], check=True)
+    subprocess.Popen(["streamlit", "run", "src/streamlit_ui.py", "--server.port", "8501","--server.runOnSave","true"])
 
 def run_pytests():
-    subprocess.run(["ptw", "--clear"])
+    return subprocess.Popen(["ptw", "--clear"])
 
 def run_fastapi():
     os.environ["PYTHONPATH"] = "./src"
+    return subprocess.Popen(["uvicorn", "api.api:app", "--reload", "--reload-dir", "src", "--port", "8512"])
+
+def run_all():
+    procs = [run_pytests(), run_fastapi()]
+
     try:
-        subprocess.run(["uvicorn", "api.api:app", "--reload", "--reload-dir", "src", "--port", "8512"], check=True)
+        for proc in procs:
+            proc.wait()
     except KeyboardInterrupt:
-        print("\nStopped.")
+        print("\nStopping processes...")
+        for proc in procs:
+            proc.terminate()
+        for proc in procs:
+            try:
+                proc.wait(timeout=5)
+            except subprocess.TimeoutExpired:
+                proc.kill()
     finally:
-        input("Press Enter to continue...")
+        input("Press Enter to exit...")
+
+
+def main():
+    if len(sys.argv) < 2:
+        print("Usage: python run.py [streamlit|test|fastapi|all]")
+        sys.exit(1)
+
+    cmd = sys.argv[1]
+
+    if cmd == "ui":
+        run_streamlit()
+    elif cmd == "test":
+        run_pytests().wait()
+    elif cmd == "api":
+        run_fastapi().wait()
+    elif cmd == "all":
+        run_all()
+    else:
+        print(f"Unknown command: {cmd}")
+        sys.exit(1)
 
 
 if __name__ == "__main__":
-    run_streamlit()
-    # run_pytests()
-    # run_fastapi()
+    main()

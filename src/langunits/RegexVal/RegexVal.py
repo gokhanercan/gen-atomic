@@ -27,9 +27,7 @@ class RegexVal(LangUnit):
         passed:bool =  self.validate_regex(eval_req.generated, eval_req.correct_case)
         return EvalResponse(passed)
 
-
     # region Regex Implementation
-
     @staticmethod
     def validate_regex(regex_pattern, test_string) -> bool:
         try:
@@ -39,7 +37,6 @@ class RegexVal(LangUnit):
                 return True
             else:
                 return False
-        # except re.error:
         except:
             print(f"{Fore.RED}Invalid regular expression pattern.{Fore.RESET}")  # TODO: Handle that error well. Reflection.
             return False

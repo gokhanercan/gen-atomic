@@ -31,11 +31,21 @@ class ModelInfo(object):
     def __repr__(self) -> str:
         return self.Key()
 
+    def __eq__(self, other):
+        if isinstance(other, ModelBase):
+            return self.Key() == other.Key()
+        return False
+
 @dataclass
 class ModelProviderMeta:
     Name: str
     Type: ABCMeta
     Abbreviation: str
+
+    def __eq__(self, other):
+        if isinstance(other, ModelBase):
+            return self.Name == other.Name
+        return False
 
 @dataclass
 class StandaloneModelMeta:
