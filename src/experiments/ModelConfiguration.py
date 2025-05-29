@@ -11,7 +11,7 @@ from prompting.impl.DirectPrompting import DirectPrompting
 
 class StaticModelConfiguration:
 
-    def __init__(self, static_model_key:str, static_prompting_key:str):
+    def __init__(self, static_model_key: str, static_prompting_key: str):
         super().__init__()
         self.static_model_key = static_model_key
         self.static_prompting_key = static_prompting_key
@@ -25,15 +25,19 @@ class StaticModelConfiguration:
     def __repr__(self) -> str:
         return self.key()
 
+
 class StaticModelConfigurationTests(TestCase):
     def test_TwoStaticKeys_Concat(self):
-        self.assertEqual(StaticModelConfiguration("np.stub", "direct").key(), "M(np.stub)P(direct)")
+        self.assertEqual(
+            StaticModelConfiguration("np.stub", "direct").key(), "M(np.stub)P(direct)"
+        )
 
 
 class ModelConfiguration(object):
     """
     Represents a dynamic model configuration with a specific hyperparameter set.
     """
+
     model: ModelBase
     prompting: PromptingBase
 
@@ -60,7 +64,13 @@ class ModelConfiguration(object):
 
 class ModelConfigurationTests(TestCase):
     def test_Key_TextValue_HashTextAsKey(self):
-        self.assertEqual(ModelConfiguration(StubModel("test"), DirectPrompting(Prompt("Hello prompt!"))).key(), "M(np.stub)P(direct_t:0b290fd)")
+        self.assertEqual(
+            ModelConfiguration(
+                StubModel("test"), DirectPrompting(Prompt("Hello prompt!"))
+            ).key(),
+            "M(np.stub)P(direct_t:0b290fd)",
+        )
+
 
 class ModelConfigurations(object):
     def __init__(self, model_configs: List[ModelConfiguration]) -> None:
@@ -71,13 +81,22 @@ class ModelConfigurations(object):
         return len(self.model_configs)
 
     def key(self):
-        if(len(self.model_configs) == 0):
+        if len(self.model_configs) == 0:
             return "MCS()"
         else:
-            config_keys:str = "|".join([model_config.key() for model_config in sorted(self.model_configs, key=lambda mc:mc.key())])
+            config_keys: str = "|".join(
+                [
+                    model_config.key()
+                    for model_config in sorted(
+                        self.model_configs, key=lambda mc: mc.key()
+                    )
+                ]
+            )
             return f"MCS({config_keys})"
+
     def __str__(self) -> str:
         return self.key()
+
     def __repr__(self) -> str:
         return self.key()
 
@@ -90,25 +109,33 @@ class ModelConfigurations(object):
             raise ValueError("Model configurations are not set.")
         return [m.model for m in self.model_configs]
 
+
 class ModelConfigurationsTests(TestCase):
     def test_MultipleConfigs_ReturnKeysByAlphabeticOrder(self):
-        key:str = ModelConfigurations(
+        key: str = ModelConfigurations(
             [
                 ModelConfiguration(
-                    StubModel("test"), DirectPrompting(Prompt("Hello prompt!", "p1")),
+                    StubModel("test"),
+                    DirectPrompting(Prompt("Hello prompt!", "p1")),
                 ),
                 ModelConfiguration(
                     RandomModel(), DirectPrompting(Prompt("Hello prompt!", "p1"))
                 ),
             ]
         ).key()
-        self.assertEqual("MCS(M(np.random)P(direct_id:p1)|M(np.stub)P(direct_id:p1))",key)
+        self.assertEqual(
+            "MCS(M(np.random)P(direct_id:p1)|M(np.stub)P(direct_id:p1))", key
+        )
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     # Explicit prompting with a text prompt
     print(ModelConfiguration(StubModel("test"), DirectPrompting("Hello prompt!")).key())
-    print(ModelConfiguration(StubModel("test"), DirectPrompting(Prompt("Hello","P1001"))).key())
+    print(
+        ModelConfiguration(
+            StubModel("test"), DirectPrompting(Prompt("Hello", "P1001"))
+        ).key()
+    )
 
     # Explicit prompting with a Prompt reference
     # print(ModelConfiguration(ModelFactory().CreateModelByKey("ol.llama3"), DirectPrompting("Hello prompt!")).key())

@@ -1,5 +1,5 @@
-
 __version__ = "0.1.2"
+
 
 def get_version_on_platform() -> str:
     """
@@ -7,4 +7,5 @@ def get_version_on_platform() -> str:
     :return: A string containing the version and platform information.
     """
     import platform
+
     return f"v{__version__} on {platform.python_version()}"

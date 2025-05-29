@@ -15,58 +15,67 @@ class DatasetXmlRepository(object):
 
     @staticmethod
     def Load(path: str) -> Dataset:
-        if(IsNullOrEmpty(path)): raise Exception("Path should be provided.")
-        name:str = Path(path).stem
-        ds:Dataset = Dataset(name)
+        if IsNullOrEmpty(path):
+            raise Exception("Path should be provided.")
+        name: str = Path(path).stem
+        ds: Dataset = Dataset(name)
         tree = et.parse(path)
         root = tree.getroot()
-        units:List[Unit] = []
+        units: List[Unit] = []
         for eUnit in root:
-            name:str = eUnit.get("name")
-            desc:str = eUnit.get("desc")
-            unitType:str = eUnit.get("type")
-            u:Unit = Unit(name,desc,unitType,None,None)
+            name: str = eUnit.get("name")
+            desc: str = eUnit.get("desc")
+            unitType: str = eUnit.get("type")
+            u: Unit = Unit(name, desc, unitType, None, None)
             units.append(u)
 
-            #CC
+            # CC
             eCCS = eUnit.find("CCases")
-            if(eCCS):
-                cCases:List[str] = []
+            if eCCS:
+                cCases: List[str] = []
                 for eCC in eCCS:
-                    val:str = eCC.get("val")
+                    val: str = eCC.get("val")
                     cCases.append(val)
                 u.CorrectCases = cCases
 
-            #ICC
+            # ICC
             eICCS = eUnit.find("ICCases")
-            if(eICCS):
+            if eICCS:
                 icCases: List[str] = []
                 for eICC in eICCS:
                     val: str = eICC.get("val")
                     icCases.append(val)
                 u.IncorrectCases = icCases
 
-            #Constraints
+            # Constraints
             eConstraints = eUnit.find("Constraints")
-            constraints:List[Constraint] = []
-            if(eConstraints):
+            constraints: List[Constraint] = []
+            if eConstraints:
                 for eCons in eConstraints:
-                    valuePair:str = eCons.get("criteria")
-                    name,value = valuePair.split(":")
-                    constraints.append(Constraint(Criteria(name,value)))
+                    valuePair: str = eCons.get("criteria")
+                    name, value = valuePair.split(":")
+                    constraints.append(Constraint(Criteria(name, value)))
                 u.Constraints = constraints
 
-            #Context
+            # Context
             eContext = eUnit.find("Context")
-            if(eContext):
-                data = eContext.find("Data").text.replace("\n"," ").strip() if eContext.find("Data") is not None else None
-                schema = eContext.find("Schema").text.strip() if eContext.find("Schema") is not None else None
-                u.Context = Context(data,schema)
+            if eContext:
+                data = (
+                    eContext.find("Data").text.replace("\n", " ").strip()
+                    if eContext.find("Data") is not None
+                    else None
+                )
+                schema = (
+                    eContext.find("Schema").text.strip()
+                    if eContext.find("Schema") is not None
+                    else None
+                )
+                u.Context = Context(data, schema)
         ds.Units = units
         return ds
 
     def Save(self, ds: Dataset, path: str):
-        eUnits = et.Element('Units')  # root
+        eUnits = et.Element("Units")  # root
         units: List[Unit] = ds.Units
         for u in units:
             eUnit = et.SubElement(eUnits, "Unit")
@@ -87,18 +96,20 @@ class DatasetXmlRepository(object):
 
         # persist
         from xml.dom import minidom
-        xmlstr = minidom.parseString(et.tostring(eUnits, encoding='utf8', method='xml')).toprettyxml(indent="   ")
-        myfile = open(path, "w", errors='', encoding="utf-8")
+
+        xmlstr = minidom.parseString(
+            et.tostring(eUnits, encoding="utf8", method="xml")
+        ).toprettyxml(indent="   ")
+        myfile = open(path, "w", errors="", encoding="utf-8")
         myfile.write(xmlstr)
         myfile.close()
         print(f"The dataset has been persisted. Path: '{path}'")
 
 
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     path = Paths().GetDataset("AtomicRegexValDataset")
 
     # Read DS
-    ds:Dataset = DatasetXmlRepository.Load(path)
+    ds: Dataset = DatasetXmlRepository.Load(path)
     print(ds)
     print(ds.Units)

@@ -5,8 +5,10 @@ from unittest import TestCase
 def IsNullOrEmpty(str) -> bool:
     return not str
 
+
 def IsNullOrWhiteSpace(str) -> bool:
     return str is None or len(str.strip()) == 0
+
 
 def Coelesce(*arg):
     """
@@ -29,7 +31,6 @@ class StringHelperTest(TestCase):
 
     def test_Coelesce_PassEmpties(self):
         self.assertEqual("Str2", Coelesce("", "", "Str2", "Str3", "", "None"))
-
 
     def test_IsNullOrWhiteSpace_DetectSingleWhitespace(self):
         self.assertTrue(IsNullOrWhiteSpace(" "))

@@ -1,4 +1,7 @@
 from typing import List
+
+from deprecated import deprecated
+
 from data.Dataset import Unit
 from langunits.LangUnit import LangUnit, UnitType, EvalRequest, EvalResponse
 
@@ -13,34 +16,33 @@ class SqlSelect(LangUnit):
     def GetUnitType(self) -> UnitType:
         return UnitType.Query
 
-    def CheckSyntax(self, code: str):       #Static check. Parse, SyntaxCheck, Compile.
-        #ANTLR
-        pass
-
-    #region Internal Impl
+    # region Internal Impl
     def createSchema(self, schema_str):
-        table_name, columns = schema_str.split('(')
+        table_name, columns = schema_str.split("(")
         table_name = table_name.strip()
 
         # Extracting column names
-        columns = columns.replace(')', '')  # Remove the closing parenthesis
-        column_list = columns.split(',')
+        columns = columns.replace(")", "")  # Remove the closing parenthesis
+        column_list = columns.split(",")
         column_names = []
         column_type_dict = {}
         primary_key = None
         for column in column_list:
-            column_name, column_type = column.split(':')
-            if column_name.__contains__('*'):
-                column_name = column_name.split('*')[0].strip()
+            column_name, column_type = column.split(":")
+            if column_name.__contains__("*"):
+                column_name = column_name.split("*")[0].strip()
                 primary_key = column_name
             column_type_dict[column_name] = column_type
             column_names.append(column_name)
 
         # Identifying the primary key column
         if primary_key is None:
-            primary_key = ''
+            primary_key = ""
 
-        column_names = [column.split('*')[0].strip() if '*' in column else column.strip() for column in column_names]
+        column_names = [
+            column.split("*")[0].strip() if "*" in column else column.strip()
+            for column in column_names
+        ]
 
         # Define the database schema
         schema = f"""CREATE TABLE IF NOT EXISTS {table_name} ("""
@@ -54,31 +56,31 @@ class SqlSelect(LangUnit):
 
     def createData(self, data_str, column_names, column_type_dict) -> List[tuple]:
         # Step 1: Clean the string to remove unwanted characters
-        data_str_cleaned = data_str.strip('{[]}').replace("'", "")
+        data_str_cleaned = data_str.strip("{[]}").replace("'", "")
 
         # Step 2: Split the string into individual data entries
-        entries = data_str_cleaned.split('},{')
+        entries = data_str_cleaned.split("},{")
 
         # Step 3: Parse each entry and convert to the desired format
         result = []
         for entry in entries:
             # Remove any remaining braces
-            entry = entry.strip('{}')
+            entry = entry.strip("{}")
             # Split the entry into key-value pairs
-            pairs = entry.split(',')
+            pairs = entry.split(",")
 
             # Extract values in the order of column_names
             values = []
             for col in column_names:
                 for pair in pairs:
-                    key, value = pair.split(':')
+                    key, value = pair.split(":")
                     if key == col:
                         # Convert the value to the appropriate type
-                        if column_type_dict[col] == 'INTEGER':
+                        if column_type_dict[col] == "INTEGER":
                             values.append(int(value))
-                        elif column_type_dict[col] == 'FLOAT':
+                        elif column_type_dict[col] == "FLOAT":
                             values.append(float(value))
-                        elif column_type_dict[col] == 'VARCHAR':
+                        elif column_type_dict[col] == "VARCHAR":
                             values.append(value)
                         break
 
@@ -86,14 +88,20 @@ class SqlSelect(LangUnit):
             result.append(tuple(values))
 
         return result
-    #endregion
 
-    def run_test(self, eval_req:EvalRequest, correct_case:str)->EvalResponse:
+    # endregion
+
+    def run_test(self, eval_req: EvalRequest, correct_case: str) -> EvalResponse:
         # test oracle
         sql_pattern = rf"```{eval_req.lang_unit_info.Name}(.*?)```"
         import re
-        match = re.search(sql_pattern, eval_req.generated, re.DOTALL)  # re.DOTALL allows matching newlines
-        print(f"Full Output:\n{eval_req.generated}\n")  # TODO:Remove model specific outputs.
+
+        match = re.search(
+            sql_pattern, eval_req.generated, re.DOTALL
+        )  # re.DOTALL allows matching newlines
+        print(
+            f"Full Output:\n{eval_req.generated}\n"
+        )  # TODO:Remove model specific outputs.
 
         if match:
             extracted_sql = match.group(1)
@@ -102,18 +110,23 @@ class SqlSelect(LangUnit):
         else:
             print(f"Couldn't find {eval_req.lang_unit_info.Name} pattern between ```")
 
-
-    def RunTest(self, code:str, correctCase:str, unit:Unit)->bool:
+    @deprecated
+    def RunTest(self, code: str, correctCase: str, unit: Unit) -> bool:
         import sqlite3
+
         try:
-            schema, column_names, column_type_dict, table_name = self.createSchema(unit.Context.Schema)
+            schema, column_names, column_type_dict, table_name = self.createSchema(
+                unit.Context.Schema
+            )
             result = self.createData(unit.Context.Data, column_names, column_type_dict)
         except Exception as e:
-            raise RuntimeError(f"\033[91mError in creating schema or data for the case: {e}. Check the dataset schema and data format.\033[0m\nContent.Schema: {unit.Context.Schema}.from UnitName: {unit.Name}.\nContent.Data: {unit.Context.Data} from UnitName: {unit.Name}")
+            raise RuntimeError(
+                f"\033[91mError in creating schema or data for the case: {e}. Check the dataset schema and data format.\033[0m\nContent.Schema: {unit.Context.Schema}.from UnitName: {unit.Name}.\nContent.Data: {unit.Context.Data} from UnitName: {unit.Name}"
+            )
 
         try:
-            with sqlite3.connect(':memory:') as connection:
-                #Schema
+            with sqlite3.connect(":memory:") as connection:
+                # Schema
                 cursor = connection.cursor()
                 cursor.executescript(schema)
                 connection.commit()
@@ -124,7 +137,7 @@ class SqlSelect(LangUnit):
 
                 connection.commit()
 
-                #Query
+                # Query
                 cursor.execute(code)
                 resultset = cursor.fetchall()
                 for row in resultset:
@@ -134,13 +147,14 @@ class SqlSelect(LangUnit):
             print(f"An error occurred trying to execute the generated code: {e}")
             return False
 
-        #EVAL
-        passCount:int = 0
+        # EVAL
+        passCount: int = 0
         for c in unit.Constraints:
-            name,value = c.Criteria.name,c.Criteria.value
-            if(name == "data-count"):
-                datacount:int = 0 if resultset is None else len(resultset)
-                passed:bool = datacount == int(value)
-                if(passed): passCount = passCount+1
+            name, value = c.Criteria.name, c.Criteria.value
+            if name == "data-count":
+                datacount: int = 0 if resultset is None else len(resultset)
+                passed: bool = datacount == int(value)
+                if passed:
+                    passCount = passCount + 1
 
         return passCount == len(unit.Constraints)

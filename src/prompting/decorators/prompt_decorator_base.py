@@ -29,6 +29,7 @@ class PromptDecoratorBase:
 
     def __str__(self) -> str:
         return self.static_key()
+
     # endregion
 
     @abstractmethod
@@ -41,9 +42,10 @@ class PromptDecoratorBase:
         pass
 
     @abstractmethod
-    def decorate_key(self, key:str):
-        """ Decorates the key for the prompt. Decorators should modify the key to reflect their changes."""
+    def decorate_key(self, key: str):
+        """Decorates the key for the prompt. Decorators should modify the key to reflect their changes."""
         pass
+
 
 class PromptDecoratorInfo(BaseModel):
     key: str

@@ -6,12 +6,16 @@ from meta import __version__, get_version_on_platform
 # region Components
 def add_version_info():
     import sys
+
     python_version_sys = sys.version
     add_bottom_right_footer_text(get_version_on_platform(), python_version_sys)
+
+
 # endregion
 
+
 # region Layout Helpers
-def add_bottom_right_footer_text(text:str, tooltip:str = None):
+def add_bottom_right_footer_text(text: str, tooltip: str = None):
     """
     Adds text at the bottom-right
     :param text:
@@ -33,6 +37,8 @@ def add_bottom_right_footer_text(text:str, tooltip:str = None):
             {text}
         </div>
         """,
-        unsafe_allow_html=True
+        unsafe_allow_html=True,
     )
+
+
 # endregion

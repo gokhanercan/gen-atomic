@@ -10,26 +10,30 @@ class UnitType(Enum):
     Class = "Class"
     Query = "Query"
 
+
 @dataclass
 class LangUnitMeta(object):
     Name: str
     Type: ABCMeta
 
+
 @dataclass
 class LangUnitInfo(object):
-    Name:str
-    PromptText:str      #This is default text. TODO: rename
+    Name: str
+    PromptText: str  # This is default text. TODO: rename
+
 
 @dataclass
 class EvalRequest:
     generated: str
-    correct_case:str
-    unit:Unit
+    correct_case: str
+    unit: Unit
     lang_unit_info: LangUnitInfo
+
 
 @dataclass
 class EvalResponse:
-    passed:bool
+    passed: bool
 
 
 class LangUnit(ABC):
@@ -38,7 +42,7 @@ class LangUnit(ABC):
         super().__init__()
 
     @abstractmethod
-    def run_test(self, eval_req:EvalRequest)->EvalResponse:
+    def run_test(self, eval_req: EvalRequest) -> EvalResponse:
         pass
 
     @abstractmethod
@@ -46,18 +50,17 @@ class LangUnit(ABC):
         pass
 
     @abstractmethod
-    def GetUnitType(self)->UnitType:
+    def GetUnitType(self) -> UnitType:
         pass
 
-    def Name(self)->str:
+    def Name(self) -> str:
         return self.__class__.__name__
 
     def CreateInfo(self):
-        return LangUnitInfo(self.Name(),self.PromptText())
+        return LangUnitInfo(self.Name(), self.PromptText())
 
     def __str__(self) -> str:
         return f"LU[{self.Name()}]"
 
     def __repr__(self) -> str:
         return self.__str__()
-

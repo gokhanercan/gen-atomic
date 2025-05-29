@@ -12,17 +12,16 @@ class StringTransformerPython(LangUnit):
     def GetUnitType(self) -> UnitType:
         return UnitType.Expression
 
-    def CheckSyntax(self, code: str):
-        pass
-
-    def run_test(self, req:EvalRequest)->EvalResponse:
-        passed:bool = self.validate_result(req.generated,req.correct_case,req.unit.Context.Data)
+    def run_test(self, req: EvalRequest) -> EvalResponse:
+        passed: bool = self.validate_result(
+            req.generated, req.correct_case, req.unit.Context.Data
+        )
         return EvalResponse(passed=passed)
 
     @staticmethod
     def validate_result(generated_code, test_string, input_string) -> bool:
         # Extract the function name using regular expression
-        match = re.search(r'def (\w+)\(', generated_code)
+        match = re.search(r"def (\w+)\(", generated_code)
         if match:
             function_name = match.group(1)
         else:
