@@ -77,4 +77,3 @@ if __name__ == "__main__":
     Print("ModelKeys", api.GetAllModelKeys())
     Print("PromptingKeys", api.get_all_prompting_keys())
     Print("PromptDecorators", api.get_all_prompt_decorator_keys())
-    # this is not black compliant, left here for CI testing

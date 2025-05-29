@@ -2,6 +2,7 @@ import sys
 import os
 import subprocess
 
+# fmt: off
 def run_streamlit():
     subprocess.Popen(["streamlit", "run", "src/streamlit_ui.py", "--server.port", "8501","--server.runOnSave","true"])
 
@@ -29,6 +30,7 @@ def run_all():
                 proc.kill()
     finally:
         input("Press Enter to exit...")
+# fmt: on
 
 
 def main():
