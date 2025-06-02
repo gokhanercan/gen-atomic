@@ -21467,7 +21467,11 @@ class SQLiteParser(Parser):
             self.state = 466
             self._errHandler.sync(self)
             _la = self._input.LA(1)
-            while (((_la) & ~0x3F) == 0 and ((1 << _la) & 72673329139417088) != 0) or ((((_la - 102)) & ~0x3F) == 0 and ((1 << (_la - 102)) & 274877941765) != 0) or _la == 169:
+            while (
+                (((_la) & ~0x3F) == 0 and ((1 << _la) & 72673329139417088) != 0)
+                or ((((_la - 102)) & ~0x3F) == 0 and ((1 << (_la - 102)) & 274877941765) != 0)
+                or _la == 169
+            ):
                 self.state = 463
                 self.column_constraint()
                 self.state = 468
@@ -24902,7 +24906,10 @@ class SQLiteParser(Parser):
             self.enterOuterAlt(localctx, 1)
             self.state = 1104
             _la = self._input.LA(1)
-            if not (((((_la - 52)) & ~0x3F) == 0 and ((1 << (_la - 52)) & 4503599627370503) != 0) or ((((_la - 172)) & ~0x3F) == 0 and ((1 << (_la - 172)) & 212995) != 0)):
+            if not (
+                ((((_la - 52)) & ~0x3F) == 0 and ((1 << (_la - 52)) & 4503599627370503) != 0)
+                or ((((_la - 172)) & ~0x3F) == 0 and ((1 << (_la - 172)) & 212995) != 0)
+            ):
                 self._errHandler.recoverInline(self)
             else:
                 self._errHandler.reportMatch(self)
