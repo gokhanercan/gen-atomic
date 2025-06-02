@@ -74,11 +74,7 @@ class AntlrParserDiscovery(object):
     def find_subclasses(self, base_class, module):
         subclasses = []
         for name, obj in inspect.getmembers(module):
-            if (
-                inspect.isclass(obj)
-                and issubclass(obj, base_class)
-                and obj is not base_class
-            ):
+            if inspect.isclass(obj) and issubclass(obj, base_class) and obj is not base_class:
                 subclasses.append(obj)
         return subclasses
 

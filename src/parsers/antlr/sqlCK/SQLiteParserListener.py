@@ -195,15 +195,11 @@ class SQLiteParserListener(ParseTreeListener):
         pass
 
     # Enter a parse tree produced by SQLiteParser#create_virtual_table_stmt.
-    def enterCreate_virtual_table_stmt(
-        self, ctx: SQLiteParser.Create_virtual_table_stmtContext
-    ):
+    def enterCreate_virtual_table_stmt(self, ctx: SQLiteParser.Create_virtual_table_stmtContext):
         pass
 
     # Exit a parse tree produced by SQLiteParser#create_virtual_table_stmt.
-    def exitCreate_virtual_table_stmt(
-        self, ctx: SQLiteParser.Create_virtual_table_stmtContext
-    ):
+    def exitCreate_virtual_table_stmt(self, ctx: SQLiteParser.Create_virtual_table_stmtContext):
         pass
 
     # Enter a parse tree produced by SQLiteParser#with_clause.
@@ -231,15 +227,11 @@ class SQLiteParserListener(ParseTreeListener):
         pass
 
     # Enter a parse tree produced by SQLiteParser#common_table_expression.
-    def enterCommon_table_expression(
-        self, ctx: SQLiteParser.Common_table_expressionContext
-    ):
+    def enterCommon_table_expression(self, ctx: SQLiteParser.Common_table_expressionContext):
         pass
 
     # Exit a parse tree produced by SQLiteParser#common_table_expression.
-    def exitCommon_table_expression(
-        self, ctx: SQLiteParser.Common_table_expressionContext
-    ):
+    def exitCommon_table_expression(self, ctx: SQLiteParser.Common_table_expressionContext):
         pass
 
     # Enter a parse tree produced by SQLiteParser#delete_stmt.
@@ -531,39 +523,27 @@ class SQLiteParserListener(ParseTreeListener):
         pass
 
     # Enter a parse tree produced by SQLiteParser#simple_function_invocation.
-    def enterSimple_function_invocation(
-        self, ctx: SQLiteParser.Simple_function_invocationContext
-    ):
+    def enterSimple_function_invocation(self, ctx: SQLiteParser.Simple_function_invocationContext):
         pass
 
     # Exit a parse tree produced by SQLiteParser#simple_function_invocation.
-    def exitSimple_function_invocation(
-        self, ctx: SQLiteParser.Simple_function_invocationContext
-    ):
+    def exitSimple_function_invocation(self, ctx: SQLiteParser.Simple_function_invocationContext):
         pass
 
     # Enter a parse tree produced by SQLiteParser#aggregate_function_invocation.
-    def enterAggregate_function_invocation(
-        self, ctx: SQLiteParser.Aggregate_function_invocationContext
-    ):
+    def enterAggregate_function_invocation(self, ctx: SQLiteParser.Aggregate_function_invocationContext):
         pass
 
     # Exit a parse tree produced by SQLiteParser#aggregate_function_invocation.
-    def exitAggregate_function_invocation(
-        self, ctx: SQLiteParser.Aggregate_function_invocationContext
-    ):
+    def exitAggregate_function_invocation(self, ctx: SQLiteParser.Aggregate_function_invocationContext):
         pass
 
     # Enter a parse tree produced by SQLiteParser#window_function_invocation.
-    def enterWindow_function_invocation(
-        self, ctx: SQLiteParser.Window_function_invocationContext
-    ):
+    def enterWindow_function_invocation(self, ctx: SQLiteParser.Window_function_invocationContext):
         pass
 
     # Exit a parse tree produced by SQLiteParser#window_function_invocation.
-    def exitWindow_function_invocation(
-        self, ctx: SQLiteParser.Window_function_invocationContext
-    ):
+    def exitWindow_function_invocation(self, ctx: SQLiteParser.Window_function_invocationContext):
         pass
 
     # Enter a parse tree produced by SQLiteParser#common_table_stmt.
@@ -671,15 +651,11 @@ class SQLiteParserListener(ParseTreeListener):
         pass
 
     # Enter a parse tree produced by SQLiteParser#order_by_expr_asc_desc.
-    def enterOrder_by_expr_asc_desc(
-        self, ctx: SQLiteParser.Order_by_expr_asc_descContext
-    ):
+    def enterOrder_by_expr_asc_desc(self, ctx: SQLiteParser.Order_by_expr_asc_descContext):
         pass
 
     # Exit a parse tree produced by SQLiteParser#order_by_expr_asc_desc.
-    def exitOrder_by_expr_asc_desc(
-        self, ctx: SQLiteParser.Order_by_expr_asc_descContext
-    ):
+    def exitOrder_by_expr_asc_desc(self, ctx: SQLiteParser.Order_by_expr_asc_descContext):
         pass
 
     # Enter a parse tree produced by SQLiteParser#expr_asc_desc.

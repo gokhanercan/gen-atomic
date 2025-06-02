@@ -44,9 +44,7 @@ class GroqModelProvider(ModelProviderBase):
             "Consider yourself a function that generates a string transformer method in python, and your output is '''python: {created python string transformer method}''' Do not give me an explanation, only give me a python method. Do not add any additional characters."
         )
         prompt: str = f"\nAsked python string transformer method: {description}."
-        promptColored: str = (
-            f"{instruction}\nAsked python string transformer method: {Fore.BLUE}{description}{Fore.RESET}."
-        )
+        promptColored: str = f"{instruction}\nAsked python string transformer method: {Fore.BLUE}{description}{Fore.RESET}."
         print(f"\nP:{promptColored}")
         print(Fore.RESET)
 
@@ -63,15 +61,7 @@ class GroqModelProvider(ModelProviderBase):
 
         answer = chat_completion.choices[0].message.content
 
-        gencode: str = (
-            str(answer)
-            .strip()
-            .replace("Regex: ", "")
-            .replace("SQL: ", "")
-            .replace("```", "")
-            .replace("`", "")
-            .replace("python: ", "")
-        )  # TODO: Output parsers here please!
+        gencode: str = str(answer).strip().replace("Regex: ", "").replace("SQL: ", "").replace("```", "").replace("`", "").replace("python: ", "")  # TODO: Output parsers here please!
         print(f"A: {Fore.CYAN}{gencode}{Fore.RESET}")
         return gencode
 

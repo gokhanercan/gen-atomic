@@ -115,9 +115,7 @@ class ModelBase(ABC):
         return f"M[{self.Key()}]"
 
     def GetModelConf(self) -> ModelInfo:
-        return ModelInfo(
-            self.PlainName(), self.ProviderName(), self.ProviderAbbreviation()
-        )
+        return ModelInfo(self.PlainName(), self.ProviderName(), self.ProviderAbbreviation())
 
     # endregion
 

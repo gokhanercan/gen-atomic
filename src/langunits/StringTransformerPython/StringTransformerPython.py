@@ -13,9 +13,7 @@ class StringTransformerPython(LangUnit):
         return UnitType.Expression
 
     def run_test(self, req: EvalRequest) -> EvalResponse:
-        passed: bool = self.validate_result(
-            req.generated, req.correct_case, req.unit.Context.Data
-        )
+        passed: bool = self.validate_result(req.generated, req.correct_case, req.unit.Context.Data)
         return EvalResponse(passed=passed)
 
     @staticmethod

@@ -39,10 +39,7 @@ class SqlSelect(LangUnit):
         if primary_key is None:
             primary_key = ""
 
-        column_names = [
-            column.split("*")[0].strip() if "*" in column else column.strip()
-            for column in column_names
-        ]
+        column_names = [column.split("*")[0].strip() if "*" in column else column.strip() for column in column_names]
 
         # Define the database schema
         schema = f"""CREATE TABLE IF NOT EXISTS {table_name} ("""
@@ -96,12 +93,8 @@ class SqlSelect(LangUnit):
         sql_pattern = rf"```{eval_req.lang_unit_info.Name}(.*?)```"
         import re
 
-        match = re.search(
-            sql_pattern, eval_req.generated, re.DOTALL
-        )  # re.DOTALL allows matching newlines
-        print(
-            f"Full Output:\n{eval_req.generated}\n"
-        )  # TODO:Remove model specific outputs.
+        match = re.search(sql_pattern, eval_req.generated, re.DOTALL)  # re.DOTALL allows matching newlines
+        print(f"Full Output:\n{eval_req.generated}\n")  # TODO:Remove model specific outputs.
 
         if match:
             extracted_sql = match.group(1)
@@ -115,9 +108,7 @@ class SqlSelect(LangUnit):
         import sqlite3
 
         try:
-            schema, column_names, column_type_dict, table_name = self.createSchema(
-                unit.Context.Schema
-            )
+            schema, column_names, column_type_dict, table_name = self.createSchema(unit.Context.Schema)
             result = self.createData(unit.Context.Data, column_names, column_type_dict)
         except Exception as e:
             raise RuntimeError(

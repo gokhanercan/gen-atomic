@@ -21,9 +21,7 @@ class FormatHelper(object):
 
 class FormatHelperTest(TestCase):
     def test_ShortenCode_SmallCodeWith50TrimSize_DoNotTouch(self):
-        self.assertEqual(
-            "[CODE] var x = 100; [/CODE]", FormatHelper.ShortenCode("var x = 100;", 50)
-        )
+        self.assertEqual("[CODE] var x = 100; [/CODE]", FormatHelper.ShortenCode("var x = 100;", 50))
 
 
 if __name__ == "__main__":

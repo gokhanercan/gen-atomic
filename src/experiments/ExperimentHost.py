@@ -56,9 +56,7 @@ class ExperimentResults(object):
         if self.Results is not None:
             experimentHeader = f"-- {self.ExperimentName.upper()} EXPERIMENT --"
             print("\n" + experimentHeader)
-            print(
-                tabulate(self.Results, headers="keys", tablefmt="psql", floatfmt=".2f")
-            )
+            print(tabulate(self.Results, headers="keys", tablefmt="psql", floatfmt=".2f"))
             print(f"{self.ExperimentKey}")
         if self.ModelKeys:
             print(f"\n-- MODEL KEYS --")
@@ -71,9 +69,7 @@ class ExperimentHost(object):
         if exp.model_configs.__len__() == 0:
             raise Exception("No model configuration(s) defined in the experiment!")
         start_time = time.time()
-        print(
-            f"\nRunning experiment on {ds.Name} dataset with {str(len(exp.model_configs))} model configuration(s) ..."
-        )
+        print(f"\nRunning experiment on {ds.Name} dataset with {str(len(exp.model_configs))} model configuration(s) ...")
         print("ModelConfigs:", exp.model_configs)
 
         modelResults: Dict[str, DataFrame] = {}
@@ -119,9 +115,7 @@ class ExperimentHost(object):
                 dfCases.at[caseIndex, "Type"] = f.UnitType
                 dfCases.at[caseIndex, "Name"] = f.Name
                 dfCases.at[caseIndex, "Passed"] = "OK" if passed else "X"
-                dfCases.at[caseIndex, "Generated Code"] = (
-                    FormatHelper.ShortenCode(generated, 20) if formatCode else generated
-                )
+                dfCases.at[caseIndex, "Generated Code"] = FormatHelper.ShortenCode(generated, 20) if formatCode else generated
                 if passed:
                     passedCaseCount = passedCaseCount + 1
                     ccPassed = ccPassed + 1
@@ -139,15 +133,9 @@ class ExperimentHost(object):
                     dfCases.at[caseIndex, "Type"] = f.UnitType
                     dfCases.at[caseIndex, "Name"] = f.Name
                     dfCases.at[caseIndex, "Case"] = "CC-> " + cc
-                    passed: bool = exp.LangUnit.run_test(
-                        EvalRequest(generated, cc, f, langUnitInfo)
-                    ).passed
+                    passed: bool = exp.LangUnit.run_test(EvalRequest(generated, cc, f, langUnitInfo)).passed
                     dfCases.at[caseIndex, "Passed"] = "OK" if passed else "X"
-                    dfCases.at[caseIndex, "Generated Code"] = (
-                        FormatHelper.ShortenCode(generated, 20)
-                        if formatCode
-                        else generated
-                    )
+                    dfCases.at[caseIndex, "Generated Code"] = FormatHelper.ShortenCode(generated, 20) if formatCode else generated
                     if passed:
                         passedCaseCount = passedCaseCount + 1
                         ccPassed = ccPassed + 1
@@ -164,11 +152,7 @@ class ExperimentHost(object):
                     dfCases.at[caseIndex, "Case"] = "IC-> " + icc
                     passed: bool = not exp.LangUnit.run_test(EvalRequest(generated, icc, f, langUnitInfo)).passed  # type: ignore
                     dfCases.at[caseIndex, "Passed"] = "OK" if passed else "X"
-                    dfCases.at[caseIndex, "Generated Code"] = (
-                        FormatHelper.ShortenCode(generated, 20)
-                        if formatCode
-                        else generated
-                    )
+                    dfCases.at[caseIndex, "Generated Code"] = FormatHelper.ShortenCode(generated, 20) if formatCode else generated
                     if passed:
                         passedCaseCount = passedCaseCount + 1
                         icPassed = icPassed + 1
@@ -190,31 +174,19 @@ class ExperimentHost(object):
 
             accuracyColName = f"{mc.key()} (%)"
             # if(ccCount + icCount + len(f.Conditions) == 0): raise Exception("No cases defined in the dataset!") TODO: commented because of a lack of Conditions implementation
-            ccAccuracy: float = (
-                (float(ccPassed) / float(ccCount)) * 100 if ccCount > 0 else 0
-            )
+            ccAccuracy: float = (float(ccPassed) / float(ccCount)) * 100 if ccCount > 0 else 0
             dfAggr.at["CorrectCase", accuracyColName] = ccAccuracy
 
-            overallAccuracy: float = (
-                (float(passedCaseCount) / float(totalCaseCount)) * 100
-                if totalCaseCount > 0
-                else 0
-            )
+            overallAccuracy: float = (float(passedCaseCount) / float(totalCaseCount)) * 100 if totalCaseCount > 0 else 0
             dfAggr.at["Overall", accuracyColName] = overallAccuracy
 
             # region Precision, Recall, F1 Score
             from sklearn.metrics import precision_score, recall_score, f1_score
 
             # Calculate precision, recall, and F1-score
-            dfAggr.at["Precision", accuracyColName] = (
-                precision_score(y_true, y_pred, zero_division=0) * 100
-            )
-            dfAggr.at["Recall", accuracyColName] = (
-                recall_score(y_true, y_pred, zero_division=0) * 100
-            )
-            dfAggr.at["F1 Score", accuracyColName] = (
-                f1_score(y_true, y_pred, zero_division=0) * 100
-            )
+            dfAggr.at["Precision", accuracyColName] = precision_score(y_true, y_pred, zero_division=0) * 100
+            dfAggr.at["Recall", accuracyColName] = recall_score(y_true, y_pred, zero_division=0) * 100
+            dfAggr.at["F1 Score", accuracyColName] = f1_score(y_true, y_pred, zero_division=0) * 100
             # endregion
 
         end_time = time.time()
@@ -224,9 +196,7 @@ class ExperimentHost(object):
         )
 
         overallAccuracy: List = dfAggr.iloc[-1]
-        r = ExperimentResults(
-            exp.plain_name(), exp.key(), OverallAccuracy=overallAccuracy
-        )
+        r = ExperimentResults(exp.plain_name(), exp.key(), OverallAccuracy=overallAccuracy)
         r.ModelResults = modelResults
         r.Results = dfAggr
         r.ModelKeys = [[mc.key()] for mc in exp.model_configs.model_configs]
@@ -259,9 +229,7 @@ def RunRegexValExperiment():
     ds: Dataset = DatasetXmlRepository.Load(path)
 
     # Exp. Context
-    exp_factory = ExperimentFactory(
-        "RegexVal", PromptingFactory().create_default("RegexVal")
-    )
+    exp_factory = ExperimentFactory("RegexVal", PromptingFactory().create_default("RegexVal"))
     exp: Experiment = exp_factory.create_single_model_experiment("np.stub")
 
     stubs = [item for item in exp.get_models() if isinstance(item, StubModel)]
@@ -276,11 +244,7 @@ def RunStringTransformerPythonExperiment():
     path = Paths().GetDataset("AtomicStringTransformerPythonDataset")
     ds: Dataset = DatasetXmlRepository.Load(path)
 
-    exp = ExperimentFactory(
-        "StringTransformerPython"
-    ).create_experiment_by_model_filters(
-        ModelFilters(keyContains="llama3"), include_baselines=False
-    )
+    exp = ExperimentFactory("StringTransformerPython").create_experiment_by_model_filters(ModelFilters(keyContains="llama3"), include_baselines=False)
 
     r: ExperimentResults = ExperimentHost().Run(exp, ds, formatCode=True)
     r.Print()
@@ -295,9 +259,7 @@ def run_model_experiment_comparing_prompts(
     ds: Dataset = DatasetXmlRepository.Load(path)
 
     exp_factory = ExperimentFactory(lang_unit_name)
-    exp: Experiment = exp_factory.create_model_experiment_with_all_default_promptings(
-        model_key, True
-    )
+    exp: Experiment = exp_factory.create_model_experiment_with_all_default_promptings(model_key, True)
     stubs = [item for item in exp.get_models() if isinstance(item, StubModel)]
     StubModel.fake_email(stubs)
 
@@ -313,14 +275,10 @@ def run_manually_defined_experiment():
     lang_unit: LangUnit = LangUnitFactory().Create(lang_unit_name)
     exp_factory: ExperimentFactory = ExperimentFactory(lang_unit_name)
     model_key: str = "np.stub"
-    exp = exp_factory.create_single_model_experiment(
-        model_key, PromptingFactory().create_default(lang_unit_name)
-    )
+    exp = exp_factory.create_single_model_experiment(model_key, PromptingFactory().create_default(lang_unit_name))
     mcs = ModelConfigurations(
         []
-        + exp_factory.create_model_configurations_with_all_default_promptings(
-            model_key, True
-        )
+        + exp_factory.create_model_configurations_with_all_default_promptings(model_key, True)
         # + exp_factory.create_model_configurations_with_all_default_promptings("np.random", True)
     )
     exp: Experiment = Experiment(lang_unit, mcs)
@@ -336,9 +294,7 @@ def run_manually_defined_experiment():
 
 if __name__ == "__main__":
     run_manually_defined_experiment()
-    run_model_experiment_comparing_prompts(
-        "RegexVal", "AtomicRegexValDataset", "np.stub"
-    )
+    run_model_experiment_comparing_prompts("RegexVal", "AtomicRegexValDataset", "np.stub")
     # RunSQLSelectExperiment()
     # RunRegexValExperiment()
     # RunStringTransformerPythonExperiment()

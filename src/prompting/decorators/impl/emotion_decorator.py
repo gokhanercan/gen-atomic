@@ -7,9 +7,7 @@ class EmotionDecorator(PromptDecoratorBase):
     Decorator imlementation for emotion prompting.
     """
 
-    _EMOTION_PROMPT_AS_PREFIX: Prompt = Prompt(
-        "I'm having a really hard time getting this right and I feel a bit stuck"
-    )
+    _EMOTION_PROMPT_AS_PREFIX: Prompt = Prompt("I'm having a really hard time getting this right and I feel a bit stuck")
     # TODO: Add more emotions and their prompts as needed to the prompt repository.
 
     def decorate(self, p: Prompt):

@@ -1291,17 +1291,13 @@ class HTMLParser(Parser):
     def __init__(self, input: TokenStream, output: TextIO = sys.stdout):
         super().__init__(input, output)
         self.checkVersion("4.13.1")
-        self._interp = ParserATNSimulator(
-            self, self.atn, self.decisionsToDFA, self.sharedContextCache
-        )
+        self._interp = ParserATNSimulator(self, self.atn, self.decisionsToDFA, self.sharedContextCache)
         self._predicates = None
 
     class HtmlDocumentContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -1409,9 +1405,7 @@ class HTMLParser(Parser):
     class ScriptletOrSeaWsContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -1457,9 +1451,7 @@ class HTMLParser(Parser):
     class HtmlElementsContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -1524,9 +1516,7 @@ class HTMLParser(Parser):
     class HtmlElementContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -1667,9 +1657,7 @@ class HTMLParser(Parser):
     class HtmlContentContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -1767,9 +1755,7 @@ class HTMLParser(Parser):
     class HtmlAttributeContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -1822,9 +1808,7 @@ class HTMLParser(Parser):
     class HtmlChardataContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -1870,9 +1854,7 @@ class HTMLParser(Parser):
     class HtmlMiscContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -1925,9 +1907,7 @@ class HTMLParser(Parser):
     class HtmlCommentContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -1973,9 +1953,7 @@ class HTMLParser(Parser):
     class ScriptContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -2026,9 +2004,7 @@ class HTMLParser(Parser):
     class StyleContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 

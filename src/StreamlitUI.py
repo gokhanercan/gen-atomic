@@ -51,9 +51,7 @@ icase = bar.selectbox("Choose an incorrect case?", unit.IncorrectCases)
 # st.write(f'Selected UnitType: {field.UnitType.name}')
 
 # Model
-baselineMode: bool = (
-    True  # Should be true if the real models are not really available in the setup. TODO: Set via config.
-)
+baselineMode: bool = True  # Should be true if the real models are not really available in the setup. TODO: Set via config.
 bar.subheader("Model")
 modelFactory = ModelFactory()
 modelKeys: List[str] = modelFactory.GetModelKeys(baselineMode)
@@ -95,14 +93,10 @@ ccase = st.text_area("Correct Case", ccase)
 if st.session_state.generatedCode == "":
     # st.write(model.Generate(userDesc,langUnitInfo))
     st.session_state.generatedCode = model.Generate(userDesc, langUnitInfo)
-st.session_state.generatedCode = st.text_area(
-    "Generated Code", st.session_state.generatedCode
-)
+st.session_state.generatedCode = st.text_area("Generated Code", st.session_state.generatedCode)
 
 if st.session_state.generatedCode != "":
-    st.session_state.result = langUnit.RunTest(
-        st.session_state.generatedCode, ccase, None
-    )
+    st.session_state.result = langUnit.RunTest(st.session_state.generatedCode, ccase, None)
     st.text(f"Test Result: {st.session_state.result}")
 
 if st.button("Generate New"):

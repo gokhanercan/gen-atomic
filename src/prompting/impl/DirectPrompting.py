@@ -14,9 +14,7 @@ class DirectPrompting(PromptingBase):
     DirectPrompting is a simple/vanilla prompting that uses a single prompt in a single request.
     """
 
-    def __init__(
-        self, prompt: Prompt, prompt_decorators: list[PromptDecoratorBase] | None = None
-    ) -> None:
+    def __init__(self, prompt: Prompt, prompt_decorators: list[PromptDecoratorBase] | None = None) -> None:
         super().__init__()
         if isinstance(prompt, str):
             if StringHelper.IsNullOrWhiteSpace(prompt):
@@ -44,13 +42,9 @@ class DirectPrompting(PromptingBase):
         return key
 
     def _generate(self, req: GenRequest) -> GenResponse:
-        eff_prompt: Prompt = PromptingBase.apply_decorators(
-            self.prompt, self.prompt_decorators
-        )
+        eff_prompt: Prompt = PromptingBase.apply_decorators(self.prompt, self.prompt_decorators)
         lang_unit_desc: str = req.lang_unit_info.PromptText
-        final_prompt: str = eff_prompt.text.replace("[DESC]", req.description).replace(
-            "[LANG_UNIT_DESC]", lang_unit_desc
-        )
+        final_prompt: str = eff_prompt.text.replace("[DESC]", req.description).replace("[LANG_UNIT_DESC]", lang_unit_desc)
 
         # promptColored: str = f"{instruction}\nAsked {lang_desc} statement: {Fore.BLUE}{description}{Fore.RESET}."
         # print(f"\nP:{promptColored}")
@@ -77,9 +71,7 @@ class DirectPrompting(PromptingBase):
         )
         return Prompt(instruction)
 
-    def create_default_instance(
-        self, lang_unit_info: LangUnitInfo
-    ) -> "DirectPrompting":
+    def create_default_instance(self, lang_unit_info: LangUnitInfo) -> "DirectPrompting":
         return self.__class__(self._create_default_prompt(lang_unit_info))
 
     # endregion

@@ -15,12 +15,8 @@ class ModelFilters:
 class ModelFactory(object):
     def __init__(self) -> None:
         super().__init__()
-        self.StandaloneModelsMeta: dict[str, StandaloneModelMeta] = (
-            self._DiscoverStandaloneModels()
-        )  # Name|Meta
-        self.ModelProvidersMeta: dict[str, ModelProviderMeta] = (
-            self._DiscoverModelProviders()
-        )  # Name|Meta
+        self.StandaloneModelsMeta: dict[str, StandaloneModelMeta] = self._DiscoverStandaloneModels()  # Name|Meta
+        self.ModelProvidersMeta: dict[str, ModelProviderMeta] = self._DiscoverModelProviders()  # Name|Meta
         # Model Auto Key Indexing via instances
         self.ModelIndex: dict[str, ModelMeta] = self._BuildModelIndex()  # Key|Meta
 
@@ -66,9 +62,7 @@ class ModelFactory(object):
             m: ModelBase = self.CreateModel(meta.Name, meta)
             return m
         else:
-            mp: ModelProviderBase = self.CreateModelProvider(
-                meta.ModelProviderMeta.Name, meta.PlainName
-            )
+            mp: ModelProviderBase = self.CreateModelProvider(meta.ModelProviderMeta.Name, meta.PlainName)
             return mp
 
     def FindKeysByFilters(self, mf: ModelFilters):
@@ -89,27 +83,13 @@ class ModelFactory(object):
         # endregion
 
         if mf.providerAbbr:
-            filtered = {
-                k: v
-                for k, v in filtered.items()
-                if filterProviderAbbr(mf.providerAbbr, v)
-            }
+            filtered = {k: v for k, v in filtered.items() if filterProviderAbbr(mf.providerAbbr, v)}
         if mf.providerName:
-            filtered = {
-                k: v
-                for k, v in filtered.items()
-                if filterProviderName(mf.providerName, v)
-            }
+            filtered = {k: v for k, v in filtered.items() if filterProviderName(mf.providerName, v)}
         if mf.keyContains:
-            filtered = {
-                k: v
-                for k, v in filtered.items()
-                if filterKeyContains(mf.keyContains, v)
-            }
+            filtered = {k: v for k, v in filtered.items() if filterKeyContains(mf.keyContains, v)}
         if mf.isBaseline:
-            filtered = {
-                k: v for k, v in filtered.items() if v.IsBaseline == mf.isBaseline
-            }
+            filtered = {k: v for k, v in filtered.items() if v.IsBaseline == mf.isBaseline}
 
         return filtered
 
@@ -141,9 +121,7 @@ class ModelFactory(object):
             providers.append(mp)
         return providers
 
-    def CreateModelProvider(
-        self, providerName: str, modelName: Optional[str] = None
-    ) -> ModelProviderBase:
+    def CreateModelProvider(self, providerName: str, modelName: Optional[str] = None) -> ModelProviderBase:
         t: ABCMeta = self.ModelProvidersMeta[providerName].Type
         mp: ModelProviderBase = t.__new__(t)
         mp.__init__(modelName)
@@ -158,9 +136,7 @@ class ModelFactory(object):
             mps.append(mp)
         return mps
 
-    def CreateModel(
-        self, modelName: str, modelMeta: ModelMeta | None = None
-    ) -> ModelBase:
+    def CreateModel(self, modelName: str, modelMeta: ModelMeta | None = None) -> ModelBase:
         t: ABCMeta = self.StandaloneModelsMeta[modelName].Type
         m: ModelBase = t.__new__(t)
         m.__init__()
@@ -183,9 +159,7 @@ class ModelFactory(object):
 
     def GetAllBaselineModelNames(self) -> List[str]:
         return [
-            key
-            for key, value in self.StandaloneModelsMeta.items()
-            if value.IsBaseline == True
+            key for key, value in self.StandaloneModelsMeta.items() if value.IsBaseline == True
         ]  # Limited to standalone models only for now.
 
     def GetAllModelKeys(self) -> List[str]:
@@ -193,14 +167,8 @@ class ModelFactory(object):
 
     def GetModelKeys(
         self, baselineFilter: Optional[bool] = None
-    ) -> List[
-        str
-    ]:  # TODO: add more filters here. ExcludeBaselines, FilterByModelName, ByProviderName etc.
-        return [
-            k
-            for k, v in self.ModelIndex.items()
-            if v.IsBaseline == baselineFilter and baselineFilter is not None
-        ]
+    ) -> List[str]:  # TODO: add more filters here. ExcludeBaselines, FilterByModelName, ByProviderName etc.
+        return [k for k, v in self.ModelIndex.items() if v.IsBaseline == baselineFilter and baselineFilter is not None]
 
     # endregion
 
@@ -211,11 +179,7 @@ class ModelFactory(object):
         Lists all available baseline model names
         :return:
         """
-        return {
-            k: v
-            for k, v in ModelFactory._DiscoverStandaloneModels().items()
-            if v.IsBaseline
-        }
+        return {k: v for k, v in ModelFactory._DiscoverStandaloneModels().items() if v.IsBaseline}
 
     @staticmethod
     def _DiscoverStandaloneModels() -> dict[str, StandaloneModelMeta]:
@@ -267,10 +231,7 @@ if __name__ == "__main__":
     Print("ModelIndex", factory.ModelIndex)
     Print("AllModelKeys", factory.GetAllModelKeys())
     Print(
-        "FindKeysByFilters usage",
-        factory.FindKeysByFilters(
-            ModelFilters("ol", "OllamaModelProvider", "llama3", False)
-        ),
+        "FindKeysByFilters usage", factory.FindKeysByFilters(ModelFilters("ol", "OllamaModelProvider", "llama3", False))
     )
 
     # Models Instance Creation
@@ -280,26 +241,12 @@ if __name__ == "__main__":
     Print("AllEffectiveModels", factory.CreateAllModels())
     Print(
         "CreateModelsByFilters() usage",
-        factory.CreateModelsByFilters(
-            ModelFilters("ol", "OllamaModelProvider", "llama", False)
-        ),
+        factory.CreateModelsByFilters(ModelFilters("ol", "OllamaModelProvider", "llama", False)),
     )
 
     # usages
     Print("CreateModel(name) usage", factory.CreateModel("RandomModel"))
-    Print(
-        "CreateModelProvider(name) usage",
-        factory.CreateModelProvider("OllamaModelProvider"),
-    )
-    Print(
-        "CreateModelsByProvider(name) usage",
-        factory.CreateModelsByProvider("OllamaModelProvider"),
-    )
-    Print(
-        "CreateModelByKey(key) usage via standalones",
-        factory.CreateModelByKey("np.random"),
-    )
-    Print(
-        "CreateModelByKey(key) usage via providers",
-        factory.CreateModelByKey("ol.codellama"),
-    )
+    Print("CreateModelProvider(name) usage", factory.CreateModelProvider("OllamaModelProvider"))
+    Print("CreateModelsByProvider(name) usage", factory.CreateModelsByProvider("OllamaModelProvider"))
+    Print("CreateModelByKey(key) usage via standalones", factory.CreateModelByKey("np.random"))
+    Print("CreateModelByKey(key) usage via providers", factory.CreateModelByKey("ol.codellama"))

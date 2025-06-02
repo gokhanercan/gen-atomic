@@ -54,9 +54,7 @@ class PromptingBase(ABC, Generic[T]):
         pass
 
     @staticmethod
-    def apply_decorators(
-        p: Prompt, prompt_decorators: list[PromptDecoratorBase]
-    ) -> Prompt:
+    def apply_decorators(p: Prompt, prompt_decorators: list[PromptDecoratorBase]) -> Prompt:
         """
         Applies a decorator to the prompt and return the decorated prompt.
         :param p:
@@ -80,9 +78,7 @@ class PromptingBaseTests(TestCase):
         p = Prompt("Hello prompt!")
         decorators: list[PromptDecoratorBase] = []
         pNew = PromptingBase.apply_decorators(p, decorators)
-        self.assertEqual(
-            p, pNew, "Applying no decorators should return the same prompt."
-        )
+        self.assertEqual(p, pNew, "Applying no decorators should return the same prompt.")
 
     def test_apply_decorators__multiple_decorators__apply(self):
         p = Prompt("Hello prompt!")
@@ -110,9 +106,7 @@ class PromptingInfo(BaseModel):
     type: ABCMeta
     doc: str = None
 
-    model_config = ConfigDict(
-        arbitrary_types_allowed=True
-    )  # This is needed to allow non-pydantic types, ABCMeta in this case.
+    model_config = ConfigDict(arbitrary_types_allowed=True)  # This is needed to allow non-pydantic types, ABCMeta in this case.
 
     def __eq__(self, other):
         if isinstance(other, PromptingInfo):

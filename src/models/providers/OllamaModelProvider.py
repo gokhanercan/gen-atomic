@@ -79,9 +79,7 @@ class OllamaModelProvider(ModelProviderBase):
             f"me a {langDesc} expression. Do not add any additional characters."
         )
         prompt: str = f"{instruction}\nAsked {langDesc} statement: {description}."
-        promptColored: str = (
-            f"{instruction}\nAsked {langDesc} statement: {Fore.BLUE}{description}{Fore.RESET}."
-        )
+        promptColored: str = f"{instruction}\nAsked {langDesc} statement: {Fore.BLUE}{description}{Fore.RESET}."
         print(f"\nP:{promptColored}")
         print(Fore.RESET)
 
@@ -91,36 +89,18 @@ class OllamaModelProvider(ModelProviderBase):
 
         # ollama_server_process.terminate()       #TODO: Manage the connection. Do not terminate on every call.
 
-        gencode: str = (
-            str(answer)
-            .strip()
-            .replace("Regex: ", "")
-            .replace("regexp", "")
-            .replace("```", "")
-            .replace("`", "")
-            .replace("SQL: ", "")
-        )  # TODO: Output parsers here please!
+        gencode: str = str(answer).strip().replace("Regex: ", "").replace("regexp", "").replace("```", "").replace("`", "").replace("SQL: ", "")  # TODO: Output parsers here please!
         print(f"A: {Fore.CYAN}{gencode}{Fore.RESET}")
         return gencode
 
     def _generate_impl(self, req: GenRequest) -> GenResponse:
-        client = ollama.Client(
-            "http://localhost:11434"
-        )  # TODO:Specify full URL with port
+        client = ollama.Client("http://localhost:11434")  # TODO:Specify full URL with port
 
         response = client.generate(model=self.ModelName(), prompt=req.final_prompt)
         answer = response["response"]
         # ollama_server_process.terminate()       #TODO: Manage the connection. Do not terminate on every call.
         # TODO: Output parsers here please!
-        generated: str = (
-            str(answer)
-            .strip()
-            .replace("Regex: ", "")
-            .replace("regexp", "")
-            .replace("```", "")
-            .replace("`", "")
-            .replace("SQL: ", "")
-        )
+        generated: str = str(answer).strip().replace("Regex: ", "").replace("regexp", "").replace("```", "").replace("`", "").replace("SQL: ", "")
         return GenResponse(req.lang_unit_info, generated)
 
 

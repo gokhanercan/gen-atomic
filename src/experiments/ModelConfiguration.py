@@ -28,9 +28,7 @@ class StaticModelConfiguration:
 
 class StaticModelConfigurationTests(TestCase):
     def test_TwoStaticKeys_Concat(self):
-        self.assertEqual(
-            StaticModelConfiguration("np.stub", "direct").key(), "M(np.stub)P(direct)"
-        )
+        self.assertEqual(StaticModelConfiguration("np.stub", "direct").key(), "M(np.stub)P(direct)")
 
 
 class ModelConfiguration(object):
@@ -65,9 +63,7 @@ class ModelConfiguration(object):
 class ModelConfigurationTests(TestCase):
     def test_Key_TextValue_HashTextAsKey(self):
         self.assertEqual(
-            ModelConfiguration(
-                StubModel("test"), DirectPrompting(Prompt("Hello prompt!"))
-            ).key(),
+            ModelConfiguration(StubModel("test"), DirectPrompting(Prompt("Hello prompt!"))).key(),
             "M(np.stub)P(direct_t:0b290fd)",
         )
 
@@ -84,14 +80,7 @@ class ModelConfigurations(object):
         if len(self.model_configs) == 0:
             return "MCS()"
         else:
-            config_keys: str = "|".join(
-                [
-                    model_config.key()
-                    for model_config in sorted(
-                        self.model_configs, key=lambda mc: mc.key()
-                    )
-                ]
-            )
+            config_keys: str = "|".join([model_config.key() for model_config in sorted(self.model_configs, key=lambda mc: mc.key())])
             return f"MCS({config_keys})"
 
     def __str__(self) -> str:
@@ -118,24 +107,16 @@ class ModelConfigurationsTests(TestCase):
                     StubModel("test"),
                     DirectPrompting(Prompt("Hello prompt!", "p1")),
                 ),
-                ModelConfiguration(
-                    RandomModel(), DirectPrompting(Prompt("Hello prompt!", "p1"))
-                ),
+                ModelConfiguration(RandomModel(), DirectPrompting(Prompt("Hello prompt!", "p1"))),
             ]
         ).key()
-        self.assertEqual(
-            "MCS(M(np.random)P(direct_id:p1)|M(np.stub)P(direct_id:p1))", key
-        )
+        self.assertEqual("MCS(M(np.random)P(direct_id:p1)|M(np.stub)P(direct_id:p1))", key)
 
 
 if __name__ == "__main__":
     # Explicit prompting with a text prompt
     print(ModelConfiguration(StubModel("test"), DirectPrompting("Hello prompt!")).key())
-    print(
-        ModelConfiguration(
-            StubModel("test"), DirectPrompting(Prompt("Hello", "P1001"))
-        ).key()
-    )
+    print(ModelConfiguration(StubModel("test"), DirectPrompting(Prompt("Hello", "P1001"))).key())
 
     # Explicit prompting with a Prompt reference
     # print(ModelConfiguration(ModelFactory().CreateModelByKey("ol.llama3"), DirectPrompting("Hello prompt!")).key())

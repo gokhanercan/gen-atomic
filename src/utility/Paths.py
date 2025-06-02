@@ -32,9 +32,7 @@ class Paths(object):
     def _FindProjectRoot(self, path: str) -> str:
         srcRoot: str = ""
 
-        if path.__contains__(
-            os.path.sep + "src" + os.path.sep
-        ):  # Using os.path.sep for platform independence
+        if path.__contains__(os.path.sep + "src" + os.path.sep):  # Using os.path.sep for platform independence
             cursor = path
             isSrc: bool = False
             while not isSrc:
@@ -49,9 +47,7 @@ class Paths(object):
             if self._IsFolderExists(path, "src"):
                 return path
             else:
-                raise Exception(
-                    f"Please call the library from the parent directory. You are calling from: '{path}'."
-                )
+                raise Exception(f"Please call the library from the parent directory. You are calling from: '{path}'.")
 
         projectRoot = str(Path(srcRoot).parent)
         return projectRoot
@@ -78,17 +74,13 @@ class PathsTest(TestCase):
     def test_FindProjectRoot_SrcFilePath_ReturnParent(self):
         self.assertEqual(
             os.path.join("C:", "Projects", "gen-atomic"),
-            Paths()._FindProjectRoot(
-                os.path.join("C:", "Projects", "gen-atomic", "src", "StreamlitUI.py")
-            ),
+            Paths()._FindProjectRoot(os.path.join("C:", "Projects", "gen-atomic", "src", "StreamlitUI.py")),
         )
 
     def test_FindProjectRoot_SrcFolderPath_ReturnParent(self):
         self.assertEqual(
             os.path.join("C:", "Projects", "gen-atomic"),
-            Paths()._FindProjectRoot(
-                os.path.join("C:", "Projects", "gen-atomic", "src")
-            ),
+            Paths()._FindProjectRoot(os.path.join("C:", "Projects", "gen-atomic", "src")),
         )
 
     def test_FindProjectRoot_ProjectFolderPath_ReturnParent(self):
@@ -107,9 +99,7 @@ class PathsTest(TestCase):
 
         with patch.object(paths, "_IsFolderExists", return_value=False):
             with self.assertRaises(Exception):
-                paths._FindProjectRoot(
-                    os.path.join("C:", "Projects", "somerandomfolder")
-                )
+                paths._FindProjectRoot(os.path.join("C:", "Projects", "somerandomfolder"))
 
 
 if __name__ == "__main__":

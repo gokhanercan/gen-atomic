@@ -20008,17 +20008,13 @@ class SQLiteParser(Parser):
     def __init__(self, input: TokenStream, output: TextIO = sys.stdout):
         super().__init__(input, output)
         self.checkVersion("4.13.1")
-        self._interp = ParserATNSimulator(
-            self, self.atn, self.decisionsToDFA, self.sharedContextCache
-        )
+        self._interp = ParserATNSimulator(self, self.atn, self.decisionsToDFA, self.sharedContextCache)
         self._predicates = None
 
     class ParseContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -20054,10 +20050,7 @@ class SQLiteParser(Parser):
             _la = self._input.LA(1)
             while (
                 (((_la) & ~0x3F) == 0 and ((1 << _la) & -6339801325483589630) != 0)
-                or (
-                    (((_la - 66)) & ~0x3F) == 0
-                    and ((1 << (_la - 66)) & -7971300971697405919) != 0
-                )
+                or ((((_la - 66)) & ~0x3F) == 0 and ((1 << (_la - 66)) & -7971300971697405919) != 0)
                 or ((((_la - 130)) & ~0x3F) == 0 and ((1 << (_la - 130)) & 550913) != 0)
             ):
                 self.state = 226
@@ -20079,9 +20072,7 @@ class SQLiteParser(Parser):
     class Sql_stmt_listContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -20172,9 +20163,7 @@ class SQLiteParser(Parser):
     class Sql_stmtContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -20206,9 +20195,7 @@ class SQLiteParser(Parser):
             return self.getTypedRuleContext(SQLiteParser.Create_view_stmtContext, 0)
 
         def create_virtual_table_stmt(self):
-            return self.getTypedRuleContext(
-                SQLiteParser.Create_virtual_table_stmtContext, 0
-            )
+            return self.getTypedRuleContext(SQLiteParser.Create_virtual_table_stmtContext, 0)
 
         def delete_stmt(self):
             return self.getTypedRuleContext(SQLiteParser.Delete_stmtContext, 0)
@@ -20428,9 +20415,7 @@ class SQLiteParser(Parser):
     class Alter_table_stmtContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
             self.new_table_name = None  # Table_nameContext
@@ -20584,9 +20569,7 @@ class SQLiteParser(Parser):
     class Analyze_stmtContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -20652,9 +20635,7 @@ class SQLiteParser(Parser):
     class Attach_stmtContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -20716,9 +20697,7 @@ class SQLiteParser(Parser):
     class Begin_stmtContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -20766,12 +20745,7 @@ class SQLiteParser(Parser):
             if (((_la - 58)) & ~0x3F) == 0 and ((1 << (_la - 58)) & 16779265) != 0:
                 self.state = 342
                 _la = self._input.LA(1)
-                if not (
-                    (
-                        (((_la - 58)) & ~0x3F) == 0
-                        and ((1 << (_la - 58)) & 16779265) != 0
-                    )
-                ):
+                if not (((((_la - 58)) & ~0x3F) == 0 and ((1 << (_la - 58)) & 16779265) != 0)):
                     self._errHandler.recoverInline(self)
                 else:
                     self._errHandler.reportMatch(self)
@@ -20801,9 +20775,7 @@ class SQLiteParser(Parser):
     class Commit_stmtContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -20859,9 +20831,7 @@ class SQLiteParser(Parser):
     class Rollback_stmtContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -20934,9 +20904,7 @@ class SQLiteParser(Parser):
     class Savepoint_stmtContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -20978,9 +20946,7 @@ class SQLiteParser(Parser):
     class Release_stmtContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -21032,9 +20998,7 @@ class SQLiteParser(Parser):
     class Create_index_stmtContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -21188,9 +21152,7 @@ class SQLiteParser(Parser):
     class Indexed_columnContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -21267,9 +21229,7 @@ class SQLiteParser(Parser):
     class Create_table_stmtContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
             self.row_ROW_ID = None  # Token
@@ -21461,9 +21421,7 @@ class SQLiteParser(Parser):
     class Column_defContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -21477,9 +21435,7 @@ class SQLiteParser(Parser):
             if i is None:
                 return self.getTypedRuleContexts(SQLiteParser.Column_constraintContext)
             else:
-                return self.getTypedRuleContext(
-                    SQLiteParser.Column_constraintContext, i
-                )
+                return self.getTypedRuleContext(SQLiteParser.Column_constraintContext, i)
 
         def getRuleIndex(self):
             return SQLiteParser.RULE_column_def
@@ -21511,14 +21467,7 @@ class SQLiteParser(Parser):
             self.state = 466
             self._errHandler.sync(self)
             _la = self._input.LA(1)
-            while (
-                (((_la) & ~0x3F) == 0 and ((1 << _la) & 72673329139417088) != 0)
-                or (
-                    (((_la - 102)) & ~0x3F) == 0
-                    and ((1 << (_la - 102)) & 274877941765) != 0
-                )
-                or _la == 169
-            ):
+            while (((_la) & ~0x3F) == 0 and ((1 << _la) & 72673329139417088) != 0) or ((((_la - 102)) & ~0x3F) == 0 and ((1 << (_la - 102)) & 274877941765) != 0) or _la == 169:
                 self.state = 463
                 self.column_constraint()
                 self.state = 468
@@ -21536,9 +21485,7 @@ class SQLiteParser(Parser):
     class Type_nameContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -21628,9 +21575,7 @@ class SQLiteParser(Parser):
     class Column_constraintContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -21887,9 +21832,7 @@ class SQLiteParser(Parser):
     class Signed_numberContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -21945,9 +21888,7 @@ class SQLiteParser(Parser):
     class Table_constraintContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -22128,9 +22069,7 @@ class SQLiteParser(Parser):
     class Foreign_key_clauseContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -22390,9 +22329,7 @@ class SQLiteParser(Parser):
     class Conflict_clauseContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -22441,13 +22378,7 @@ class SQLiteParser(Parser):
             self.match(SQLiteParser.CONFLICT_)
             self.state = 633
             _la = self._input.LA(1)
-            if not (
-                _la == 25
-                or (
-                    (((_la - 72)) & ~0x3F) == 0
-                    and ((1 << (_la - 72)) & 19140298416325121) != 0
-                )
-            ):
+            if not (_la == 25 or ((((_la - 72)) & ~0x3F) == 0 and ((1 << (_la - 72)) & 19140298416325121) != 0)):
                 self._errHandler.recoverInline(self)
             else:
                 self._errHandler.reportMatch(self)
@@ -22463,9 +22394,7 @@ class SQLiteParser(Parser):
     class Create_trigger_stmtContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -22765,13 +22694,7 @@ class SQLiteParser(Parser):
                 self.state = 695
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
-                if not (
-                    _la == 59
-                    or (
-                        (((_la - 88)) & ~0x3F) == 0
-                        and ((1 << (_la - 88)) & 2386912217732743169) != 0
-                    )
-                ):
+                if not (_la == 59 or ((((_la - 88)) & ~0x3F) == 0 and ((1 << (_la - 88)) & 2386912217732743169) != 0)):
                     break
 
             self.state = 697
@@ -22787,9 +22710,7 @@ class SQLiteParser(Parser):
     class Create_view_stmtContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -22941,9 +22862,7 @@ class SQLiteParser(Parser):
     class Create_virtual_table_stmtContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -23011,9 +22930,7 @@ class SQLiteParser(Parser):
 
     def create_virtual_table_stmt(self):
 
-        localctx = SQLiteParser.Create_virtual_table_stmtContext(
-            self, self._ctx, self.state
-        )
+        localctx = SQLiteParser.Create_virtual_table_stmtContext(self, self._ctx, self.state)
         self.enterRule(localctx, 46, self.RULE_create_virtual_table_stmt)
         self._la = 0  # Token type
         try:
@@ -23084,9 +23001,7 @@ class SQLiteParser(Parser):
     class With_clauseContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -23200,9 +23115,7 @@ class SQLiteParser(Parser):
     class Cte_table_nameContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -23281,9 +23194,7 @@ class SQLiteParser(Parser):
     class Recursive_cteContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -23361,9 +23272,7 @@ class SQLiteParser(Parser):
     class Common_table_expressionContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -23413,9 +23322,7 @@ class SQLiteParser(Parser):
 
     def common_table_expression(self):
 
-        localctx = SQLiteParser.Common_table_expressionContext(
-            self, self._ctx, self.state
-        )
+        localctx = SQLiteParser.Common_table_expressionContext(self, self._ctx, self.state)
         self.enterRule(localctx, 54, self.RULE_common_table_expression)
         self._la = 0  # Token type
         try:
@@ -23464,9 +23371,7 @@ class SQLiteParser(Parser):
     class Delete_stmtContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -23549,9 +23454,7 @@ class SQLiteParser(Parser):
     class Delete_stmt_limitedContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -23654,9 +23557,7 @@ class SQLiteParser(Parser):
     class Detach_stmtContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -23708,9 +23609,7 @@ class SQLiteParser(Parser):
     class Drop_stmtContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
             self.object_ = None  # Token
@@ -23768,12 +23667,7 @@ class SQLiteParser(Parser):
             self.state = 864
             localctx.object_ = self._input.LT(1)
             _la = self._input.LA(1)
-            if not (
-                (
-                    (((_la - 84)) & ~0x3F) == 0
-                    and ((1 << (_la - 84)) & 2324138882699886593) != 0
-                )
-            ):
+            if not (((((_la - 84)) & ~0x3F) == 0 and ((1 << (_la - 84)) & 2324138882699886593) != 0)):
                 localctx.object_ = self._errHandler.recoverInline(self)
             else:
                 self._errHandler.reportMatch(self)
@@ -23809,9 +23703,7 @@ class SQLiteParser(Parser):
     class ExprContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -24420,19 +24312,13 @@ class SQLiteParser(Parser):
                     self._errHandler.sync(self)
                     la_ = self._interp.adaptivePredict(self._input, 137, self._ctx)
                     if la_ == 1:
-                        localctx = SQLiteParser.ExprContext(
-                            self, _parentctx, _parentState
-                        )
-                        self.pushNewRecursionContext(
-                            localctx, _startState, self.RULE_expr
-                        )
+                        localctx = SQLiteParser.ExprContext(self, _parentctx, _parentState)
+                        self.pushNewRecursionContext(localctx, _startState, self.RULE_expr)
                         self.state = 966
                         if not self.precpred(self._ctx, 20):
                             from antlr4.error.Errors import FailedPredicateException
 
-                            raise FailedPredicateException(
-                                self, "self.precpred(self._ctx, 20)"
-                            )
+                            raise FailedPredicateException(self, "self.precpred(self._ctx, 20)")
                         self.state = 967
                         self.match(SQLiteParser.PIPE2)
                         self.state = 968
@@ -24440,19 +24326,13 @@ class SQLiteParser(Parser):
                         pass
 
                     elif la_ == 2:
-                        localctx = SQLiteParser.ExprContext(
-                            self, _parentctx, _parentState
-                        )
-                        self.pushNewRecursionContext(
-                            localctx, _startState, self.RULE_expr
-                        )
+                        localctx = SQLiteParser.ExprContext(self, _parentctx, _parentState)
+                        self.pushNewRecursionContext(localctx, _startState, self.RULE_expr)
                         self.state = 969
                         if not self.precpred(self._ctx, 19):
                             from antlr4.error.Errors import FailedPredicateException
 
-                            raise FailedPredicateException(
-                                self, "self.precpred(self._ctx, 19)"
-                            )
+                            raise FailedPredicateException(self, "self.precpred(self._ctx, 19)")
                         self.state = 970
                         _la = self._input.LA(1)
                         if not ((((_la) & ~0x3F) == 0 and ((1 << _la) & 12416) != 0)):
@@ -24465,19 +24345,13 @@ class SQLiteParser(Parser):
                         pass
 
                     elif la_ == 3:
-                        localctx = SQLiteParser.ExprContext(
-                            self, _parentctx, _parentState
-                        )
-                        self.pushNewRecursionContext(
-                            localctx, _startState, self.RULE_expr
-                        )
+                        localctx = SQLiteParser.ExprContext(self, _parentctx, _parentState)
+                        self.pushNewRecursionContext(localctx, _startState, self.RULE_expr)
                         self.state = 972
                         if not self.precpred(self._ctx, 18):
                             from antlr4.error.Errors import FailedPredicateException
 
-                            raise FailedPredicateException(
-                                self, "self.precpred(self._ctx, 18)"
-                            )
+                            raise FailedPredicateException(self, "self.precpred(self._ctx, 18)")
                         self.state = 973
                         _la = self._input.LA(1)
                         if not (_la == 8 or _la == 9):
@@ -24490,19 +24364,13 @@ class SQLiteParser(Parser):
                         pass
 
                     elif la_ == 4:
-                        localctx = SQLiteParser.ExprContext(
-                            self, _parentctx, _parentState
-                        )
-                        self.pushNewRecursionContext(
-                            localctx, _startState, self.RULE_expr
-                        )
+                        localctx = SQLiteParser.ExprContext(self, _parentctx, _parentState)
+                        self.pushNewRecursionContext(localctx, _startState, self.RULE_expr)
                         self.state = 975
                         if not self.precpred(self._ctx, 17):
                             from antlr4.error.Errors import FailedPredicateException
 
-                            raise FailedPredicateException(
-                                self, "self.precpred(self._ctx, 17)"
-                            )
+                            raise FailedPredicateException(self, "self.precpred(self._ctx, 17)")
                         self.state = 976
                         _la = self._input.LA(1)
                         if not ((((_la) & ~0x3F) == 0 and ((1 << _la) & 245760) != 0)):
@@ -24515,19 +24383,13 @@ class SQLiteParser(Parser):
                         pass
 
                     elif la_ == 5:
-                        localctx = SQLiteParser.ExprContext(
-                            self, _parentctx, _parentState
-                        )
-                        self.pushNewRecursionContext(
-                            localctx, _startState, self.RULE_expr
-                        )
+                        localctx = SQLiteParser.ExprContext(self, _parentctx, _parentState)
+                        self.pushNewRecursionContext(localctx, _startState, self.RULE_expr)
                         self.state = 978
                         if not self.precpred(self._ctx, 16):
                             from antlr4.error.Errors import FailedPredicateException
 
-                            raise FailedPredicateException(
-                                self, "self.precpred(self._ctx, 16)"
-                            )
+                            raise FailedPredicateException(self, "self.precpred(self._ctx, 16)")
                         self.state = 979
                         _la = self._input.LA(1)
                         if not ((((_la) & ~0x3F) == 0 and ((1 << _la) & 3932160) != 0)):
@@ -24540,19 +24402,13 @@ class SQLiteParser(Parser):
                         pass
 
                     elif la_ == 6:
-                        localctx = SQLiteParser.ExprContext(
-                            self, _parentctx, _parentState
-                        )
-                        self.pushNewRecursionContext(
-                            localctx, _startState, self.RULE_expr
-                        )
+                        localctx = SQLiteParser.ExprContext(self, _parentctx, _parentState)
+                        self.pushNewRecursionContext(localctx, _startState, self.RULE_expr)
                         self.state = 981
                         if not self.precpred(self._ctx, 15):
                             from antlr4.error.Errors import FailedPredicateException
 
-                            raise FailedPredicateException(
-                                self, "self.precpred(self._ctx, 15)"
-                            )
+                            raise FailedPredicateException(self, "self.precpred(self._ctx, 15)")
                         self.state = 1000
                         self._errHandler.sync(self)
                         la_ = self._interp.adaptivePredict(self._input, 123, self._ctx)
@@ -24634,19 +24490,13 @@ class SQLiteParser(Parser):
                         pass
 
                     elif la_ == 7:
-                        localctx = SQLiteParser.ExprContext(
-                            self, _parentctx, _parentState
-                        )
-                        self.pushNewRecursionContext(
-                            localctx, _startState, self.RULE_expr
-                        )
+                        localctx = SQLiteParser.ExprContext(self, _parentctx, _parentState)
+                        self.pushNewRecursionContext(localctx, _startState, self.RULE_expr)
                         self.state = 1003
                         if not self.precpred(self._ctx, 14):
                             from antlr4.error.Errors import FailedPredicateException
 
-                            raise FailedPredicateException(
-                                self, "self.precpred(self._ctx, 14)"
-                            )
+                            raise FailedPredicateException(self, "self.precpred(self._ctx, 14)")
                         self.state = 1004
                         self.match(SQLiteParser.AND_)
                         self.state = 1005
@@ -24654,19 +24504,13 @@ class SQLiteParser(Parser):
                         pass
 
                     elif la_ == 8:
-                        localctx = SQLiteParser.ExprContext(
-                            self, _parentctx, _parentState
-                        )
-                        self.pushNewRecursionContext(
-                            localctx, _startState, self.RULE_expr
-                        )
+                        localctx = SQLiteParser.ExprContext(self, _parentctx, _parentState)
+                        self.pushNewRecursionContext(localctx, _startState, self.RULE_expr)
                         self.state = 1006
                         if not self.precpred(self._ctx, 13):
                             from antlr4.error.Errors import FailedPredicateException
 
-                            raise FailedPredicateException(
-                                self, "self.precpred(self._ctx, 13)"
-                            )
+                            raise FailedPredicateException(self, "self.precpred(self._ctx, 13)")
                         self.state = 1007
                         self.match(SQLiteParser.OR_)
                         self.state = 1008
@@ -24674,19 +24518,13 @@ class SQLiteParser(Parser):
                         pass
 
                     elif la_ == 9:
-                        localctx = SQLiteParser.ExprContext(
-                            self, _parentctx, _parentState
-                        )
-                        self.pushNewRecursionContext(
-                            localctx, _startState, self.RULE_expr
-                        )
+                        localctx = SQLiteParser.ExprContext(self, _parentctx, _parentState)
+                        self.pushNewRecursionContext(localctx, _startState, self.RULE_expr)
                         self.state = 1009
                         if not self.precpred(self._ctx, 6):
                             from antlr4.error.Errors import FailedPredicateException
 
-                            raise FailedPredicateException(
-                                self, "self.precpred(self._ctx, 6)"
-                            )
+                            raise FailedPredicateException(self, "self.precpred(self._ctx, 6)")
                         self.state = 1010
                         self.match(SQLiteParser.IS_)
                         self.state = 1012
@@ -24701,19 +24539,13 @@ class SQLiteParser(Parser):
                         pass
 
                     elif la_ == 10:
-                        localctx = SQLiteParser.ExprContext(
-                            self, _parentctx, _parentState
-                        )
-                        self.pushNewRecursionContext(
-                            localctx, _startState, self.RULE_expr
-                        )
+                        localctx = SQLiteParser.ExprContext(self, _parentctx, _parentState)
+                        self.pushNewRecursionContext(localctx, _startState, self.RULE_expr)
                         self.state = 1015
                         if not self.precpred(self._ctx, 5):
                             from antlr4.error.Errors import FailedPredicateException
 
-                            raise FailedPredicateException(
-                                self, "self.precpred(self._ctx, 5)"
-                            )
+                            raise FailedPredicateException(self, "self.precpred(self._ctx, 5)")
                         self.state = 1017
                         self._errHandler.sync(self)
                         _la = self._input.LA(1)
@@ -24732,19 +24564,13 @@ class SQLiteParser(Parser):
                         pass
 
                     elif la_ == 11:
-                        localctx = SQLiteParser.ExprContext(
-                            self, _parentctx, _parentState
-                        )
-                        self.pushNewRecursionContext(
-                            localctx, _startState, self.RULE_expr
-                        )
+                        localctx = SQLiteParser.ExprContext(self, _parentctx, _parentState)
+                        self.pushNewRecursionContext(localctx, _startState, self.RULE_expr)
                         self.state = 1024
                         if not self.precpred(self._ctx, 9):
                             from antlr4.error.Errors import FailedPredicateException
 
-                            raise FailedPredicateException(
-                                self, "self.precpred(self._ctx, 9)"
-                            )
+                            raise FailedPredicateException(self, "self.precpred(self._ctx, 9)")
                         self.state = 1025
                         self.match(SQLiteParser.COLLATE_)
                         self.state = 1026
@@ -24752,19 +24578,13 @@ class SQLiteParser(Parser):
                         pass
 
                     elif la_ == 12:
-                        localctx = SQLiteParser.ExprContext(
-                            self, _parentctx, _parentState
-                        )
-                        self.pushNewRecursionContext(
-                            localctx, _startState, self.RULE_expr
-                        )
+                        localctx = SQLiteParser.ExprContext(self, _parentctx, _parentState)
+                        self.pushNewRecursionContext(localctx, _startState, self.RULE_expr)
                         self.state = 1027
                         if not self.precpred(self._ctx, 8):
                             from antlr4.error.Errors import FailedPredicateException
 
-                            raise FailedPredicateException(
-                                self, "self.precpred(self._ctx, 8)"
-                            )
+                            raise FailedPredicateException(self, "self.precpred(self._ctx, 8)")
                         self.state = 1029
                         self._errHandler.sync(self)
                         _la = self._input.LA(1)
@@ -24774,12 +24594,7 @@ class SQLiteParser(Parser):
 
                         self.state = 1031
                         _la = self._input.LA(1)
-                        if not (
-                            (
-                                (((_la - 77)) & ~0x3F) == 0
-                                and ((1 << (_la - 77)) & 2199028498433) != 0
-                            )
-                        ):
+                        if not (((((_la - 77)) & ~0x3F) == 0 and ((1 << (_la - 77)) & 2199028498433) != 0)):
                             self._errHandler.recoverInline(self)
                         else:
                             self._errHandler.reportMatch(self)
@@ -24798,19 +24613,13 @@ class SQLiteParser(Parser):
                         pass
 
                     elif la_ == 13:
-                        localctx = SQLiteParser.ExprContext(
-                            self, _parentctx, _parentState
-                        )
-                        self.pushNewRecursionContext(
-                            localctx, _startState, self.RULE_expr
-                        )
+                        localctx = SQLiteParser.ExprContext(self, _parentctx, _parentState)
+                        self.pushNewRecursionContext(localctx, _startState, self.RULE_expr)
                         self.state = 1037
                         if not self.precpred(self._ctx, 7):
                             from antlr4.error.Errors import FailedPredicateException
 
-                            raise FailedPredicateException(
-                                self, "self.precpred(self._ctx, 7)"
-                            )
+                            raise FailedPredicateException(self, "self.precpred(self._ctx, 7)")
                         self.state = 1042
                         self._errHandler.sync(self)
                         token = self._input.LA(1)
@@ -24834,19 +24643,13 @@ class SQLiteParser(Parser):
                         pass
 
                     elif la_ == 14:
-                        localctx = SQLiteParser.ExprContext(
-                            self, _parentctx, _parentState
-                        )
-                        self.pushNewRecursionContext(
-                            localctx, _startState, self.RULE_expr
-                        )
+                        localctx = SQLiteParser.ExprContext(self, _parentctx, _parentState)
+                        self.pushNewRecursionContext(localctx, _startState, self.RULE_expr)
                         self.state = 1044
                         if not self.precpred(self._ctx, 4):
                             from antlr4.error.Errors import FailedPredicateException
 
-                            raise FailedPredicateException(
-                                self, "self.precpred(self._ctx, 4)"
-                            )
+                            raise FailedPredicateException(self, "self.precpred(self._ctx, 4)")
                         self.state = 1046
                         self._errHandler.sync(self)
                         _la = self._input.LA(1)
@@ -24864,9 +24667,7 @@ class SQLiteParser(Parser):
                             self.match(SQLiteParser.OPEN_PAR)
                             self.state = 1059
                             self._errHandler.sync(self)
-                            la_ = self._interp.adaptivePredict(
-                                self._input, 131, self._ctx
-                            )
+                            la_ = self._interp.adaptivePredict(self._input, 131, self._ctx)
                             if la_ == 1:
                                 self.state = 1050
                                 self.select_stmt()
@@ -24893,9 +24694,7 @@ class SQLiteParser(Parser):
                         elif la_ == 2:
                             self.state = 1065
                             self._errHandler.sync(self)
-                            la_ = self._interp.adaptivePredict(
-                                self._input, 132, self._ctx
-                            )
+                            la_ = self._interp.adaptivePredict(self._input, 132, self._ctx)
                             if la_ == 1:
                                 self.state = 1062
                                 self.schema_name()
@@ -24909,9 +24708,7 @@ class SQLiteParser(Parser):
                         elif la_ == 3:
                             self.state = 1071
                             self._errHandler.sync(self)
-                            la_ = self._interp.adaptivePredict(
-                                self._input, 133, self._ctx
-                            )
+                            la_ = self._interp.adaptivePredict(self._input, 133, self._ctx)
                             if la_ == 1:
                                 self.state = 1068
                                 self.schema_name()
@@ -24927,14 +24724,8 @@ class SQLiteParser(Parser):
                             _la = self._input.LA(1)
                             if (
                                 (((_la) & ~0x3F) == 0 and ((1 << _la) & -33552632) != 0)
-                                or (
-                                    (((_la - 64)) & ~0x3F) == 0
-                                    and ((1 << (_la - 64)) & -1152921504606846977) != 0
-                                )
-                                or (
-                                    (((_la - 128)) & ~0x3F) == 0
-                                    and ((1 << (_la - 128)) & 4476578029606273023) != 0
-                                )
+                                or ((((_la - 64)) & ~0x3F) == 0 and ((1 << (_la - 64)) & -1152921504606846977) != 0)
+                                or ((((_la - 128)) & ~0x3F) == 0 and ((1 << (_la - 128)) & 4476578029606273023) != 0)
                             ):
                                 self.state = 1075
                                 self.expr(0)
@@ -24971,9 +24762,7 @@ class SQLiteParser(Parser):
     class Raise_functionContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -25062,9 +24851,7 @@ class SQLiteParser(Parser):
     class Literal_valueContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -25115,13 +24902,7 @@ class SQLiteParser(Parser):
             self.enterOuterAlt(localctx, 1)
             self.state = 1104
             _la = self._input.LA(1)
-            if not (
-                (
-                    (((_la - 52)) & ~0x3F) == 0
-                    and ((1 << (_la - 52)) & 4503599627370503) != 0
-                )
-                or ((((_la - 172)) & ~0x3F) == 0 and ((1 << (_la - 172)) & 212995) != 0)
-            ):
+            if not (((((_la - 52)) & ~0x3F) == 0 and ((1 << (_la - 52)) & 4503599627370503) != 0) or ((((_la - 172)) & ~0x3F) == 0 and ((1 << (_la - 172)) & 212995) != 0)):
                 self._errHandler.recoverInline(self)
             else:
                 self._errHandler.reportMatch(self)
@@ -25137,9 +24918,7 @@ class SQLiteParser(Parser):
     class Value_rowContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -25208,9 +24987,7 @@ class SQLiteParser(Parser):
     class Values_clauseContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -25274,9 +25051,7 @@ class SQLiteParser(Parser):
     class Insert_stmtContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -25403,13 +25178,7 @@ class SQLiteParser(Parser):
                 self.match(SQLiteParser.OR_)
                 self.state = 1133
                 _la = self._input.LA(1)
-                if not (
-                    _la == 25
-                    or (
-                        (((_la - 72)) & ~0x3F) == 0
-                        and ((1 << (_la - 72)) & 19140298416325121) != 0
-                    )
-                ):
+                if not (_la == 25 or ((((_la - 72)) & ~0x3F) == 0 and ((1 << (_la - 72)) & 19140298416325121) != 0)):
                     self._errHandler.recoverInline(self)
                 else:
                     self._errHandler.reportMatch(self)
@@ -25513,9 +25282,7 @@ class SQLiteParser(Parser):
     class Returning_clauseContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -25579,9 +25346,7 @@ class SQLiteParser(Parser):
     class Upsert_clauseContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -25787,9 +25552,7 @@ class SQLiteParser(Parser):
     class Pragma_stmtContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -25905,9 +25668,7 @@ class SQLiteParser(Parser):
     class Pragma_valueContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -25968,9 +25729,7 @@ class SQLiteParser(Parser):
     class Reindex_stmtContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -26052,9 +25811,7 @@ class SQLiteParser(Parser):
     class Select_stmtContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -26071,9 +25828,7 @@ class SQLiteParser(Parser):
             if i is None:
                 return self.getTypedRuleContexts(SQLiteParser.Compound_operatorContext)
             else:
-                return self.getTypedRuleContext(
-                    SQLiteParser.Compound_operatorContext, i
-                )
+                return self.getTypedRuleContext(SQLiteParser.Compound_operatorContext, i)
 
         def order_by_stmt(self):
             return self.getTypedRuleContext(SQLiteParser.Order_by_stmtContext, 0)
@@ -26146,9 +25901,7 @@ class SQLiteParser(Parser):
     class Join_clauseContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -26156,9 +25909,7 @@ class SQLiteParser(Parser):
             if i is None:
                 return self.getTypedRuleContexts(SQLiteParser.Table_or_subqueryContext)
             else:
-                return self.getTypedRuleContext(
-                    SQLiteParser.Table_or_subqueryContext, i
-                )
+                return self.getTypedRuleContext(SQLiteParser.Table_or_subqueryContext, i)
 
         def join_operator(self, i: int = None):
             if i is None:
@@ -26195,14 +25946,7 @@ class SQLiteParser(Parser):
             self.state = 1289
             self._errHandler.sync(self)
             _la = self._input.LA(1)
-            while (
-                _la == 5
-                or _la == 51
-                or (
-                    (((_la - 76)) & ~0x3F) == 0
-                    and ((1 << (_la - 76)) & 562949971511297) != 0
-                )
-            ):
+            while _la == 5 or _la == 51 or ((((_la - 76)) & ~0x3F) == 0 and ((1 << (_la - 76)) & 562949971511297) != 0):
                 self.state = 1282
                 self.join_operator()
                 self.state = 1283
@@ -26229,9 +25973,7 @@ class SQLiteParser(Parser):
     class Select_coreContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
             self.whereExpr = None  # ExprContext
@@ -26303,9 +26045,7 @@ class SQLiteParser(Parser):
             if i is None:
                 return self.getTypedRuleContexts(SQLiteParser.Table_or_subqueryContext)
             else:
-                return self.getTypedRuleContext(
-                    SQLiteParser.Table_or_subqueryContext, i
-                )
+                return self.getTypedRuleContext(SQLiteParser.Table_or_subqueryContext, i)
 
         def join_clause(self):
             return self.getTypedRuleContext(SQLiteParser.Join_clauseContext, 0)
@@ -26487,9 +26227,7 @@ class SQLiteParser(Parser):
     class Factored_select_stmtContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -26526,9 +26264,7 @@ class SQLiteParser(Parser):
     class Simple_select_stmtContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -26596,9 +26332,7 @@ class SQLiteParser(Parser):
     class Compound_select_stmtContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -26730,9 +26464,7 @@ class SQLiteParser(Parser):
     class Table_or_subqueryContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -26788,9 +26520,7 @@ class SQLiteParser(Parser):
             if i is None:
                 return self.getTypedRuleContexts(SQLiteParser.Table_or_subqueryContext)
             else:
-                return self.getTypedRuleContext(
-                    SQLiteParser.Table_or_subqueryContext, i
-                )
+                return self.getTypedRuleContext(SQLiteParser.Table_or_subqueryContext, i)
 
         def join_clause(self):
             return self.getTypedRuleContext(SQLiteParser.Join_clauseContext, 0)
@@ -27029,9 +26759,7 @@ class SQLiteParser(Parser):
     class Result_columnContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -27120,9 +26848,7 @@ class SQLiteParser(Parser):
     class Join_operatorContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -27193,12 +26919,7 @@ class SQLiteParser(Parser):
                 if token in [76, 96, 125]:
                     self.state = 1476
                     _la = self._input.LA(1)
-                    if not (
-                        (
-                            (((_la - 76)) & ~0x3F) == 0
-                            and ((1 << (_la - 76)) & 562949954469889) != 0
-                        )
-                    ):
+                    if not (((((_la - 76)) & ~0x3F) == 0 and ((1 << (_la - 76)) & 562949954469889) != 0)):
                         self._errHandler.recoverInline(self)
                     else:
                         self._errHandler.reportMatch(self)
@@ -27240,9 +26961,7 @@ class SQLiteParser(Parser):
     class Join_constraintContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -27337,9 +27056,7 @@ class SQLiteParser(Parser):
     class Compound_operatorContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -27411,9 +27128,7 @@ class SQLiteParser(Parser):
     class Update_stmtContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -27490,9 +27205,7 @@ class SQLiteParser(Parser):
             if i is None:
                 return self.getTypedRuleContexts(SQLiteParser.Table_or_subqueryContext)
             else:
-                return self.getTypedRuleContext(
-                    SQLiteParser.Table_or_subqueryContext, i
-                )
+                return self.getTypedRuleContext(SQLiteParser.Table_or_subqueryContext, i)
 
         def join_clause(self):
             return self.getTypedRuleContext(SQLiteParser.Join_clauseContext, 0)
@@ -27532,13 +27245,7 @@ class SQLiteParser(Parser):
                 self.match(SQLiteParser.OR_)
                 self.state = 1516
                 _la = self._input.LA(1)
-                if not (
-                    _la == 25
-                    or (
-                        (((_la - 72)) & ~0x3F) == 0
-                        and ((1 << (_la - 72)) & 19140298416325121) != 0
-                    )
-                ):
+                if not (_la == 25 or ((((_la - 72)) & ~0x3F) == 0 and ((1 << (_la - 72)) & 19140298416325121) != 0)):
                     self._errHandler.recoverInline(self)
                 else:
                     self._errHandler.reportMatch(self)
@@ -27650,9 +27357,7 @@ class SQLiteParser(Parser):
     class Column_name_listContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -27721,9 +27426,7 @@ class SQLiteParser(Parser):
     class Update_stmt_limitedContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -27834,13 +27537,7 @@ class SQLiteParser(Parser):
                 self.match(SQLiteParser.OR_)
                 self.state = 1577
                 _la = self._input.LA(1)
-                if not (
-                    _la == 25
-                    or (
-                        (((_la - 72)) & ~0x3F) == 0
-                        and ((1 << (_la - 72)) & 19140298416325121) != 0
-                    )
-                ):
+                if not (_la == 25 or ((((_la - 72)) & ~0x3F) == 0 and ((1 << (_la - 72)) & 19140298416325121) != 0)):
                     self._errHandler.recoverInline(self)
                 else:
                     self._errHandler.reportMatch(self)
@@ -27935,9 +27632,7 @@ class SQLiteParser(Parser):
     class Qualified_table_nameContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -28069,9 +27764,7 @@ class SQLiteParser(Parser):
     class Vacuum_stmtContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -28134,9 +27827,7 @@ class SQLiteParser(Parser):
     class Filter_clauseContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -28193,9 +27884,7 @@ class SQLiteParser(Parser):
     class Window_defnContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -28311,9 +28000,7 @@ class SQLiteParser(Parser):
             self.state = 1672
             self._errHandler.sync(self)
             _la = self._input.LA(1)
-            if (((_la - 128)) & ~0x3F) == 0 and (
-                (1 << (_la - 128)) & 2251799880794113
-            ) != 0:
+            if (((_la - 128)) & ~0x3F) == 0 and ((1 << (_la - 128)) & 2251799880794113) != 0:
                 self.state = 1671
                 self.frame_spec()
 
@@ -28330,9 +28017,7 @@ class SQLiteParser(Parser):
     class Over_clauseContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -28469,9 +28154,7 @@ class SQLiteParser(Parser):
                 self.state = 1707
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
-                if (((_la - 128)) & ~0x3F) == 0 and (
-                    (1 << (_la - 128)) & 2251799880794113
-                ) != 0:
+                if (((_la - 128)) & ~0x3F) == 0 and ((1 << (_la - 128)) & 2251799880794113) != 0:
                     self.state = 1706
                     self.frame_spec()
 
@@ -28490,9 +28173,7 @@ class SQLiteParser(Parser):
     class Frame_specContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -28583,9 +28264,7 @@ class SQLiteParser(Parser):
     class Frame_clauseContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -28633,12 +28312,7 @@ class SQLiteParser(Parser):
             self.enterOuterAlt(localctx, 1)
             self.state = 1724
             _la = self._input.LA(1)
-            if not (
-                (
-                    (((_la - 128)) & ~0x3F) == 0
-                    and ((1 << (_la - 128)) & 2251799880794113) != 0
-                )
-            ):
+            if not (((((_la - 128)) & ~0x3F) == 0 and ((1 << (_la - 128)) & 2251799880794113) != 0)):
                 self._errHandler.recoverInline(self)
             else:
                 self._errHandler.reportMatch(self)
@@ -28673,9 +28347,7 @@ class SQLiteParser(Parser):
     class Simple_function_invocationContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -28716,9 +28388,7 @@ class SQLiteParser(Parser):
 
     def simple_function_invocation(self):
 
-        localctx = SQLiteParser.Simple_function_invocationContext(
-            self, self._ctx, self.state
-        )
+        localctx = SQLiteParser.Simple_function_invocationContext(self, self._ctx, self.state)
         self.enterRule(localctx, 128, self.RULE_simple_function_invocation)
         self._la = 0  # Token type
         try:
@@ -28931,9 +28601,7 @@ class SQLiteParser(Parser):
     class Aggregate_function_invocationContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -28980,9 +28648,7 @@ class SQLiteParser(Parser):
 
     def aggregate_function_invocation(self):
 
-        localctx = SQLiteParser.Aggregate_function_invocationContext(
-            self, self._ctx, self.state
-        )
+        localctx = SQLiteParser.Aggregate_function_invocationContext(self, self._ctx, self.state)
         self.enterRule(localctx, 130, self.RULE_aggregate_function_invocation)
         self._la = 0  # Token type
         try:
@@ -29210,9 +28876,7 @@ class SQLiteParser(Parser):
     class Window_function_invocationContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -29265,9 +28929,7 @@ class SQLiteParser(Parser):
 
     def window_function_invocation(self):
 
-        localctx = SQLiteParser.Window_function_invocationContext(
-            self, self._ctx, self.state
-        )
+        localctx = SQLiteParser.Window_function_invocationContext(self, self._ctx, self.state)
         self.enterRule(localctx, 132, self.RULE_window_function_invocation)
         self._la = 0  # Token type
         try:
@@ -29503,9 +29165,7 @@ class SQLiteParser(Parser):
     class Common_table_stmtContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -29514,13 +29174,9 @@ class SQLiteParser(Parser):
 
         def common_table_expression(self, i: int = None):
             if i is None:
-                return self.getTypedRuleContexts(
-                    SQLiteParser.Common_table_expressionContext
-                )
+                return self.getTypedRuleContexts(SQLiteParser.Common_table_expressionContext)
             else:
-                return self.getTypedRuleContext(
-                    SQLiteParser.Common_table_expressionContext, i
-                )
+                return self.getTypedRuleContext(SQLiteParser.Common_table_expressionContext, i)
 
         def RECURSIVE_(self):
             return self.getToken(SQLiteParser.RECURSIVE_, 0)
@@ -29583,9 +29239,7 @@ class SQLiteParser(Parser):
     class Order_by_stmtContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -29654,9 +29308,7 @@ class SQLiteParser(Parser):
     class Limit_stmtContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -29722,9 +29374,7 @@ class SQLiteParser(Parser):
     class Ordering_termContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -29810,9 +29460,7 @@ class SQLiteParser(Parser):
     class Asc_descContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -29858,9 +29506,7 @@ class SQLiteParser(Parser):
     class Frame_leftContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -29944,9 +29590,7 @@ class SQLiteParser(Parser):
     class Frame_rightContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -30030,9 +29674,7 @@ class SQLiteParser(Parser):
     class Frame_singleContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -30105,9 +29747,7 @@ class SQLiteParser(Parser):
     class Window_functionContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -30130,9 +29770,7 @@ class SQLiteParser(Parser):
             return self.getToken(SQLiteParser.OVER_, 0)
 
         def order_by_expr_asc_desc(self):
-            return self.getTypedRuleContext(
-                SQLiteParser.Order_by_expr_asc_descContext, 0
-            )
+            return self.getTypedRuleContext(SQLiteParser.Order_by_expr_asc_descContext, 0)
 
         def FIRST_VALUE_(self):
             return self.getToken(SQLiteParser.FIRST_VALUE_, 0)
@@ -30239,9 +29877,7 @@ class SQLiteParser(Parser):
                 self.state = 1876
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
-                if (((_la - 128)) & ~0x3F) == 0 and (
-                    (1 << (_la - 128)) & 2251799880794113
-                ) != 0:
+                if (((_la - 128)) & ~0x3F) == 0 and ((1 << (_la - 128)) & 2251799880794113) != 0:
                     self.state = 1875
                     self.frame_clause()
 
@@ -30286,9 +29922,7 @@ class SQLiteParser(Parser):
                 self.enterOuterAlt(localctx, 3)
                 self.state = 1892
                 _la = self._input.LA(1)
-                if not (
-                    ((((_la - 160)) & ~0x3F) == 0 and ((1 << (_la - 160)) & 385) != 0)
-                ):
+                if not (((((_la - 160)) & ~0x3F) == 0 and ((1 << (_la - 160)) & 385) != 0)):
                     self._errHandler.recoverInline(self)
                 else:
                     self._errHandler.reportMatch(self)
@@ -30388,9 +30022,7 @@ class SQLiteParser(Parser):
                 self.state = 1934
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
-                if (((_la - 128)) & ~0x3F) == 0 and (
-                    (1 << (_la - 128)) & 2251799880794113
-                ) != 0:
+                if (((_la - 128)) & ~0x3F) == 0 and ((1 << (_la - 128)) & 2251799880794113) != 0:
                     self.state = 1933
                     self.frame_clause()
 
@@ -30437,9 +30069,7 @@ class SQLiteParser(Parser):
     class OffsetContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -30481,9 +30111,7 @@ class SQLiteParser(Parser):
     class Default_valueContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -30525,9 +30153,7 @@ class SQLiteParser(Parser):
     class Partition_byContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -30589,9 +30215,7 @@ class SQLiteParser(Parser):
     class Order_by_exprContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -30640,14 +30264,8 @@ class SQLiteParser(Parser):
                 _la = self._input.LA(1)
                 if not (
                     (((_la) & ~0x3F) == 0 and ((1 << _la) & -33552632) != 0)
-                    or (
-                        (((_la - 64)) & ~0x3F) == 0
-                        and ((1 << (_la - 64)) & -1152921504606846977) != 0
-                    )
-                    or (
-                        (((_la - 128)) & ~0x3F) == 0
-                        and ((1 << (_la - 128)) & 4476578029606273023) != 0
-                    )
+                    or ((((_la - 64)) & ~0x3F) == 0 and ((1 << (_la - 64)) & -1152921504606846977) != 0)
+                    or ((((_la - 128)) & ~0x3F) == 0 and ((1 << (_la - 128)) & 4476578029606273023) != 0)
                 ):
                     break
 
@@ -30662,9 +30280,7 @@ class SQLiteParser(Parser):
     class Order_by_expr_asc_descContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -30690,9 +30306,7 @@ class SQLiteParser(Parser):
 
     def order_by_expr_asc_desc(self):
 
-        localctx = SQLiteParser.Order_by_expr_asc_descContext(
-            self, self._ctx, self.state
-        )
+        localctx = SQLiteParser.Order_by_expr_asc_descContext(self, self._ctx, self.state)
         self.enterRule(localctx, 160, self.RULE_order_by_expr_asc_desc)
         try:
             self.enterOuterAlt(localctx, 1)
@@ -30713,9 +30327,7 @@ class SQLiteParser(Parser):
     class Expr_asc_descContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -30794,9 +30406,7 @@ class SQLiteParser(Parser):
     class Initial_selectContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -30833,9 +30443,7 @@ class SQLiteParser(Parser):
     class Recursive_selectContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -30872,9 +30480,7 @@ class SQLiteParser(Parser):
     class Unary_operatorContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -30926,9 +30532,7 @@ class SQLiteParser(Parser):
     class Error_messageContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -30965,9 +30569,7 @@ class SQLiteParser(Parser):
     class Module_argumentContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -31019,9 +30621,7 @@ class SQLiteParser(Parser):
     class Column_aliasContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -31067,9 +30667,7 @@ class SQLiteParser(Parser):
     class KeywordContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -31560,14 +31158,8 @@ class SQLiteParser(Parser):
             _la = self._input.LA(1)
             if not (
                 (((_la) & ~0x3F) == 0 and ((1 << _la) & -33554432) != 0)
-                or (
-                    (((_la - 64)) & ~0x3F) == 0
-                    and ((1 << (_la - 64)) & -1152921504606846977) != 0
-                )
-                or (
-                    (((_la - 128)) & ~0x3F) == 0
-                    and ((1 << (_la - 128)) & 9007199254740991) != 0
-                )
+                or ((((_la - 64)) & ~0x3F) == 0 and ((1 << (_la - 64)) & -1152921504606846977) != 0)
+                or ((((_la - 128)) & ~0x3F) == 0 and ((1 << (_la - 128)) & 9007199254740991) != 0)
             ):
                 self._errHandler.recoverInline(self)
             else:
@@ -31584,9 +31176,7 @@ class SQLiteParser(Parser):
     class NameContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -31623,9 +31213,7 @@ class SQLiteParser(Parser):
     class Function_nameContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -31662,9 +31250,7 @@ class SQLiteParser(Parser):
     class Schema_nameContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -31701,9 +31287,7 @@ class SQLiteParser(Parser):
     class Table_nameContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -31740,9 +31324,7 @@ class SQLiteParser(Parser):
     class Table_or_index_nameContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -31779,9 +31361,7 @@ class SQLiteParser(Parser):
     class Column_nameContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -31818,9 +31398,7 @@ class SQLiteParser(Parser):
     class Collation_nameContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -31857,9 +31435,7 @@ class SQLiteParser(Parser):
     class Foreign_tableContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -31896,9 +31472,7 @@ class SQLiteParser(Parser):
     class Index_nameContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -31935,9 +31509,7 @@ class SQLiteParser(Parser):
     class Trigger_nameContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -31974,9 +31546,7 @@ class SQLiteParser(Parser):
     class View_nameContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -32013,9 +31583,7 @@ class SQLiteParser(Parser):
     class Module_nameContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -32052,9 +31620,7 @@ class SQLiteParser(Parser):
     class Pragma_nameContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -32091,9 +31657,7 @@ class SQLiteParser(Parser):
     class Savepoint_nameContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -32130,9 +31694,7 @@ class SQLiteParser(Parser):
     class Table_aliasContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -32169,9 +31731,7 @@ class SQLiteParser(Parser):
     class Transaction_nameContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -32208,9 +31768,7 @@ class SQLiteParser(Parser):
     class Window_nameContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -32247,9 +31805,7 @@ class SQLiteParser(Parser):
     class AliasContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -32286,9 +31842,7 @@ class SQLiteParser(Parser):
     class FilenameContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -32325,9 +31879,7 @@ class SQLiteParser(Parser):
     class Base_window_nameContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -32364,9 +31916,7 @@ class SQLiteParser(Parser):
     class Simple_funcContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -32403,9 +31953,7 @@ class SQLiteParser(Parser):
     class Aggregate_funcContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -32442,9 +31990,7 @@ class SQLiteParser(Parser):
     class Table_function_nameContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -32481,9 +32027,7 @@ class SQLiteParser(Parser):
     class Any_nameContext(ParserRuleContext):
         __slots__ = "parser"
 
-        def __init__(
-            self, parser, parent: ParserRuleContext = None, invokingState: int = -1
-        ):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 

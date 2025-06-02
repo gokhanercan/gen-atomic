@@ -47,18 +47,14 @@ modelProviderInfos.append(ModelProviderMeta("- All -", None, ""))
 selModelProvider = bar.selectbox(
     "Model Providers",
     modelProviderInfos,
-    format_func=lambda u: (
-        u.Name + " (" + u.Abbreviation + ")" if u.Abbreviation != "" else u.Name
-    ),
+    format_func=lambda u: (u.Name + " (" + u.Abbreviation + ")" if u.Abbreviation != "" else u.Name),
     index=len(modelProviderInfos) - 1,
 )
 selModelProviderAbbr = selModelProvider.Abbreviation
 allProviders: bool = selModelProviderAbbr == ""
 
 # Models
-modelKeys: List[str] = modelFactory.FindKeysByFilters(
-    ModelFilters(providerAbbr=None if allProviders else selModelProviderAbbr)
-)
+modelKeys: List[str] = modelFactory.FindKeysByFilters(ModelFilters(providerAbbr=None if allProviders else selModelProviderAbbr))
 selModelKey = bar.selectbox("Effective Model Keys", modelKeys)
 
 
@@ -79,9 +75,7 @@ selPrompting: PromptingInfo = bar.selectbox(
 selPromptingImpl: PromptingBase = None
 if selPrompting.doc:
     bar.markdown(
-        f"<span style='font-size: 0.9em' "
-        f"title='This information is coming from the docstrings of the implementations'><i>"
-        f"{selPrompting.doc}</i></span>",
+        f"<span style='font-size: 0.9em' " f"title='This information is coming from the docstrings of the implementations'><i>" f"{selPrompting.doc}</i></span>",
         unsafe_allow_html=True,
     )
 
@@ -100,28 +94,17 @@ if anyDynamicConfig:
     bar.divider()
     bar.subheader("Dynamic Configurations")
 if selPrompting.key == "direct":
-    with bar.expander(
-        "DirectPrompting (direct)", expanded=True
-    ):  # UI support provided manually for DirectPrompting for now!
+    with bar.expander("DirectPrompting (direct)", expanded=True):  # UI support provided manually for DirectPrompting for now!
         is_ref_prompt = st.toggle("Is a Reference Prompt", value=True)
         prompt: Prompt = None
         if is_ref_prompt:
-            selPromptID: str = st.selectbox(
-                "Prompt ID", ["DF", "P101", "P102"], index=0
-            )  # TODO:Load from prompts repo
+            selPromptID: str = st.selectbox("Prompt ID", ["DF", "P101", "P102"], index=0)  # TODO:Load from prompts repo
             prompt = Prompt("text is the prompt template text", selPromptID)
         else:
-            selPrompt: str = st.text_input(
-                "Custom Prompt", "This is a sample prompt.", key="prompt"
-            )
+            selPrompt: str = st.text_input("Custom Prompt", "This is a sample prompt.", key="prompt")
             prompt = Prompt(selPrompt)
-        decorators: list[PromptDecoratorBase] = [
-            p_factory.create_prompt_decorator_instance(d.key)
-            for d in selectedDecorators
-        ]
-        selPromptingImpl: PromptingBase = DirectPrompting(
-            prompt, decorators
-        )  # TODO: A real DI engine required here.
+        decorators: list[PromptDecoratorBase] = [p_factory.create_prompt_decorator_instance(d.key) for d in selectedDecorators]
+        selPromptingImpl: PromptingBase = DirectPrompting(prompt, decorators)  # TODO: A real DI engine required here.
 # endregion
 
 # endregion  #sidebar end
@@ -139,11 +122,7 @@ data = {
         selModelProvider.Name.replace("- All -", "-"),
         selModelKey,
         selPrompting.plain_name,
-        (
-            ", ".join([d.key for d in selectedDecorators])
-            if len(selectedDecorators) > 0
-            else "None"
-        ),
+        (", ".join([d.key for d in selectedDecorators]) if len(selectedDecorators) > 0 else "None"),
     ],
 }
 df = pd.DataFrame(data)
@@ -152,9 +131,7 @@ st.dataframe(df, hide_index=True)
 
 # Static Key
 def render_static_key():
-    smc: StaticModelConfiguration = StaticModelConfiguration(
-        selModelKey, static_prompting_key=selPrompting.key
-    )
+    smc: StaticModelConfiguration = StaticModelConfiguration(selModelKey, static_prompting_key=selPrompting.key)
     st.markdown("**Model Configuration Key (Static)**")
     st.code(smc.key())
 
@@ -163,15 +140,11 @@ render_static_key()
 
 # Dynamic Key
 try:
-    mc: ModelConfiguration = ModelConfiguration(
-        model=modelFactory.CreateModelByKey(selModelKey), prompting=selPromptingImpl
-    )
+    mc: ModelConfiguration = ModelConfiguration(model=modelFactory.CreateModelByKey(selModelKey), prompting=selPromptingImpl)
     modelConfigKey: str = selModelKey
     st.markdown("**Model Configuration Key (Dynamic)**")
     st.code(mc.key())
 except Exception as e:
-    st.warning(
-        "There is no UI support for the selected configuration. Please check the selected model and prompting method."
-    )
+    st.warning("There is no UI support for the selected configuration. Please check the selected model and prompting method.")
     st.error(f"Error: {e}")
     st.stop()

@@ -16,7 +16,5 @@ class RandomModel(ModelBase, BaselineModel):
 
 
 if __name__ == "__main__":
-    random_text = RandomModel().Generate(
-        "here is the sample text", LangUnitInfo("SqlSelect", "sql select query")
-    )
+    random_text = RandomModel().Generate("here is the sample text", LangUnitInfo("SqlSelect", "sql select query"))
     print(random_text)

@@ -10,11 +10,7 @@ class ModelProviderBase(ModelBase):
         self.ActiveModelName: Optional[str] = active_model_name
 
     def ModelName(self) -> str:
-        return (
-            self.ActiveModelName
-            if (not StringHelper.IsNullOrEmpty(self.ActiveModelName))
-            else self.ProviderName()
-        )
+        return self.ActiveModelName if (not StringHelper.IsNullOrEmpty(self.ActiveModelName)) else self.ProviderName()
 
     def Name(self) -> str:
         return self.ModelName()
@@ -26,6 +22,4 @@ class ModelProviderBase(ModelBase):
     def GetModelConf(
         self,
     ) -> ModelInfo:  # TODO: rename this cause we will have a ModelConfiguration class.
-        return ModelInfo(
-            self.ModelName(), self.ProviderName(), self.ProviderAbbreviation()
-        )
+        return ModelInfo(self.ModelName(), self.ProviderName(), self.ProviderAbbreviation())
