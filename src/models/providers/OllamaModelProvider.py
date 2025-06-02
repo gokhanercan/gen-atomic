@@ -60,6 +60,7 @@ class OllamaModelProvider(ModelProviderBase):
         process.communicate()
         return process
 
+    @deprecated
     def Generate(self, description: str, langUnitInfo: LangUnitInfo) -> str:
         """
         TODO: https://github.com/users/gokhanercan/projects/3/views/1?pane=issue&itemId=71867358
@@ -89,7 +90,15 @@ class OllamaModelProvider(ModelProviderBase):
 
         # ollama_server_process.terminate()       #TODO: Manage the connection. Do not terminate on every call.
 
-        gencode: str = str(answer).strip().replace("Regex: ", "").replace("regexp", "").replace("```", "").replace("`", "").replace("SQL: ", "")  # TODO: Output parsers here please!
+        gencode: str = (
+            str(answer)
+            .strip()
+            .replace("Regex: ", "")
+            .replace("regexp", "")
+            .replace("```", "")
+            .replace("`", "")
+            .replace("SQL: ", "")
+        )  # TODO: Output parsers here please!
         print(f"A: {Fore.CYAN}{gencode}{Fore.RESET}")
         return gencode
 
@@ -100,7 +109,15 @@ class OllamaModelProvider(ModelProviderBase):
         answer = response["response"]
         # ollama_server_process.terminate()       #TODO: Manage the connection. Do not terminate on every call.
         # TODO: Output parsers here please!
-        generated: str = str(answer).strip().replace("Regex: ", "").replace("regexp", "").replace("```", "").replace("`", "").replace("SQL: ", "")
+        generated: str = (
+            str(answer)
+            .strip()
+            .replace("Regex: ", "")
+            .replace("regexp", "")
+            .replace("```", "")
+            .replace("`", "")
+            .replace("SQL: ", "")
+        )
         return GenResponse(req.lang_unit_info, generated)
 
 

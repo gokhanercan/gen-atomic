@@ -30,6 +30,7 @@ class ChatGPTModelProvider(ModelProviderBase):
     def ModelNames(self):
         return ChatGPTModelProvider.ModelNameList()
 
+    @deprecated
     def Generate(self, description: str, langUnitInfo: LangUnitInfo) -> str:
         openai_api_key = os.getenv("OPEN_AI_API_KEY")
         if not openai_api_key:
@@ -55,9 +56,13 @@ class ChatGPTModelProvider(ModelProviderBase):
             model=self.ModelName(),
         )
 
-        answer = chat_completion.choices[0].message.content  # phi3,llama2,llama3,deepseek-coder,codegemma,starcoder2  ref:https://ollama.com/library?sort=popular
+        answer = chat_completion.choices[
+            0
+        ].message.content  # phi3,llama2,llama3,deepseek-coder,codegemma,starcoder2  ref:https://ollama.com/library?sort=popular
 
-        gencode: str = str(answer).strip().replace("Regex: ", "").replace("```", "").replace("`", "")  # TODO: Output parsers here please!
+        gencode: str = (
+            str(answer).strip().replace("Regex: ", "").replace("```", "").replace("`", "")
+        )  # TODO: Output parsers here please!
         print(f"A: {Fore.CYAN}{gencode}{Fore.RESET}")
         return gencode
 

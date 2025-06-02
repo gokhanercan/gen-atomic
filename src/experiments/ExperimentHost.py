@@ -69,7 +69,9 @@ class ExperimentHost(object):
         if exp.model_configs.__len__() == 0:
             raise Exception("No model configuration(s) defined in the experiment!")
         start_time = time.time()
-        print(f"\nRunning experiment on {ds.Name} dataset with {str(len(exp.model_configs))} model configuration(s) ...")
+        print(
+            f"\nRunning experiment on {ds.Name} dataset with {str(len(exp.model_configs))} model configuration(s) ..."
+        )
         print("ModelConfigs:", exp.model_configs)
 
         modelResults: Dict[str, DataFrame] = {}
@@ -115,7 +117,9 @@ class ExperimentHost(object):
                 dfCases.at[caseIndex, "Type"] = f.UnitType
                 dfCases.at[caseIndex, "Name"] = f.Name
                 dfCases.at[caseIndex, "Passed"] = "OK" if passed else "X"
-                dfCases.at[caseIndex, "Generated Code"] = FormatHelper.ShortenCode(generated, 20) if formatCode else generated
+                dfCases.at[caseIndex, "Generated Code"] = (
+                    FormatHelper.ShortenCode(generated, 20) if formatCode else generated
+                )
                 if passed:
                     passedCaseCount = passedCaseCount + 1
                     ccPassed = ccPassed + 1
@@ -135,7 +139,9 @@ class ExperimentHost(object):
                     dfCases.at[caseIndex, "Case"] = "CC-> " + cc
                     passed: bool = exp.LangUnit.run_test(EvalRequest(generated, cc, f, langUnitInfo)).passed
                     dfCases.at[caseIndex, "Passed"] = "OK" if passed else "X"
-                    dfCases.at[caseIndex, "Generated Code"] = FormatHelper.ShortenCode(generated, 20) if formatCode else generated
+                    dfCases.at[caseIndex, "Generated Code"] = (
+                        FormatHelper.ShortenCode(generated, 20) if formatCode else generated
+                    )
                     if passed:
                         passedCaseCount = passedCaseCount + 1
                         ccPassed = ccPassed + 1
@@ -152,7 +158,9 @@ class ExperimentHost(object):
                     dfCases.at[caseIndex, "Case"] = "IC-> " + icc
                     passed: bool = not exp.LangUnit.run_test(EvalRequest(generated, icc, f, langUnitInfo)).passed  # type: ignore
                     dfCases.at[caseIndex, "Passed"] = "OK" if passed else "X"
-                    dfCases.at[caseIndex, "Generated Code"] = FormatHelper.ShortenCode(generated, 20) if formatCode else generated
+                    dfCases.at[caseIndex, "Generated Code"] = (
+                        FormatHelper.ShortenCode(generated, 20) if formatCode else generated
+                    )
                     if passed:
                         passedCaseCount = passedCaseCount + 1
                         icPassed = icPassed + 1
@@ -244,7 +252,9 @@ def RunStringTransformerPythonExperiment():
     path = Paths().GetDataset("AtomicStringTransformerPythonDataset")
     ds: Dataset = DatasetXmlRepository.Load(path)
 
-    exp = ExperimentFactory("StringTransformerPython").create_experiment_by_model_filters(ModelFilters(keyContains="llama3"), include_baselines=False)
+    exp = ExperimentFactory("StringTransformerPython").create_experiment_by_model_filters(
+        ModelFilters(keyContains="llama3"), include_baselines=False
+    )
 
     r: ExperimentResults = ExperimentHost().Run(exp, ds, formatCode=True)
     r.Print()
@@ -293,7 +303,7 @@ def run_manually_defined_experiment():
 
 
 if __name__ == "__main__":
-    run_manually_defined_experiment()
+    # run_manually_defined_experiment()
     run_model_experiment_comparing_prompts("RegexVal", "AtomicRegexValDataset", "np.stub")
     # RunSQLSelectExperiment()
     # RunRegexValExperiment()
