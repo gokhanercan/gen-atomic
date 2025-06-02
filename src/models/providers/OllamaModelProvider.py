@@ -29,9 +29,11 @@ class OllamaModelProvider(ModelProviderBase):
         # endregion
 
     def ProviderName(self):
+
         return "ollama"
 
     def ProviderAbbreviation(self):
+
         return "ol"
 
     @staticmethod
