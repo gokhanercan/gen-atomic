@@ -68,7 +68,9 @@ class Unit(object):  # TODO: Find a better name for this. Field,Column,Case etc.
         self.Constraints: List[Constraint] = []
 
         # Cases
-        self.CorrectCases: List[str] = correctCases  # TODO: Is this ds generalizable to other langs?     #TODO: We need additonal and optional case desc for this, for defining specific cases.
+        self.CorrectCases: List[str] = (
+            correctCases  # TODO: Is this ds generalizable to other langs?     #TODO: We need additonal and optional case desc for this, for defining specific cases.
+        )
         if self.CorrectCases is None:
             self.CorrectCases = []
         self.IncorrectCases: List[str] = incorrectCases

@@ -6,7 +6,9 @@ from abc import ABC
 from utility.Paths import Paths
 from utility.PrintHelper import *
 
-sys.path.append(Paths().GetSourceRoot())  # We want to make sure that our SourceRoot is in the sys.paths for module/type discovery. That makes discovery caller path independent.
+sys.path.append(
+    Paths().GetSourceRoot()
+)  # We want to make sure that our SourceRoot is in the sys.paths for module/type discovery. That makes discovery caller path independent.
 
 
 def find_subclasses(module_name: str, base_class, sub_module_name: str = None) -> set:

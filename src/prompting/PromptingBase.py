@@ -106,7 +106,9 @@ class PromptingInfo(BaseModel):
     type: ABCMeta
     doc: str = None
 
-    model_config = ConfigDict(arbitrary_types_allowed=True)  # This is needed to allow non-pydantic types, ABCMeta in this case.
+    model_config = ConfigDict(
+        arbitrary_types_allowed=True
+    )  # This is needed to allow non-pydantic types, ABCMeta in this case.
 
     def __eq__(self, other):
         if isinstance(other, PromptingInfo):

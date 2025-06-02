@@ -60,7 +60,9 @@ class DatasetXmlRepository(object):
             # Context
             eContext = eUnit.find("Context")
             if eContext:
-                data = eContext.find("Data").text.replace("\n", " ").strip() if eContext.find("Data") is not None else None
+                data = (
+                    eContext.find("Data").text.replace("\n", " ").strip() if eContext.find("Data") is not None else None
+                )
                 schema = eContext.find("Schema").text.strip() if eContext.find("Schema") is not None else None
                 u.Context = Context(data, schema)
         ds.Units = units

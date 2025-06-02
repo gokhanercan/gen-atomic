@@ -36,7 +36,9 @@ class RegexVal(LangUnit):
             else:
                 return False
         except:
-            print(f"{Fore.RED}Invalid regular expression pattern.{Fore.RESET}")  # TODO: Handle that error well. Reflection.
+            print(
+                f"{Fore.RED}Invalid regular expression pattern.{Fore.RESET}"
+            )  # TODO: Handle that error well. Reflection.
             return False
 
     # endregion

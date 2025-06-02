@@ -120,11 +120,15 @@ class ExperimentFactory(object):
         models: List[ModelBase] = model_factory.CreateModelsByFilters(ModelFilters(providerAbbr=provider_abbr))
         if include_baselines:
             models += model_factory.CreateBaselineModels()
-        mcs: ModelConfigurations = ModelConfigurations([ModelConfiguration(m, prompting or self.default_prompting) for m in models])
+        mcs: ModelConfigurations = ModelConfigurations(
+            [ModelConfiguration(m, prompting or self.default_prompting) for m in models]
+        )
         exp: Experiment = Experiment(unit, mcs)
         return exp
 
-    def create_model_configurations_with_all_default_promptings(self, model_key: str, create_decorator_variations: bool = False) -> List[ModelConfiguration]:
+    def create_model_configurations_with_all_default_promptings(
+        self, model_key: str, create_decorator_variations: bool = False
+    ) -> List[ModelConfiguration]:
         model: ModelBase = ModelFactory().CreateModelByKey(model_key)
         p_factory = PromptingFactory()
         lang_unit: LangUnit = LangUnitFactory().Create(self.lang_unit_name)
@@ -149,7 +153,9 @@ class ExperimentFactory(object):
                 mcs.append(ModelConfiguration(model, p))
         return mcs
 
-    def create_model_experiment_with_all_default_promptings(self, model_key: str, create_decorator_variations: bool = False) -> Experiment:
+    def create_model_experiment_with_all_default_promptings(
+        self, model_key: str, create_decorator_variations: bool = False
+    ) -> Experiment:
         """
         Creates an experiment with a single model, and all promptings with their default settings and prompt texts.
         :param create_decorator_variations: If true, creates all possible prompt compositions.
@@ -159,14 +165,18 @@ class ExperimentFactory(object):
         lang_unit: LangUnit = LangUnitFactory().Create(self.lang_unit_name)
         return Experiment(
             lang_unit,
-            ModelConfigurations(self.create_model_configurations_with_all_default_promptings(model_key, create_decorator_variations)),
+            ModelConfigurations(
+                self.create_model_configurations_with_all_default_promptings(model_key, create_decorator_variations)
+            ),
         )
 
 
 class ExperimentFactoryTests(TestCase):
 
     def test_create_single_model_experiment__defaults_check_defaults(self):
-        exp: Experiment = ExperimentFactory("RegexVal", default_prompting=DirectPrompting("direct")).create_single_model_experiment("np.stub")
+        exp: Experiment = ExperimentFactory(
+            "RegexVal", default_prompting=DirectPrompting("direct")
+        ).create_single_model_experiment("np.stub")
 
         self.assertEqual(exp.LangUnit.Name(), "RegexVal")
         self.assertIsNotNone(exp.get_model_by_key("np.stub"))
@@ -175,7 +185,9 @@ class ExperimentFactoryTests(TestCase):
         self.assertEqual(DirectPrompting, type(exp.model_configs.model_configs[0].prompting))
 
     def test_create_provider_experiment__customprompting__init_all(self):
-        exp: Experiment = ExperimentFactory("RegexVal", default_prompting=DirectPrompting("direct")).create_provider_experiment("np")
+        exp: Experiment = ExperimentFactory(
+            "RegexVal", default_prompting=DirectPrompting("direct")
+        ).create_provider_experiment("np")
 
         self.assertEqual(exp.LangUnit.Name(), "RegexVal")
         self.assertIsNotNone(exp.get_model_by_key("np.stub"))

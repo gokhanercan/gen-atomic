@@ -51,7 +51,9 @@ icase = bar.selectbox("Choose an incorrect case?", unit.IncorrectCases)
 # st.write(f'Selected UnitType: {field.UnitType.name}')
 
 # Model
-baselineMode: bool = True  # Should be true if the real models are not really available in the setup. TODO: Set via config.
+baselineMode: bool = (
+    True  # Should be true if the real models are not really available in the setup. TODO: Set via config.
+)
 bar.subheader("Model")
 modelFactory = ModelFactory()
 modelKeys: List[str] = modelFactory.GetModelKeys(baselineMode)

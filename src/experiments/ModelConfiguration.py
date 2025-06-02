@@ -80,7 +80,9 @@ class ModelConfigurations(object):
         if len(self.model_configs) == 0:
             return "MCS()"
         else:
-            config_keys: str = "|".join([model_config.key() for model_config in sorted(self.model_configs, key=lambda mc: mc.key())])
+            config_keys: str = "|".join(
+                [model_config.key() for model_config in sorted(self.model_configs, key=lambda mc: mc.key())]
+            )
             return f"MCS({config_keys})"
 
     def __str__(self) -> str:

@@ -20,7 +20,12 @@ class APISmokeTests(TestCase):
         for name, method in inspect.getmembers(api, predicate=inspect.ismethod):
             if name.lower().startswith("get"):
                 sig = inspect.signature(method)
-                if all(p.default != inspect.Parameter.empty or p.kind == inspect.Parameter.VAR_POSITIONAL or p.kind == inspect.Parameter.VAR_KEYWORD for p in sig.parameters.values()):
+                if all(
+                    p.default != inspect.Parameter.empty
+                    or p.kind == inspect.Parameter.VAR_POSITIONAL
+                    or p.kind == inspect.Parameter.VAR_KEYWORD
+                    for p in sig.parameters.values()
+                ):
                     # Safe to call if all parameters have defaults or are *args/**kwargs
                     result = method()
                     assert isinstance(result, list) or isinstance(result, str)

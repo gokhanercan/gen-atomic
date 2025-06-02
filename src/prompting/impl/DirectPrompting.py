@@ -44,7 +44,9 @@ class DirectPrompting(PromptingBase):
     def _generate(self, req: GenRequest) -> GenResponse:
         eff_prompt: Prompt = PromptingBase.apply_decorators(self.prompt, self.prompt_decorators)
         lang_unit_desc: str = req.lang_unit_info.PromptText
-        final_prompt: str = eff_prompt.text.replace("[DESC]", req.description).replace("[LANG_UNIT_DESC]", lang_unit_desc)
+        final_prompt: str = eff_prompt.text.replace("[DESC]", req.description).replace(
+            "[LANG_UNIT_DESC]", lang_unit_desc
+        )
 
         # promptColored: str = f"{instruction}\nAsked {lang_desc} statement: {Fore.BLUE}{description}{Fore.RESET}."
         # print(f"\nP:{promptColored}")

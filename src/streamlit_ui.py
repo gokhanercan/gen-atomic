@@ -54,7 +54,9 @@ selModelProviderAbbr = selModelProvider.Abbreviation
 allProviders: bool = selModelProviderAbbr == ""
 
 # Models
-modelKeys: List[str] = modelFactory.FindKeysByFilters(ModelFilters(providerAbbr=None if allProviders else selModelProviderAbbr))
+modelKeys: List[str] = modelFactory.FindKeysByFilters(
+    ModelFilters(providerAbbr=None if allProviders else selModelProviderAbbr)
+)
 selModelKey = bar.selectbox("Effective Model Keys", modelKeys)
 
 
@@ -75,7 +77,9 @@ selPrompting: PromptingInfo = bar.selectbox(
 selPromptingImpl: PromptingBase = None
 if selPrompting.doc:
     bar.markdown(
-        f"<span style='font-size: 0.9em' " f"title='This information is coming from the docstrings of the implementations'><i>" f"{selPrompting.doc}</i></span>",
+        f"<span style='font-size: 0.9em' "
+        f"title='This information is coming from the docstrings of the implementations'><i>"
+        f"{selPrompting.doc}</i></span>",
         unsafe_allow_html=True,
     )
 
@@ -94,7 +98,9 @@ if anyDynamicConfig:
     bar.divider()
     bar.subheader("Dynamic Configurations")
 if selPrompting.key == "direct":
-    with bar.expander("DirectPrompting (direct)", expanded=True):  # UI support provided manually for DirectPrompting for now!
+    with bar.expander(
+        "DirectPrompting (direct)", expanded=True
+    ):  # UI support provided manually for DirectPrompting for now!
         is_ref_prompt = st.toggle("Is a Reference Prompt", value=True)
         prompt: Prompt = None
         if is_ref_prompt:
@@ -103,7 +109,9 @@ if selPrompting.key == "direct":
         else:
             selPrompt: str = st.text_input("Custom Prompt", "This is a sample prompt.", key="prompt")
             prompt = Prompt(selPrompt)
-        decorators: list[PromptDecoratorBase] = [p_factory.create_prompt_decorator_instance(d.key) for d in selectedDecorators]
+        decorators: list[PromptDecoratorBase] = [
+            p_factory.create_prompt_decorator_instance(d.key) for d in selectedDecorators
+        ]
         selPromptingImpl: PromptingBase = DirectPrompting(prompt, decorators)  # TODO: A real DI engine required here.
 # endregion
 
@@ -140,11 +148,15 @@ render_static_key()
 
 # Dynamic Key
 try:
-    mc: ModelConfiguration = ModelConfiguration(model=modelFactory.CreateModelByKey(selModelKey), prompting=selPromptingImpl)
+    mc: ModelConfiguration = ModelConfiguration(
+        model=modelFactory.CreateModelByKey(selModelKey), prompting=selPromptingImpl
+    )
     modelConfigKey: str = selModelKey
     st.markdown("**Model Configuration Key (Dynamic)**")
     st.code(mc.key())
 except Exception as e:
-    st.warning("There is no UI support for the selected configuration. Please check the selected model and prompting method.")
+    st.warning(
+        "There is no UI support for the selected configuration. Please check the selected model and prompting method."
+    )
     st.error(f"Error: {e}")
     st.stop()
