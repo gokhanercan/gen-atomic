@@ -15,10 +15,32 @@ class ModelFilters:
 class ModelFactory(object):
     def __init__(self) -> None:
         super().__init__()
-        self.StandaloneModelsMeta: dict[str, StandaloneModelMeta] = self._DiscoverStandaloneModels()  # Name|Meta
-        self.ModelProvidersMeta: dict[str, ModelProviderMeta] = self._DiscoverModelProviders()  # Name|Meta
-        # Model Auto Key Indexing via instances
-        self.ModelIndex: dict[str, ModelMeta] = self._BuildModelIndex()  # Key|Meta
+        # self.StandaloneModelsMeta: dict[str, StandaloneModelMeta] = self._DiscoverStandaloneModels()  # Name|Meta
+        # self.ModelProvidersMeta: dict[str, ModelProviderMeta] = self._DiscoverModelProviders()  # Name|Meta
+        # # Model Auto Key Indexing via instances
+        # self.ModelIndex: dict[str, ModelMeta] = self._BuildModelIndex()  # Key|Meta
+
+        self._standalone_meta: dict[str, StandaloneModelMeta] | None = None
+        self._provider_meta: dict[str, ModelProviderMeta] | None = None
+        self._model_index: dict[str, ModelMeta] | None = None
+
+    @property
+    def StandaloneModelsMeta(self) -> dict[str, StandaloneModelMeta]:
+        if self._standalone_meta is None:
+            self._standalone_meta = self._DiscoverStandaloneModels()
+        return self._standalone_meta
+
+    @property
+    def ModelProvidersMeta(self) -> dict[str, ModelProviderMeta]:
+        if self._provider_meta is None:
+            self._provider_meta = self._DiscoverModelProviders()
+        return self._provider_meta
+
+    @property
+    def ModelIndex(self) -> dict[str, ModelMeta]:
+        if self._model_index is None:
+            self._model_index = self._BuildModelIndex()
+        return self._model_index
 
     def _BuildModelIndex(self) -> dict[str, ModelMeta]:
         index: dict[str:ModelMeta] = {}
@@ -129,7 +151,7 @@ class ModelFactory(object):
 
     def CreateModelsByProvider(self, providerName: str) -> List[ModelProviderBase]:
         p: ModelProviderBase = self.CreateModelProvider(providerName)
-        modelNames = p.ModelNames()
+        modelNames = p.model_names()
         mps: List[ModelProviderBase] = []
         for modelName in modelNames:
             mp: ModelProviderBase = self.CreateModelProvider(providerName, modelName)

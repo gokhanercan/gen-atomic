@@ -15,8 +15,13 @@ class ModelProviderBase(ModelBase):
     def Name(self) -> str:
         return self.ModelName()
 
+    # @deprecated()
+    # @abstractmethod
+    # def ModelNames(self) -> list[str]:
+    #     pass
+
     @abstractmethod
-    def ModelNames(self) -> List[str]:  # str:ModelNames
+    def model_names(self) -> list[str]:
         pass
 
     def GetModelConf(

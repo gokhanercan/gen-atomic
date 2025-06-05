@@ -304,7 +304,8 @@ def run_manually_defined_experiment():
 
 if __name__ == "__main__":
     # run_manually_defined_experiment()
-    run_model_experiment_comparing_prompts("RegexVal", "AtomicRegexValDataset", "np.stub")
+    run_model_experiment_comparing_prompts("RegexVal", "AtomicRegexValDataset", "ol.llama3")
+    # run_model_experiment_comparing_prompts("RegexVal", "AtomicRegexValDataset", "np.stub")
     # RunSQLSelectExperiment()
     # RunRegexValExperiment()
     # RunStringTransformerPythonExperiment()

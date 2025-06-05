@@ -22,11 +22,16 @@ class ChatGPTModelProvider(ModelProviderBase):
     def ProviderAbbreviation(self):
         return "cg"
 
+    @deprecated()
     @staticmethod
     def ModelNameList() -> List[str]:
         return ["gpt-3.5-turbo"]  # cost: <= 1 cent
         # return ["gpt-4"] #cost: approximately 10 cents
 
+    def model_names(self) -> list[str]:
+        return ["gpt-3.5-turbo"]
+
+    @deprecated()
     def ModelNames(self):
         return ChatGPTModelProvider.ModelNameList()
 

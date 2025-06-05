@@ -23,6 +23,9 @@ class API(object):
     def GetAllModelProviderNames(self) -> List[str]:
         return ModelFactory().GetAllModelProviderNames()
 
+    def get_all_model_provider_keys(self) -> List[str]:
+        return [mp.Abbreviation for mp in ModelFactory().GetAllModelProviderInfos()]
+
     def GetAllModelKeys(self) -> List[str]:
         return ModelFactory().GetAllModelKeys()
 
@@ -74,6 +77,7 @@ if __name__ == "__main__":
     Print("VersionOnPlatform", api.get_version_on_platform())
     print("-" * 50)
     Print("ModelProviders", api.GetAllModelProviderNames())
+    Print("ModelProviderKeys", api.get_all_model_provider_keys())
     Print("ModelKeys", api.GetAllModelKeys())
     Print("PromptingKeys", api.get_all_prompting_keys())
     Print("PromptDecorators", api.get_all_prompt_decorator_keys())
