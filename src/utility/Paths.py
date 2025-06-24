@@ -41,7 +41,7 @@ class Paths(object):
                 if part == "src":
                     isSrc = True
                     srcRoot = str(cursor)
-        elif path.__contains__(os.path.sep + "src"):
+        elif path.endswith(os.path.sep + "src"):
             srcRoot = path
         else:
             if self._IsFolderExists(path, "src"):
