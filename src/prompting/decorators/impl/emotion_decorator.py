@@ -4,7 +4,7 @@ from prompting.decorators.prompt_decorator_base import PromptDecoratorBase
 
 class EmotionDecorator(PromptDecoratorBase):
     """
-    Decorator imlementation for emotion prompting.
+    Decorator implementation for emotion prompting.
     """
 
     _EMOTION_PROMPT_AS_PREFIX: Prompt = Prompt(
