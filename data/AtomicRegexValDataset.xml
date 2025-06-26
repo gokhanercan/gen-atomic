@@ -109,7 +109,7 @@
    </Unit>
    <Unit name="ISBN-13" desc="13 digit ISBN number formatted without any separator" type="RegexVal">
       <CCases>
-         <CCase val="9781861978769"/>     <!--Dash formattings vary. Prefix should begin either with 978 or 979 -->
+         <CCase val="9781861978769"/>     <!--Dash formatting vary. Prefix should begin either with 978 or 979 -->
          <CCase val="9781449373320"/>     <!--Martin Kleppmanns's book -->
       </CCases>
       <ICCases>
@@ -180,7 +180,7 @@
          <ICCase val=".png"/>
       </ICCases>
    </Unit>
-   <Unit name="VisaMasterCreditCard" desc="Visa or Master credit card number with dash/hypens separators adhering Luhn algorithm" type="RegexVal">
+   <Unit name="VisaMasterCreditCard" desc="Visa or Master credit card number with dash/hyphens separators adhering Luhn algorithm" type="RegexVal">
       <!--TODO: Luhn alg. cannot be implemented via regex. https://www.oreilly.com/library/view/regular-expressions-cookbook/9781449327453/ch04s20.html-->
       <CCases>
          <CCase val="4111-1111-1111-1111"/>

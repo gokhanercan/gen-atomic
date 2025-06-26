@@ -193,7 +193,7 @@
             </Data>
         </Context>
         <CCases>
-            <CCase val="Hello Worl"/>
+            <CCase val="Hello World"/>
         </CCases>
     </Unit>
 

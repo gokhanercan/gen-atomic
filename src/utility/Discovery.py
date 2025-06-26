@@ -13,7 +13,7 @@ sys.path.append(
 
 def find_subclasses(module_name: str, base_class, sub_module_name: str = None) -> set:
     subclasses = set()
-    module = importlib.import_module(module_name)  # this is consumer's path dependant.
+    module = importlib.import_module(module_name)  # this is consumer's path dependent.
     for _, name, is_pkg in pkgutil.walk_packages(module.__path__, module.__name__ + "."):
         if not is_pkg:
             sub_module = importlib.import_module(name)
