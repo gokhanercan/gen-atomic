@@ -66,7 +66,7 @@ class PathsTest(TestCase):
                     "src",
                     "UI",
                     "folder",
-                    "StreamlitUI.py",
+                    "streamlit_ui_legacy.py",
                 )
             ),
         )
@@ -74,7 +74,7 @@ class PathsTest(TestCase):
     def test_FindProjectRoot_SrcFilePath_ReturnParent(self):
         self.assertEqual(
             os.path.join("C:", "Projects", "gen-atomic"),
-            Paths()._FindProjectRoot(os.path.join("C:", "Projects", "gen-atomic", "src", "StreamlitUI.py")),
+            Paths()._FindProjectRoot(os.path.join("C:", "Projects", "gen-atomic", "src", "streamlit_ui_legacy.py")),
         )
 
     def test_FindProjectRoot_SrcFolderPath_ReturnParent(self):
