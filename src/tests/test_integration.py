@@ -2,8 +2,8 @@ import inspect
 import unittest
 from unittest import TestCase
 
-from data.Dataset import Dataset
-from data.DatasetXmlRepository import DatasetXmlRepository
+from data.dataset import Dataset
+from data.dataset_xml_repository import DatasetXmlRepository
 from experiments.Experiment import Experiment, ExperimentFactory
 from experiments.ExperimentHost import ExperimentHost, ExperimentResults
 from models.StubModel import StubModel

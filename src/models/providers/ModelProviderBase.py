@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from data.Dataset import *
+from data.dataset import *
 from models.ModelBase import ModelBase, ModelInfo
 from utility import StringHelper
 

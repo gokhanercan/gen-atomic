@@ -7,8 +7,8 @@ from typing import List
 
 import streamlit as st
 
-from data.Dataset import Dataset, Unit
-from data.DatasetXmlRepository import DatasetXmlRepository
+from data.dataset import Dataset, Unit
+from data.dataset_xml_repository import DatasetXmlRepository
 from langunits.LangUnit import LangUnit, LangUnitInfo
 from langunits.LangUnitFactory import LangUnitFactory
 from models.ModelBase import ModelBase

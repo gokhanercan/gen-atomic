@@ -4,7 +4,7 @@ from openai import OpenAI
 from langunits.LangUnit import LangUnitInfo
 from models.ModelBase import ModelBase
 from colorama import init, Fore, Back, Style
-from data.Dataset import *
+from data.dataset import *
 from models.providers.ModelProviderBase import ModelProviderBase
 from models.ModelBase import GenResponse, GenRequest
 

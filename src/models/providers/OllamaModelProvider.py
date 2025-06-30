@@ -6,7 +6,7 @@ from models.ModelBase import ModelBase
 import subprocess
 import ollama
 from colorama import init, Fore, Back, Style
-from data.Dataset import *
+from data.dataset import *
 from models.ModelBase import GenResponse, GenRequest
 from models.providers.ModelProviderBase import ModelProviderBase
 

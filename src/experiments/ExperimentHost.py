@@ -1,8 +1,8 @@
 import time
 from typing import Optional, List, Dict
 
-from data.Dataset import Dataset, Unit, Criteria, Constraint
-from data.DatasetXmlRepository import DatasetXmlRepository
+from data.dataset import Dataset, Unit, Criteria, Constraint
+from data.dataset_xml_repository import DatasetXmlRepository
 from experiments.Experiment import Experiment, ExperimentFactory
 from pandas import DataFrame  # type: ignore
 from tabulate import tabulate  # type: ignore
