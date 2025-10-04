@@ -43,7 +43,7 @@ class Unit(object):  # TODO: Find a better name for this. Field,Column,Case etc.
 
         # Cases
         self.CorrectCases: List[str] = (
-            correctCases  # TODO: Is this ds generalizable to other langs?     #TODO: We need additonal and optional case desc for this, for defining specific cases.
+            correctCases  # TODO: Is this ds generalizable to other langs?     #TODO: We need additional and optional case desc for this, for defining specific cases.
         )
         if self.CorrectCases is None:
             self.CorrectCases = []
