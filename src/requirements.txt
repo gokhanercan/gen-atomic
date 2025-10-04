@@ -2,7 +2,7 @@ pandas
 tabulate
 streamlit
 patch
-ollama
+ollama==0.5.1
 colorama
 openai
 Deprecated

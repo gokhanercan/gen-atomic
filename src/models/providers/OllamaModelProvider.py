@@ -1,51 +1,36 @@
-from typing import List
-import re
-
 from langunits.LangUnit import LangUnitInfo
-from models.ModelBase import ModelBase
+from langunits.LangUnitFactory import LangUnitFactory
+from models.ModelBase import ModelBase, GenRequest, GenResponse
 import subprocess
 import ollama
 from colorama import init, Fore, Back, Style
 from data.Dataset import *
-from models.ModelBase import GenResponse, GenRequest
+
 from models.providers.ModelProviderBase import ModelProviderBase
 
 
 class OllamaModelProvider(ModelProviderBase):
-    def __init__(self, activeModelName: str = None) -> None:
+    def __init__(self, active_model_name: str = None) -> None:
         super().__init__()
         ModelBase.__init__(self)
-        ModelProviderBase.__init__(self, activeModelName)
-
-        # region Naming convention ideas
-        # EXPERIMENT <MODELCONFIG | DATASET>
-        # MODELCONFIG <PROVIDER | MODEL | FLOW | PROMPT>
-        # MODEL CONF: Exp4029-MFTSG#12-win5-dim100-ns5-hs0-del0-mean1-iter2-root0-inf0-seg3-lang=tr-ngr[no]__TRCorpora2LCNPS2SH-TR2022_MM_NLPTPPRJ1_der0comp0frg0st2.vec
-        # ModelProvider[p1:p2]-Model[p1:p2]--Flow[p1:p2]--Prompt[p1:p2]
-        # Ollama-codellama:7b -noflow-p1
-        # Ollama-codellama:70b-noflow-p1
-        # Ollama-phi3:7b-noflow-p1
-        # Ollama-phi3:7b-simple:r3-p1
-        # endregion
+        ModelProviderBase.__init__(self, active_model_name)
 
     def ProviderName(self):
-
         return "ollama"
 
     def ProviderAbbreviation(self):
-
         return "ol"
 
-    @staticmethod
-    def ModelNameList() -> List[str]:  # str:ModelNames
-        return ["codellama", "llama3", "llama2"]
-        # TODO: Dynamically fetch list of models supported by Ollama. After implementing this drop static support and self.ModelConfigurations signature.
-        # return ["codellama","llama3","phi3","codegemma","codellama:70b","llama3:70b","starcoder2","gemma","tinyllama"]
-        # return ["codellama", "codellama:70b", "phi3", "llama3:7b", "llama2"]  # ? :
-        # phi3,llama2,llama3,deepseek-coder,codegemma,starcoder2  ref:https://ollama.com/library?sort=popular
+    def model_names(self) -> list[str]:
+        """
+        Returns a list of names of locally installed/downloaded models.
 
-    def ModelNames(self):  # str:ModelNames
-        return OllamaModelProvider.ModelNameList()
+        Note: This does not include all available models from the registry.
+
+        Returns:
+            list[str]: Names of installed models.
+        """
+        return [m["model"] for m in ollama.list().get("models", []) if "model" in m]
 
     def start_ollama_server(self):
         """
@@ -109,23 +94,29 @@ class OllamaModelProvider(ModelProviderBase):
 
         response = client.generate(model=self.ModelName(), prompt=req.final_prompt)
         answer = response["response"]
-        # ollama_server_process.terminate()       #TODO: Manage the connection. Do not terminate on every call.
+
         # TODO: Output parsers here please!
-        generated: str = (
-            str(answer)
-            .strip()
-            .replace("Regex: ", "")
-            .replace("regexp", "")
-            .replace("```", "")
-            .replace("`", "")
-            .replace("SQL: ", "")
-        )
-        return GenResponse(req.lang_unit_info, generated)
+        # generated: str = (
+        #     str(answer)
+        #     .strip()
+        #     .replace("Regex: ", "")
+        #     .replace("regexp", "")
+        #     .replace("```", "")
+        #     .replace("`", "")
+        #     .replace("SQL: ", "")
+        # )
+        return GenResponse(req.lang_unit_info, answer)
 
 
 if __name__ == "__main__":
-    answer = OllamaModelProvider("codellama").Generate(
-        "generate me an email regex, do not give me an explanation",
-        LangUnitInfo("RegexVal", "regular expression for validation"),
+    final_prompt: str = (
+        "You are a function that generates 'Regular Expression Validator' code unit by instruction.\n"
+        "Return **only** a single valid expression. \n"
+        "Do not explain or comment.\n\n"
+        "Instruction: 'General email compliant to RFC 5322 official standard'"
     )
-    print(answer)
+    req: GenRequest = GenRequest(LangUnitFactory().Create("RegexVal"), "Email address validator", None, final_prompt)
+    res: GenResponse = OllamaModelProvider("llama3").generate(req)
+    print(res)
+
+    print(f"\n{res.raw_generated}")

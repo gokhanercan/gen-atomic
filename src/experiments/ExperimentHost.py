@@ -14,6 +14,8 @@ from models.ModelBase import GenResponse, GenRequest
 from models.ModelFactory import ModelFactory, ModelFilters
 from models.StubModel import StubModel
 from prompting.prompting_factory import PromptingFactory
+from prompting.repo.inmemory_prompt_repository import InMemoryPromptRepository
+from prompting.repo.prompt_repository_base import PromptRepositoryBase
 from utility.FormatHelper import FormatHelper
 from utility.Paths import Paths
 
@@ -216,12 +218,16 @@ class ExperimentHost(object):
         return "{:02}:{:02}:{:02}".format(int(hours), int(minutes), int(seconds))
 
 
+def _prompt_repo() -> PromptRepositoryBase:
+    return InMemoryPromptRepository()
+
+
 # region Sample Experiments
 def RunSQLSelectExperiment():
     path = Paths().GetDataset("AtomicSQLSelectDataset")
     ds: Dataset = DatasetXmlRepository.Load(path)
 
-    exp = ExperimentFactory("SqlSelect").create_experiment_by_model_filters(
+    exp = ExperimentFactory("SqlSelect", _prompt_repo()).create_experiment_by_model_filters(
         ModelFilters(providerAbbr="ol", keyContains="codellama"),
         include_baselines=False,
     )
@@ -237,7 +243,7 @@ def RunRegexValExperiment():
     ds: Dataset = DatasetXmlRepository.Load(path)
 
     # Exp. Context
-    exp_factory = ExperimentFactory("RegexVal", PromptingFactory().create_default("RegexVal"))
+    exp_factory = ExperimentFactory("RegexVal", _prompt_repo(), PromptingFactory().create_default("RegexVal"))
     exp: Experiment = exp_factory.create_single_model_experiment("np.stub")
 
     stubs = [item for item in exp.get_models() if isinstance(item, StubModel)]
@@ -252,7 +258,7 @@ def RunStringTransformerPythonExperiment():
     path = Paths().GetDataset("AtomicStringTransformerPythonDataset")
     ds: Dataset = DatasetXmlRepository.Load(path)
 
-    exp = ExperimentFactory("StringTransformerPython").create_experiment_by_model_filters(
+    exp = ExperimentFactory("StringTransformerPython", _prompt_repo()).create_experiment_by_model_filters(
         ModelFilters(keyContains="llama3"), include_baselines=False
     )
 
@@ -267,8 +273,8 @@ def run_model_experiment_comparing_prompts(
 ):
     path = Paths().GetDataset(ds_name)
     ds: Dataset = DatasetXmlRepository.Load(path)
-
-    exp_factory = ExperimentFactory(lang_unit_name)
+    ds.Units = ds.Units[:1]
+    exp_factory = ExperimentFactory(lang_unit_name, _prompt_repo())
     exp: Experiment = exp_factory.create_model_experiment_with_all_default_promptings(model_key, True)
     stubs = [item for item in exp.get_models() if isinstance(item, StubModel)]
     StubModel.fake_email(stubs)
@@ -283,9 +289,11 @@ def run_manually_defined_experiment():
     ds: Dataset = DatasetXmlRepository.Load(path)
     lang_unit_name: str = "RegexVal"
     lang_unit: LangUnit = LangUnitFactory().Create(lang_unit_name)
-    exp_factory: ExperimentFactory = ExperimentFactory(lang_unit_name)
+    exp_factory: ExperimentFactory = ExperimentFactory(lang_unit_name, _prompt_repo())
     model_key: str = "np.stub"
-    exp = exp_factory.create_single_model_experiment(model_key, PromptingFactory().create_default(lang_unit_name))
+    exp = exp_factory.create_single_model_experiment(
+        model_key, PromptingFactory(_prompt_repo()).create_default(lang_unit_name)
+    )
     mcs = ModelConfigurations(
         []
         + exp_factory.create_model_configurations_with_all_default_promptings(model_key, True)
@@ -304,7 +312,8 @@ def run_manually_defined_experiment():
 
 if __name__ == "__main__":
     # run_manually_defined_experiment()
-    run_model_experiment_comparing_prompts("RegexVal", "AtomicRegexValDataset", "np.stub")
+    run_model_experiment_comparing_prompts("RegexVal", "AtomicRegexValDataset", "ol.llama3:latest")
+    # run_model_experiment_comparing_prompts("RegexVal", "AtomicRegexValDataset", "np.stub")
     # RunSQLSelectExperiment()
     # RunRegexValExperiment()
     # RunStringTransformerPythonExperiment()

@@ -7,6 +7,7 @@ from data.DatasetXmlRepository import DatasetXmlRepository
 from experiments.Experiment import Experiment, ExperimentFactory
 from experiments.ExperimentHost import ExperimentHost, ExperimentResults
 from models.StubModel import StubModel
+from prompting.repo.inmemory_prompt_repository import InMemoryPromptRepository
 from utility.Paths import Paths
 
 
@@ -38,7 +39,9 @@ class ExperimentsIntegrationTest(TestCase):
 
         path: str = Paths().GetDataset("AtomicRegexValDataset")
         ds: Dataset = DatasetXmlRepository.Load(path)
-        exp: Experiment = ExperimentFactory("RegexVal").create_experiment_with_baseline_models()
+        exp: Experiment = ExperimentFactory(
+            "RegexVal", InMemoryPromptRepository()
+        ).create_experiment_with_baseline_models()
 
         stubs = [item for item in exp.get_models() if isinstance(item, StubModel)]
         StubModel.fake_email(stubs)

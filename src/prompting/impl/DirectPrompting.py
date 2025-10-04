@@ -6,6 +6,7 @@ from models.ModelBase import GenResponse, GenRequest
 from prompting.Prompt import Prompt
 from prompting.PromptingBase import PromptingBase
 from prompting.decorators.prompt_decorator_base import PromptDecoratorBase
+from prompting.repo.prompt_repository_base import PromptRepositoryBase
 from utility import StringHelper
 
 
@@ -32,13 +33,13 @@ class DirectPrompting(PromptingBase):
         key: str = ""
         if hasattr(self, "prompt"):  # dynamic key
             key = f"{self.plain_name()}_{self.prompt.key()}"
+            # Apply decorators
+            if self.prompt_decorators:
+                for d in sorted(self.prompt_decorators, key=lambda x: x.key()):
+                    key = d.decorate_key(key)
         else:
             key = super().static_key()
 
-        # Apply decorators
-        if self.prompt_decorators:
-            for d in sorted(self.prompt_decorators, key=lambda x: x.key()):
-                key = d.decorate_key(key)
         return key
 
     def _generate(self, req: GenRequest) -> GenResponse:
@@ -58,23 +59,26 @@ class DirectPrompting(PromptingBase):
         return res
 
     # region Defaults
-    def _create_default_prompt(self, lang_unit_info: LangUnitInfo) -> Prompt:
-        """
-        Creates a default prompt for this prompting class.
-        :return: Prompt
-        """
-        # TODO: Load from the prompt repository
-        lang_desc: str = lang_unit_info.PromptText
-        instruction: str = (
-            f"Consider yourself a function that takes the input of asked {lang_desc} statement, and "
-            f"your output should be a markdown code snippet formatted in the following schema, including "
-            f'the leading and trailing "```{lang_desc}" and "```". Do not give me an explanation, only give '
-            f"me a {lang_desc} expression. Do not add any additional characters. Asked {lang_desc} statement: [CODE_DESCRIPTION]]."
-        )
-        return Prompt(instruction)
 
-    def create_default_instance(self, lang_unit_info: LangUnitInfo) -> "DirectPrompting":
-        return self.__class__(self._create_default_prompt(lang_unit_info))
+    # def _create_default_prompt(self, lang_unit_info: LangUnitInfo) -> Prompt:
+    #     """
+    #     Creates a default prompt for this prompting class.
+    #     :return: Prompt
+    #     """
+    #     # TODO: Load from the prompt repository by lang_unit
+    #     lang_desc: str = lang_unit_info.PromptText
+    #     instruction: str = (
+    #         f"Consider yourself a function that takes the input of asked {lang_desc} statement, and "
+    #         f"your output should be a markdown code snippet formatted in the following schema, including "
+    #         f'the leading and trailing "```{lang_desc}" and "```". Do not give me an explanation, only give '
+    #         f"me a {lang_desc} expression. Do not add any additional characters. Asked {lang_desc} statement: [GEN_ATOMIC_UNIT_DESC]."
+    #     )
+    #     return Prompt(instruction)
+
+    def create_default_instance(
+        self, repo: PromptRepositoryBase, lang_unit_name: str | None = None
+    ) -> "DirectPrompting":
+        return self.__class__(repo.get_default_prompt(lang_unit_name))
 
     # endregion
 

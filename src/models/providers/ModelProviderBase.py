@@ -16,10 +16,11 @@ class ModelProviderBase(ModelBase):
         return self.ModelName()
 
     @abstractmethod
-    def ModelNames(self) -> List[str]:  # str:ModelNames
+    def model_names(self) -> list[str]:
         pass
 
+    @deprecated("rename this cause we will have a ModelConfiguration class.")
     def GetModelConf(
         self,
-    ) -> ModelInfo:  # TODO: rename this cause we will have a ModelConfiguration class.
+    ) -> ModelInfo:
         return ModelInfo(self.ModelName(), self.ProviderName(), self.ProviderAbbreviation())
