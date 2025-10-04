@@ -15,10 +15,10 @@ class OllamaModelProvider(ModelProviderBase):
         ModelBase.__init__(self)
         ModelProviderBase.__init__(self, active_model_name)
 
-    def ProviderName(self):
+    def provider_name(self):
         return "ollama"
 
-    def ProviderAbbreviation(self):
+    def provider_abbreviation(self):
         return "ol"
 
     def model_names(self) -> list[str]:
@@ -40,7 +40,7 @@ class OllamaModelProvider(ModelProviderBase):
         :return:
         """
         process = subprocess.Popen(
-            ["ollama run", self.ModelName()],
+            ["ollama run", self.model_name()],
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
         )
@@ -59,7 +59,7 @@ class OllamaModelProvider(ModelProviderBase):
         client = ollama.Client("http://localhost:11434")  # Specify full URL with port
 
         # prompt
-        langDesc: str = langUnitInfo.PromptText
+        langDesc: str = langUnitInfo.prompt_text
         instruction: str = (
             f"Consider yourself a function that takes the input of asked {langDesc} statement, and "
             f"your output should be a markdown code snippet formatted in the following schema, including "
@@ -72,7 +72,7 @@ class OllamaModelProvider(ModelProviderBase):
         print(Fore.RESET)
 
         # model call
-        response = client.generate(model=self.ModelName(), prompt=prompt)
+        response = client.generate(model=self.model_name(), prompt=prompt)
         answer = response["response"]
 
         # ollama_server_process.terminate()       #TODO: Manage the connection. Do not terminate on every call.
@@ -92,7 +92,7 @@ class OllamaModelProvider(ModelProviderBase):
     def _generate_impl(self, req: GenRequest) -> GenResponse:
         client = ollama.Client("http://localhost:11434")  # TODO:Specify full URL with port
 
-        response = client.generate(model=self.ModelName(), prompt=req.final_prompt)
+        response = client.generate(model=self.model_name(), prompt=req.final_prompt)
         answer = response["response"]
 
         # TODO: Output parsers here please!
@@ -115,7 +115,7 @@ if __name__ == "__main__":
         "Do not explain or comment.\n\n"
         "Instruction: 'General email compliant to RFC 5322 official standard'"
     )
-    req: GenRequest = GenRequest(LangUnitFactory().Create("RegexVal"), "Email address validator", None, final_prompt)
+    req: GenRequest = GenRequest(LangUnitFactory().create("RegexVal"), "Email address validator", None, final_prompt)
     res: GenResponse = OllamaModelProvider("llama3").generate(req)
     print(res)
 

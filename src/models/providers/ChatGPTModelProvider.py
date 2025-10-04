@@ -11,15 +11,15 @@ from models.ModelBase import GenResponse, GenRequest
 
 class ChatGPTModelProvider(ModelProviderBase):
 
-    def __init__(self, activeModelName: str = None) -> None:
+    def __init__(self, active_model_name: str = None) -> None:
         super().__init__()
         ModelBase.__init__(self)
-        ModelProviderBase.__init__(self, activeModelName)
+        ModelProviderBase.__init__(self, active_model_name)
 
-    def ProviderName(self):
+    def provider_name(self):
         return "chatgpt"
 
-    def ProviderAbbreviation(self):
+    def provider_abbreviation(self):
         return "cg"
 
     @deprecated()
@@ -58,7 +58,7 @@ class ChatGPTModelProvider(ModelProviderBase):
                     "content": prompt,
                 },
             ],
-            model=self.ModelName(),
+            model=self.model_name(),
         )
 
         answer = chat_completion.choices[
@@ -78,6 +78,6 @@ class ChatGPTModelProvider(ModelProviderBase):
 if __name__ == "__main__":
     answer = ChatGPTModelProvider("gpt-3.5-turbo").Generate(
         "Generic email address",
-        LangUnitInfo("RegexVal", "regular expression for validation"),
+        LangUnitInfo("regexval", "regular expression for validation"),
     )
     print(answer)
