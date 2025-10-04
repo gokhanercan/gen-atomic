@@ -6,10 +6,10 @@ from utility.PrintHelper import Print
 
 @dataclass
 class ModelFilters:
-    providerAbbr: str = None
-    providerName: str = None
-    keyContains: str = None
-    isBaseline: Optional[bool] = None
+    provider_abbr: str = None
+    provider_name: str = None
+    key_contains: str = None
+    is_baseline: Optional[bool] = None
 
 
 class ModelFactory(object):
@@ -21,186 +21,186 @@ class ModelFactory(object):
         self._model_index: dict[str, ModelMeta] | None = None
 
     @property
-    def StandaloneModelsMeta(self) -> dict[str, StandaloneModelMeta]:
+    def standalone_models_meta(self) -> dict[str, StandaloneModelMeta]:
         if self._standalone_meta is None:
-            self._standalone_meta = self._DiscoverStandaloneModels()
+            self._standalone_meta = self._discover_standalone_models()
         return self._standalone_meta
 
     @property
-    def ModelProvidersMeta(self) -> dict[str, ModelProviderMeta]:
+    def model_providers_meta(self) -> dict[str, ModelProviderMeta]:
         if self._provider_meta is None:
-            self._provider_meta = self._DiscoverModelProviders()
+            self._provider_meta = self._discover_model_providers()
         return self._provider_meta
 
     @property
-    def ModelIndex(self) -> dict[str, ModelMeta]:
+    def model_index(self) -> dict[str, ModelMeta]:
         if self._model_index is None:
-            self._model_index = self._BuildModelIndex()
+            self._model_index = self._build_model_index()
         return self._model_index
 
-    def _BuildModelIndex(self) -> dict[str, ModelMeta]:
+    def _build_model_index(self) -> dict[str, ModelMeta]:
         index: dict[str:ModelMeta] = {}
 
         # Standalone ones
-        for k, v in self.StandaloneModelsMeta.items():
-            sMeta: StandaloneModelMeta = v
-            sModel: ModelBase = self.CreateModel(sMeta.Name)
-            key: str = sModel.Key()
+        for k, v in self.standalone_models_meta.items():
+            s_meta: StandaloneModelMeta = v
+            s_model: ModelBase = self.create_model(s_meta.name)
+            key: str = s_model.key()
             meta: ModelMeta = ModelMeta(
-                Name=sMeta.Name,
-                PlainName=sModel.PlainName(),
-                Key=key,
-                StandaloneModelMeta=sMeta,
-                ModelProviderMeta=None,
+                name=s_meta.name,
+                plain_name=s_model.plain_name(),
+                key=key,
+                standalone_model_meta=s_meta,
+                model_provider_meta=None,
             )
             index[key] = meta
-            sModel.ModelMeta = meta
+            s_model.model_meta = meta
 
         # Provider Models
-        for k, v in self.ModelProvidersMeta.items():
-            mpMeta: ModelProviderMeta = v
-            models: List[ModelBase] = self.CreateModelsByProvider(mpMeta.Name)
+        for k, v in self.model_providers_meta.items():
+            mp_meta: ModelProviderMeta = v
+            models: List[ModelBase] = self.create_models_by_provider(mp_meta.name)
             for m in models:
-                key: str = m.Key()
+                key: str = m.key()
                 meta: ModelMeta = ModelMeta(
-                    Name=m.Name(),
-                    PlainName=m.PlainName(),
-                    Key=key,
-                    StandaloneModelMeta=None,
-                    ModelProviderMeta=mpMeta,
+                    name=m.name(),
+                    plain_name=m.plain_name(),
+                    key=key,
+                    standalone_model_meta=None,
+                    model_provider_meta=mp_meta,
                 )
                 index[key] = meta
-                m.ModelMeta = meta
+                m.model_meta = meta
         return index
 
     # region Model Instance Creators
-    def CreateModelByKey(self, key: str) -> ModelBase:
-        meta: ModelMeta = self.ModelIndex[key]
-        if meta.IsStandalone:
-            m: ModelBase = self.CreateModel(meta.Name, meta)
+    def create_model_by_key(self, key: str) -> ModelBase:
+        meta: ModelMeta = self.model_index[key]
+        if meta.is_standalone:
+            m: ModelBase = self.create_model(meta.name, meta)
             return m
         else:
-            mp: ModelProviderBase = self.CreateModelProvider(meta.ModelProviderMeta.Name, meta.PlainName)
+            mp: ModelProviderBase = self.create_model_provider(meta.model_provider_meta.name, meta.plain_name)
             return mp
 
-    def FindKeysByFilters(self, mf: ModelFilters):
-        filtered: dict[str, ModelMeta] = self.ModelIndex
+    def find_keys_by_filters(self, mf: ModelFilters):
+        filtered: dict[str, ModelMeta] = self.model_index
 
         # region Apply filters
-        def filterProviderAbbr(filter: str, meta: ModelMeta):
-            return filter == meta.Key.split(".")[0]
+        def filter_provider_abbr(filter: str, meta: ModelMeta):
+            return filter == meta.key.split(".")[0]
 
-        def filterProviderName(filter: str, meta: ModelMeta):
-            if meta.ModelProviderMeta:
-                return filter == meta.ModelProviderMeta.Name
+        def filter_provider_name(filter: str, meta: ModelMeta):
+            if meta.model_provider_meta:
+                return filter == meta.model_provider_meta.name
             return False
 
-        def filterKeyContains(filter: str, meta: ModelMeta):
-            return meta.Key.__contains__(filter)
+        def filter_key_contains(filter: str, meta: ModelMeta):
+            return meta.key.__contains__(filter)
 
         # endregion
 
-        if mf.providerAbbr:
-            filtered = {k: v for k, v in filtered.items() if filterProviderAbbr(mf.providerAbbr, v)}
-        if mf.providerName:
-            filtered = {k: v for k, v in filtered.items() if filterProviderName(mf.providerName, v)}
-        if mf.keyContains:
-            filtered = {k: v for k, v in filtered.items() if filterKeyContains(mf.keyContains, v)}
-        if mf.isBaseline:
-            filtered = {k: v for k, v in filtered.items() if v.IsBaseline == mf.isBaseline}
+        if mf.provider_abbr:
+            filtered = {k: v for k, v in filtered.items() if filter_provider_abbr(mf.provider_abbr, v)}
+        if mf.provider_name:
+            filtered = {k: v for k, v in filtered.items() if filter_provider_name(mf.provider_name, v)}
+        if mf.key_contains:
+            filtered = {k: v for k, v in filtered.items() if filter_key_contains(mf.key_contains, v)}
+        if mf.is_baseline:
+            filtered = {k: v for k, v in filtered.items() if v.is_baseline == mf.is_baseline}
 
         return filtered
 
-    def CreateModelsByFilters(self, mf: ModelFilters) -> List[ModelBase]:
-        filtered: dict[str, ModelMeta] = self.FindKeysByFilters(mf)
-        return [self.CreateModelByKey(k) for k, v in filtered.items()]
+    def create_models_by_filters(self, mf: ModelFilters) -> List[ModelBase]:
+        filtered: dict[str, ModelMeta] = self.find_keys_by_filters(mf)
+        return [self.create_model_by_key(k) for k, v in filtered.items()]
 
-    def CreateAllModels(self) -> List[ModelBase]:
-        return [self.CreateModelByKey(k) for k, v in self.ModelIndex.items()]
+    def create_all_models(self) -> List[ModelBase]:
+        return [self.create_model_by_key(k) for k, v in self.model_index.items()]
 
-    def CreateStandaloneModels(self) -> List[ModelBase]:
+    def create_standalone_models(self) -> List[ModelBase]:
         models: List[ModelBase] = []
-        for modelName in self.GetAllStandaloneModelNames():
-            m: ModelBase = self.CreateModel(modelName)
+        for model_name in self.get_all_standalone_model_names():
+            m: ModelBase = self.create_model(model_name)
             models.append(m)
         return models
 
-    def CreateBaselineModels(self) -> List[ModelBase]:
+    def create_baseline_models(self) -> List[ModelBase]:
         models: List[ModelBase] = []
-        for modelName in self.GetAllBaselineModelNames():
-            m: ModelBase = self.CreateModel(modelName)
+        for model_name in self.get_all_baseline_model_names():
+            m: ModelBase = self.create_model(model_name)
             models.append(m)
         return models
 
-    def CreateModelProviders(self) -> List[ModelProviderBase]:
+    def create_model_providers(self) -> List[ModelProviderBase]:
         providers: List[ModelProviderBase] = []
-        for mpName in self.GetAllModelProviderNames():
-            mp: ModelProviderBase = self.CreateModelProvider(mpName)
+        for mp_name in self.get_all_model_provider_names():
+            mp: ModelProviderBase = self.create_model_provider(mp_name)
             providers.append(mp)
         return providers
 
-    def CreateModelProvider(self, providerName: str, modelName: Optional[str] = None) -> ModelProviderBase:
-        t: ABCMeta = self.ModelProvidersMeta[providerName].Type
+    def create_model_provider(self, provider_name: str, model_name: Optional[str] = None) -> ModelProviderBase:
+        t: ABCMeta = self.model_providers_meta[provider_name].type
         mp: ModelProviderBase = t.__new__(t)
-        mp.__init__(modelName)
+        mp.__init__(model_name)
         return mp
 
-    def CreateModelsByProvider(self, providerName: str) -> List[ModelProviderBase]:
-        p: ModelProviderBase = self.CreateModelProvider(providerName)
-        modelNames = p.model_names()
+    def create_models_by_provider(self, provider_name: str) -> List[ModelProviderBase]:
+        p: ModelProviderBase = self.create_model_provider(provider_name)
+        model_names = p.model_names()
         mps: List[ModelProviderBase] = []
-        for modelName in modelNames:
-            mp: ModelProviderBase = self.CreateModelProvider(providerName, modelName)
+        for model_name in model_names:
+            mp: ModelProviderBase = self.create_model_provider(provider_name, model_name)
             mps.append(mp)
         return mps
 
-    def CreateModel(self, modelName: str, modelMeta: ModelMeta | None = None) -> ModelBase:
-        t: ABCMeta = self.StandaloneModelsMeta[modelName].Type
+    def create_model(self, model_name: str, model_meta: ModelMeta | None = None) -> ModelBase:
+        t: ABCMeta = self.standalone_models_meta[model_name].type
         m: ModelBase = t.__new__(t)
         m.__init__()
-        if modelMeta:
-            m.ModelMeta = modelMeta
+        if model_meta:
+            m.model_meta = model_meta
         return m
 
     # endregion
 
     # region Queries
 
-    def GetAllModelProviderNames(self) -> List[str]:
-        return [k for k in self.ModelProvidersMeta]
+    def get_all_model_provider_names(self) -> List[str]:
+        return [k for k in self.model_providers_meta]
 
-    def GetAllModelProviderInfos(self) -> List[ModelProviderMeta]:
-        return [v for k, v in self.ModelProvidersMeta.items()]
+    def get_all_model_provider_infos(self) -> List[ModelProviderMeta]:
+        return [v for k, v in self.model_providers_meta.items()]
 
-    def GetAllStandaloneModelNames(self) -> List[str]:
-        return [k for k in self.StandaloneModelsMeta]
+    def get_all_standalone_model_names(self) -> List[str]:
+        return [k for k in self.standalone_models_meta]
 
-    def GetAllBaselineModelNames(self) -> List[str]:
+    def get_all_baseline_model_names(self) -> List[str]:
         return [
-            key for key, value in self.StandaloneModelsMeta.items() if value.IsBaseline == True
+            key for key, value in self.standalone_models_meta.items() if value.is_baseline == True
         ]  # Limited to standalone models only for now.
 
-    def GetAllModelKeys(self) -> List[str]:
-        return [k for k, v in self.ModelIndex.items()]
+    def get_all_model_keys(self) -> List[str]:
+        return [k for k, v in self.model_index.items()]
 
-    def GetModelKeys(
-        self, baselineFilter: Optional[bool] = None
+    def get_model_keys(
+        self, baseline_filter: Optional[bool] = None
     ) -> List[str]:  # TODO: add more filters here. ExcludeBaselines, FilterByModelName, ByProviderName etc.
-        return [k for k, v in self.ModelIndex.items() if v.IsBaseline == baselineFilter and baselineFilter is not None]
+        return [k for k, v in self.model_index.items() if v.is_baseline == baseline_filter and baseline_filter is not None]
 
     # endregion
 
     # region Discovery
     @staticmethod
-    def _DiscoverBaselineModels() -> dict[str, StandaloneModelMeta]:
+    def _discover_baseline_models() -> dict[str, StandaloneModelMeta]:
         """
         Lists all available baseline model names
         :return:
         """
-        return {k: v for k, v in ModelFactory._DiscoverStandaloneModels().items() if v.IsBaseline}
+        return {k: v for k, v in ModelFactory._discover_standalone_models().items() if v.is_baseline}
 
     @staticmethod
-    def _DiscoverStandaloneModels() -> dict[str, StandaloneModelMeta]:
+    def _discover_standalone_models() -> dict[str, StandaloneModelMeta]:
         """
         Discovers standalone models, not server through model providers
         :return:
@@ -211,22 +211,22 @@ class ModelFactory(object):
         metas: dict[str, StandaloneModelMeta] = {}
         for t in types:
             name: str = t.__name__
-            isBaseline: bool = issubclass(t, BaselineModel)
+            is_baseline: bool = issubclass(t, BaselineModel)
             if issubclass(t, ModelProviderBase):
                 continue  # Skipping non-standalone models here. They are discovered in a separate process
-            meta = StandaloneModelMeta(name, t, isBaseline)
+            meta = StandaloneModelMeta(name, t, is_baseline)
             metas[name] = meta
         return metas
 
     @staticmethod
-    def _DiscoverModelProviders() -> dict[str, ModelProviderMeta]:
+    def _discover_model_providers() -> dict[str, ModelProviderMeta]:
         types = Discovery.find_subclasses("models", ModelProviderBase, "providers")
         metas: dict[str, ModelProviderMeta] = {}
         for t in types:
             name: str = t.__name__
             mp: ModelProviderBase = t.__new__(t)
             mp.__init__()
-            meta = ModelProviderMeta(name, t, mp.ProviderAbbreviation())
+            meta = ModelProviderMeta(name, t, mp.provider_abbreviation())
             metas[name] = meta
         return metas
 
@@ -235,19 +235,19 @@ class ModelFactory(object):
 
 if __name__ == "__main__":
     # STATIC Discovery
-    Print("BaselineModelsMeta", ModelFactory._DiscoverBaselineModels())
-    Print("StandaloneModelsMeta", ModelFactory._DiscoverStandaloneModels())
-    Print("ModelProvidersMeta", ModelFactory._DiscoverModelProviders())
+    Print("BaselineModelsMeta", ModelFactory._discover_baseline_models())
+    Print("StandaloneModelsMeta", ModelFactory._discover_standalone_models())
+    Print("ModelProvidersMeta", ModelFactory._discover_model_providers())
 
     # INSTANCE Queries
     factory = ModelFactory()
-    Print("ModelProviderNames", factory.GetAllModelProviderNames())
-    Print("StandaloneModelNames", factory.GetAllStandaloneModelNames())
-    Print("BaselineModelNames", factory.GetAllBaselineModelNames())
+    Print("ModelProviderNames", factory.get_all_model_provider_names())
+    Print("StandaloneModelNames", factory.get_all_standalone_model_names())
+    Print("BaselineModelNames", factory.get_all_baseline_model_names())
 
     # Keys
-    Print("ModelIndex", factory.ModelIndex)
-    Print("AllModelKeys", factory.GetAllModelKeys())
+    Print("ModelIndex", factory.model_index)
+    Print("AllModelKeys", factory.get_all_model_keys())
     Print(
         "FindKeysByFilters usage", factory.FindKeysByFilters(ModelFilters("ol", "OllamaModelProvider", "llama3", False))
     )

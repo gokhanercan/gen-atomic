@@ -6,14 +6,14 @@ class StringTransformerPython(LangUnit):
     def __init__(self) -> None:
         super().__init__()
 
-    def PromptText(self):
+    def prompt_text(self):
         return "string transformer method in python"
 
-    def GetUnitType(self) -> UnitType:
+    def get_unit_type(self) -> UnitType:
         return UnitType.Expression
 
     def run_test(self, req: EvalRequest) -> EvalResponse:
-        passed: bool = self.validate_result(req.generated, req.correct_case, req.unit.Context.Data)
+        passed: bool = self.validate_result(req.generated, req.correct_case, req.unit.context.data)
         return EvalResponse(passed=passed)
 
     @staticmethod

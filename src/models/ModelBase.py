@@ -17,48 +17,48 @@ class BaselineModel(ABC):
 class ModelInfo(object):
     def __init__(
         self,
-        plainName: str,
-        providerName: Optional[str] = None,
-        providerAbbreviation: Optional[str] = None,
+        plain_name: str,
+        provider_name: Optional[str] = None,
+        provider_abbreviation: Optional[str] = None,
     ) -> None:
         super().__init__()
-        self.PlainName: str = plainName
-        self.ProviderName: Optional[str] = providerName
-        self.ProviderAbbreviation: Optional[str] = providerAbbreviation
+        self.plain_name: str = plain_name
+        self.provider_name: Optional[str] = provider_name
+        self.provider_abbreviation: Optional[str] = provider_abbreviation
 
-    def Key(self) -> str:
-        abbr: str = StringHelper.Coelesce(self.ProviderAbbreviation, "np")
-        return f"{abbr.lower()}.{self.PlainName.lower()}"
+    def key(self) -> str:
+        abbr: str = StringHelper.Coelesce(self.provider_abbreviation, "np")
+        return f"{abbr.lower()}.{self.plain_name.lower()}"
 
     def __str__(self) -> str:
-        return self.Key()
+        return self.key()
 
     def __repr__(self) -> str:
-        return self.Key()
+        return self.key()
 
     def __eq__(self, other):
         if isinstance(other, ModelBase):
-            return self.Key() == other.Key()
+            return self.key() == other.key()
         return False
 
 
 @dataclass
 class ModelProviderMeta:
-    Name: str
-    Type: ABCMeta
-    Abbreviation: str
+    name: str
+    type: ABCMeta
+    abbreviation: str
 
     def __eq__(self, other):
         if isinstance(other, ModelBase):
-            return self.Name == other.Name
+            return self.name == other.name
         return False
 
 
 @dataclass
 class StandaloneModelMeta:
-    Name: str
-    Type: ABCMeta
-    IsBaseline: bool = field(default=False)
+    name: str
+    type: ABCMeta
+    is_baseline: bool = field(default=False)
 
 
 @dataclass
@@ -67,21 +67,21 @@ class ModelMeta:
     Represents effective metadata information for all available models.
     """
 
-    Name: str
-    PlainName: str
-    Key: str
-    StandaloneModelMeta: StandaloneModelMeta = None
-    ModelProviderMeta: ModelProviderMeta = None
+    name: str
+    plain_name: str
+    key: str
+    standalone_model_meta: StandaloneModelMeta = None
+    model_provider_meta: ModelProviderMeta = None
 
     # TODO: Add configs.
     @property
-    def IsStandalone(self) -> bool:
-        return self.StandaloneModelMeta is not None
+    def is_standalone(self) -> bool:
+        return self.standalone_model_meta is not None
 
     @property
-    def IsBaseline(self) -> bool:
-        if self.IsStandalone:
-            return self.StandaloneModelMeta.IsBaseline
+    def is_baseline(self) -> bool:
+        if self.is_standalone:
+            return self.standalone_model_meta.is_baseline
         else:
             return False  # We can't define baseline model by providers
 
@@ -115,34 +115,34 @@ class GenResponse:
 class ModelBase(ABC):
     def __init__(self, model_meta: ModelMeta | None = None) -> None:
         super().__init__()
-        self.ModelMeta: ModelMeta | None = model_meta  # TODO: Index sets it!
+        self.model_meta: ModelMeta | None = model_meta  # TODO: Index sets it!
 
     # region Names and Identities
-    def Name(self) -> str:
+    def name(self) -> str:
         return str(type(self).__name__)
 
-    def PlainName(self) -> str:
-        return self.Name().replace("Model", "").replace("Provider", "")
+    def plain_name(self) -> str:
+        return self.name().replace("Model", "").replace("Provider", "")
 
     # TODO: Convert to @property
-    def ProviderName(self) -> str:
+    def provider_name(self) -> str:
         return "NoProvider"
 
-    def ProviderAbbreviation(self) -> str:
+    def provider_abbreviation(self) -> str:
         return "np"
 
-    def Key(self):
-        return self.GetModelConf().Key()
+    def key(self):
+        return self.get_model_conf().key()
 
     def __repr__(self) -> str:
-        return f"M[{self.Key()}]"
+        return f"M[{self.key()}]"
 
     def __str__(self) -> str:
-        return f"M[{self.Key()}]"
+        return f"M[{self.key()}]"
 
     @deprecated("Use Key/key instead.")
-    def GetModelConf(self) -> ModelInfo:
-        return ModelInfo(self.PlainName(), self.ProviderName(), self.ProviderAbbreviation())
+    def get_model_conf(self) -> ModelInfo:
+        return ModelInfo(self.plain_name(), self.provider_name(), self.provider_abbreviation())
 
     # endregion
 

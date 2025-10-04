@@ -22,8 +22,8 @@ from itertools import combinations
 
 
 class Experiment(object):
-    def __init__(self, langUnit: LangUnit, model_configs: ModelConfigurations = None) -> None:
-        self.LangUnit: LangUnit = langUnit  # we support single LangUnit per Experiment
+    def __init__(self, lang_unit: LangUnit, model_configs: ModelConfigurations = None) -> None:
+        self.lang_unit: LangUnit = lang_unit  # we support single LangUnit per Experiment
         self.model_configs: ModelConfigurations = model_configs  # TODO: Too many model_configs drama!
 
     def get_models(self) -> List[ModelBase]:
@@ -42,7 +42,7 @@ class Experiment(object):
         """
         if self.model_configs is None:
             raise ValueError("Model configurations are not set.")
-        return [m for m in self.model_configs.get_models() if m.Key() == model_key][0]
+        return [m for m in self.model_configs.get_models() if m.key() == model_key][0]
 
     def __repr__(self) -> str:
         try:
@@ -54,13 +54,13 @@ class Experiment(object):
         return self.__repr__()
 
     def plain_name(self) -> str:
-        return f"{self.LangUnit.Name()}"
+        return f"{self.lang_unit.name()}"
 
     def key(self) -> str:
         try:
-            return f"E[{self.LangUnit}_{self.model_configs.key()}]"
+            return f"E[{self.lang_unit}_{self.model_configs.key()}]"
         except Exception as e:
-            return f"E[{self.LangUnit.Name()}]"
+            return f"E[{self.lang_unit.name()}]"
 
 
 class ExperimentFactory(object):
@@ -74,8 +74,8 @@ class ExperimentFactory(object):
         self.default_prompting: PromptingBase = default_prompting
 
     def create_experiment_with_all_models(self, prompting: PromptingBase | None = None) -> Experiment:
-        unit: LangUnit = LangUnitFactory().Create(self.lang_unit_name)
-        models: List[ModelBase] = ModelFactory().CreateAllModels()
+        unit: LangUnit = LangUnitFactory().create(self.lang_unit_name)
+        models: List[ModelBase] = ModelFactory().create_all_models()
         eff_prompting: PromptingBase = prompting or self.default_prompting
         mcs = ModelConfigurations([ModelConfiguration(m, eff_prompting) for m in models])
         exp: Experiment = Experiment(unit, mcs)
@@ -87,27 +87,27 @@ class ExperimentFactory(object):
         include_baselines: bool = False,
         prompting: PromptingBase | None = None,
     ):
-        unit: LangUnit = LangUnitFactory().Create(self.lang_unit_name)
+        unit: LangUnit = LangUnitFactory().create(self.lang_unit_name)
         model_factory = ModelFactory()
-        models: List[ModelBase] = model_factory.CreateModelsByFilters(mf)
+        models: List[ModelBase] = model_factory.create_models_by_filters(mf)
         if include_baselines:
-            models += model_factory.CreateBaselineModels()
+            models += model_factory.create_baseline_models()
         eff_prompting: PromptingBase = prompting or self.default_prompting
         mcs = ModelConfigurations([ModelConfiguration(m, eff_prompting) for m in models])
         exp: Experiment = Experiment(unit, mcs)
         return exp
 
     def create_experiment_with_baseline_models(self, prompting: PromptingBase | None = None) -> Experiment:
-        unit: LangUnit = LangUnitFactory().Create(self.lang_unit_name)
-        models: List[ModelBase] = ModelFactory().CreateModelsByFilters(ModelFilters(isBaseline=True))
+        unit: LangUnit = LangUnitFactory().create(self.lang_unit_name)
+        models: List[ModelBase] = ModelFactory().create_models_by_filters(ModelFilters(isBaseline=True))
         eff_prompting: PromptingBase = prompting or self.default_prompting
         mcs = ModelConfigurations([ModelConfiguration(m, eff_prompting) for m in models])
         exp: Experiment = Experiment(unit, mcs)
         return exp
 
     def create_single_model_experiment(self, model_key: str, prompting: PromptingBase | None = None) -> Experiment:
-        unit: LangUnit = LangUnitFactory().Create(self.lang_unit_name)
-        model: ModelBase = ModelFactory().CreateModelByKey(model_key)
+        unit: LangUnit = LangUnitFactory().create(self.lang_unit_name)
+        model: ModelBase = ModelFactory().create_model_by_key(model_key)
         mcs: ModelConfigurations = ModelConfigurations([ModelConfiguration(model, prompting or self.default_prompting)])
         exp: Experiment = Experiment(unit, mcs)
         return exp
@@ -185,7 +185,7 @@ class ExperimentFactoryTests(TestCase):
             "RegexVal", prompt_repo=self._prompt_repo, default_prompting=DirectPrompting("direct")
         ).create_single_model_experiment("np.stub")
 
-        self.assertEqual(exp.LangUnit.Name(), "RegexVal")
+        self.assertEqual(exp.lang_unit.name(), "RegexVal")
         self.assertIsNotNone(exp.get_model_by_key("np.stub"))
         self.assertEqual(StubModel, type(exp.get_model_by_key("np.stub")))
         self.assertEqual(1, exp.model_configs.__len__())
@@ -196,7 +196,7 @@ class ExperimentFactoryTests(TestCase):
             "RegexVal", prompt_repo=self._prompt_repo, default_prompting=DirectPrompting("direct")
         ).create_provider_experiment("np")
 
-        self.assertEqual(exp.LangUnit.Name(), "RegexVal")
+        self.assertEqual(exp.lang_unit.name(), "RegexVal")
         self.assertIsNotNone(exp.get_model_by_key("np.stub"))
         self.assertEqual(StubModel, type(exp.get_model_by_key("np.stub")))
         self.assertEqual(2, exp.model_configs.__len__())  # stub and random
@@ -208,15 +208,15 @@ if __name__ == "__main__":
     lang_unit_name: str = "SqlSelect"
     repo: PromptRepositoryBase = InMemoryPromptRepository()
     e: Experiment = Experiment(
-        LangUnitFactory().Create(lang_unit_name),
+        LangUnitFactory().create(lang_unit_name),
         ModelConfigurations(
             [
                 ModelConfiguration(
-                    ModelFactory().CreateModelByKey("np.stub"),
+                    ModelFactory().create_model_by_key("np.stub"),
                     PromptingFactory(repo).create_default(lang_unit_name),
                 ),
                 ModelConfiguration(
-                    ModelFactory().CreateModelByKey("np.random"),
+                    ModelFactory().create_model_by_key("np.random"),
                     PromptingFactory(repo).create_default(lang_unit_name),
                 ),
             ]

@@ -38,7 +38,7 @@ class ExperimentsIntegrationTest(TestCase):
         host: ExperimentHost = ExperimentHost()
 
         path: str = Paths().GetDataset("AtomicRegexValDataset")
-        ds: Dataset = DatasetXmlRepository.Load(path)
+        ds: Dataset = DatasetXmlRepository.load(path)
         exp: Experiment = ExperimentFactory(
             "RegexVal", InMemoryPromptRepository()
         ).create_experiment_with_baseline_models()
@@ -46,9 +46,9 @@ class ExperimentsIntegrationTest(TestCase):
         stubs = [item for item in exp.get_models() if isinstance(item, StubModel)]
         StubModel.fake_email(stubs)
 
-        r: ExperimentResults = host.Run(exp, ds)
-        r.Print(False)
-        self.assertTrue(0 <= r.OverallAccuracy.iloc[0] <= 100)
+        r: ExperimentResults = host.run(exp, ds)
+        r.print(False)
+        self.assertTrue(0 <= r.overall_accuracy.iloc[0] <= 100)
 
 
 if __name__ == "__main__":

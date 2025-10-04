@@ -10,10 +10,10 @@ class RegexVal(LangUnit):
     def __init__(self) -> None:
         super().__init__()
 
-    def PromptText(self):
+    def prompt_text(self):
         return "regular expression for validation"
 
-    def GetUnitType(self) -> UnitType:
+    def get_unit_type(self) -> UnitType:
         return UnitType.Expression
 
     @deprecated

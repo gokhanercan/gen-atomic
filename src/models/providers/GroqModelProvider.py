@@ -15,10 +15,10 @@ class GroqModelProvider(ModelProviderBase):
         ModelBase.__init__(self)
         ModelProviderBase.__init__(self, active_model_name)
 
-    def ProviderName(self):
+    def provider_name(self):
         return "groq"
 
-    def ProviderAbbreviation(self):
+    def provider_abbreviation(self):
         return "gr"
 
     def model_names(self) -> list[str]:
@@ -51,7 +51,7 @@ class GroqModelProvider(ModelProviderBase):
                     "content": prompt,
                 },
             ],
-            model=self.ModelName(),
+            model=self.model_name(),
         )
 
         answer = chat_completion.choices[0].message.content
@@ -75,6 +75,6 @@ class GroqModelProvider(ModelProviderBase):
 if __name__ == "__main__":
     answer = GroqModelProvider("llama-3.1-70b-versatile").Generate(
         "Generic email address",
-        LangUnitInfo("RegexVal", "regular expression for validation"),
+        LangUnitInfo("regexval", "regular expression for validation"),
     )
     print(answer)
