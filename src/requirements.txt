@@ -12,3 +12,4 @@ antlr4-python3-runtime
 pydantic
 fastapi
 uvicorn
+streamlit-aggrid
