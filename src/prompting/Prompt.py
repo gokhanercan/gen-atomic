@@ -22,6 +22,9 @@ class Prompt:
         else:
             return f"id:{self.pid}"
 
+    def __repr__(self) -> str:
+        return super().__repr__() + f"[key={self.key()}]"
+
 
 class PromptTests(TestCase):
     def test_Key_TextValue_HashTextAsKey(self):

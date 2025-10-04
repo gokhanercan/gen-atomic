@@ -15,6 +15,8 @@ from prompting.decorators.prompt_decorator_base import (
 )
 from prompting.impl.DirectPrompting import DirectPrompting
 from prompting.prompting_factory import PromptingFactory
+from prompting.repo.inmemory_prompt_repository import InMemoryPromptRepository
+from prompting.repo.prompt_repository_base import PromptRepositoryBase
 from utility import StringHelper
 from itertools import combinations
 
@@ -63,11 +65,12 @@ class Experiment(object):
 
 class ExperimentFactory(object):
 
-    def __init__(self, lang_unit_name: str, default_prompting: PromptingBase = None) -> None:
+    def __init__(self, lang_unit_name: str, prompt_repo: PromptRepositoryBase, default_prompting: PromptingBase = None) -> None:
         super().__init__()
         self.lang_unit_name: str = lang_unit_name
+        self.prompt_repo: PromptRepositoryBase = prompt_repo
         if default_prompting is None:
-            default_prompting = PromptingFactory().create_default(self.lang_unit_name)
+            default_prompting = PromptingFactory(prompt_repo).create_default(self.lang_unit_name)
         self.default_prompting: PromptingBase = default_prompting
 
     def create_experiment_with_all_models(self, prompting: PromptingBase | None = None) -> Experiment:
@@ -130,7 +133,7 @@ class ExperimentFactory(object):
         self, model_key: str, create_decorator_variations: bool = False
     ) -> List[ModelConfiguration]:
         model: ModelBase = ModelFactory().CreateModelByKey(model_key)
-        p_factory = PromptingFactory()
+        p_factory = PromptingFactory(self.prompt_repo)
         lang_unit: LangUnit = LangUnitFactory().Create(self.lang_unit_name)
         p_metas: list[PromptingInfo] = p_factory.get_all_prompting_meta()
         mcs: list[ModelConfiguration] = []
@@ -173,9 +176,13 @@ class ExperimentFactory(object):
 
 class ExperimentFactoryTests(TestCase):
 
+    @property
+    def _prompt_repo(self) -> PromptRepositoryBase:
+        return InMemoryPromptRepository()
+
     def test_create_single_model_experiment__defaults_check_defaults(self):
         exp: Experiment = ExperimentFactory(
-            "RegexVal", default_prompting=DirectPrompting("direct")
+            "RegexVal", prompt_repo=self._prompt_repo, default_prompting=DirectPrompting("direct")
         ).create_single_model_experiment("np.stub")
 
         self.assertEqual(exp.LangUnit.Name(), "RegexVal")
@@ -186,7 +193,7 @@ class ExperimentFactoryTests(TestCase):
 
     def test_create_provider_experiment__customprompting__init_all(self):
         exp: Experiment = ExperimentFactory(
-            "RegexVal", default_prompting=DirectPrompting("direct")
+            "RegexVal", prompt_repo=self._prompt_repo, default_prompting=DirectPrompting("direct")
         ).create_provider_experiment("np")
 
         self.assertEqual(exp.LangUnit.Name(), "RegexVal")
@@ -199,17 +206,18 @@ class ExperimentFactoryTests(TestCase):
 if __name__ == "__main__":
 
     lang_unit_name: str = "SqlSelect"
+    repo: PromptRepositoryBase = InMemoryPromptRepository()
     e: Experiment = Experiment(
         LangUnitFactory().Create(lang_unit_name),
         ModelConfigurations(
             [
                 ModelConfiguration(
                     ModelFactory().CreateModelByKey("np.stub"),
-                    PromptingFactory().create_default(lang_unit_name),
+                    PromptingFactory(repo).create_default(lang_unit_name),
                 ),
                 ModelConfiguration(
                     ModelFactory().CreateModelByKey("np.random"),
-                    PromptingFactory().create_default(lang_unit_name),
+                    PromptingFactory(repo).create_default(lang_unit_name),
                 ),
             ]
         ),

@@ -12,13 +12,13 @@ class UnitType(Enum):
 
 
 @dataclass
-class LangUnitMeta(object):
+class LangUnitMeta:
     Name: str
     Type: ABCMeta
 
 
 @dataclass
-class LangUnitInfo(object):
+class LangUnitInfo:
     Name: str
     PromptText: str  # This is default text. TODO: rename
 

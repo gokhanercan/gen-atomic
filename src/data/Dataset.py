@@ -7,32 +7,6 @@ from tabulate import tabulate
 from deprecated import deprecated
 
 
-class Dataset(object):
-    def __init__(self, name: str):
-        super().__init__()
-        self.Units: List[Unit] = []
-        self.Name = name
-
-    def Print(self):
-        ccCount: int = 0
-        icCount: int = 0
-        constraintCount: int = 0
-        print(f"-- {self.Name.upper()} DATASET --")
-        for u in self.Units:
-            ccCount = ccCount + len(u.CorrectCases)
-            icCount = icCount + len(u.IncorrectCases)
-            constraintCount = constraintCount + len(u.Constraints)
-        overall: int = ccCount + icCount + constraintCount
-        df: DataFrame = DataFrame()
-        df.at["Count", "CorrectCase"] = str(ccCount)
-        df.at["Count", "IncorrectCase"] = str(icCount)
-        df.at["Count", "Overall"] = str(overall)
-        df.at["Perc (%)", "CorrectCase"] = str(float(ccCount) / overall * 100)
-        df.at["Perc (%)", "IncorrectCase"] = str(float(icCount) / overall * 100)
-        df.at["Perc (%)", "Overall"] = str(100)
-        print(tabulate(df, headers="keys", tablefmt="psql", floatfmt=".2f"))
-
-
 @dataclass
 class Criteria:
     name: str
@@ -86,3 +60,29 @@ class Unit(object):  # TODO: Find a better name for this. Field,Column,Case etc.
 
     def __repr__(self) -> str:
         return f"{self.Name} ({self.TotalCases} Cases)"
+
+
+class Dataset(object):
+    def __init__(self, name: str):
+        super().__init__()
+        self.Units: List[Unit] = []
+        self.Name = name
+
+    def Print(self):
+        ccCount: int = 0
+        icCount: int = 0
+        constraintCount: int = 0
+        print(f"-- {self.Name.upper()} DATASET --")
+        for u in self.Units:
+            ccCount = ccCount + len(u.CorrectCases)
+            icCount = icCount + len(u.IncorrectCases)
+            constraintCount = constraintCount + len(u.Constraints)
+        overall: int = ccCount + icCount + constraintCount
+        df: DataFrame = DataFrame()
+        df.at["Count", "CorrectCase"] = str(ccCount)
+        df.at["Count", "IncorrectCase"] = str(icCount)
+        df.at["Count", "Overall"] = str(overall)
+        df.at["Perc (%)", "CorrectCase"] = str(float(ccCount) / overall * 100)
+        df.at["Perc (%)", "IncorrectCase"] = str(float(icCount) / overall * 100)
+        df.at["Perc (%)", "Overall"] = str(100)
+        print(tabulate(df, headers="keys", tablefmt="psql", floatfmt=".2f"))

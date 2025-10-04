@@ -36,19 +36,25 @@ class ModelConfiguration(object):
     Represents a dynamic model configuration with a specific hyperparameter set.
     """
 
-    model: ModelBase
-    prompting: PromptingBase
-
-    def __init__(self, model: ModelBase, prompting: PromptingBase):
-        super().__init__()
+    def __init__(self, model: ModelBase, prompting: PromptingBase, custom_alias: str | None = None) -> None:
         self.model = model
         self.prompting = prompting
+        self.custom_alias = custom_alias
 
     def static_key(self):
         return f"M({self.model.Key()})P({self.prompting.static_key()})"
 
     def key(self):
         return f"M({self.model.Key()})P({self.prompting.key()})"
+
+    def alias(self):
+        """
+        Returns alias (display name) for the model configuration.
+        If a custom alias is provided, it will be used; otherwise, it will return the key.
+        """
+        if self.custom_alias:
+            return self.custom_alias
+        return self.key()
 
     def __str__(self) -> str:
         try:
@@ -61,11 +67,21 @@ class ModelConfiguration(object):
 
 
 class ModelConfigurationTests(TestCase):
-    def test_Key_TextValue_HashTextAsKey(self):
+    def test_key__text_value__hash_text_as_key(self):
         self.assertEqual(
             ModelConfiguration(StubModel("test"), DirectPrompting(Prompt("Hello prompt!"))).key(),
             "M(np.stub)P(direct_t:0b290fd)",
         )
+
+    def test_alias__has_custom__return_custom(self):
+        mc = ModelConfiguration(StubModel("test"), DirectPrompting(Prompt("Hello prompt!")))
+        mc.key = lambda: "the_key"
+        self.assertEqual(mc.alias(), "the_key")
+
+    def test_alias__no_custom__return_key_as_alias(self):
+        mc = ModelConfiguration(StubModel("test"), DirectPrompting(Prompt("Hello prompt!")))
+        mc.custom_alias = "custom"
+        self.assertEqual(mc.alias(), "custom")
 
 
 class ModelConfigurations(object):

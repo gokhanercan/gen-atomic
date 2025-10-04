@@ -1,18 +1,19 @@
 from langunits.LangUnit import LangUnitInfo
-from models.ModelBase import ModelBase
+from langunits.LangUnitFactory import LangUnitFactory
+from models.ModelBase import ModelBase, GenRequest, GenResponse
 import subprocess
 import ollama
 from colorama import init, Fore, Back, Style
 from data.Dataset import *
-from models.ModelBase import GenResponse, GenRequest
+
 from models.providers.ModelProviderBase import ModelProviderBase
 
 
 class OllamaModelProvider(ModelProviderBase):
-    def __init__(self, activeModelName: str = None) -> None:
+    def __init__(self, active_model_name: str = None) -> None:
         super().__init__()
         ModelBase.__init__(self)
-        ModelProviderBase.__init__(self, activeModelName)
+        ModelProviderBase.__init__(self, active_model_name)
 
     def ProviderName(self):
         return "ollama"
@@ -93,33 +94,29 @@ class OllamaModelProvider(ModelProviderBase):
 
         response = client.generate(model=self.ModelName(), prompt=req.final_prompt)
         answer = response["response"]
-        # ollama_server_process.terminate()       #TODO: Manage the connection. Do not terminate on every call.
+
         # TODO: Output parsers here please!
-        generated: str = (
-            str(answer)
-            .strip()
-            .replace("Regex: ", "")
-            .replace("regexp", "")
-            .replace("```", "")
-            .replace("`", "")
-            .replace("SQL: ", "")
-        )
-        return GenResponse(req.lang_unit_info, generated)
+        # generated: str = (
+        #     str(answer)
+        #     .strip()
+        #     .replace("Regex: ", "")
+        #     .replace("regexp", "")
+        #     .replace("```", "")
+        #     .replace("`", "")
+        #     .replace("SQL: ", "")
+        # )
+        return GenResponse(req.lang_unit_info, answer)
 
 
 if __name__ == "__main__":
-    pass
-    # print(OllamaModelProvider().model_names())  # TODO: What to do with the 'latest' prefix?
-    # exit()
+    final_prompt: str = (
+        "You are a function that generates 'Regular Expression Validator' code unit by instruction.\n"
+        "Return **only** a single valid expression. \n"
+        "Do not explain or comment.\n\n"
+        "Instruction: 'General email compliant to RFC 5322 official standard'"
+    )
+    req: GenRequest = GenRequest(LangUnitFactory().Create("RegexVal"), "Email address validator", None, final_prompt)
+    res: GenResponse = OllamaModelProvider("llama3").generate(req)
+    print(res)
 
-    # models = ollama.list()  # locally installed/downloaded models. not the all available models.
-    # for model in models["models"]:
-    #     print(f"\n{model.model}")
-    # print(model)
-    # print(f"{model['name']} - {model['size']} - {model['modified_at']}")
-
-    # answer = OllamaModelProvider("codellama").Generate(
-    #     "generate me an email regex, do not give me an explanation",
-    #     LangUnitInfo("RegexVal", "regular expression for validation"),
-    # )
-    # print(answer)
+    print(f"\n{res.raw_generated}")

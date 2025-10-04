@@ -1,17 +1,17 @@
 from abc import ABC, abstractmethod, ABCMeta
 
 # from __future__ import annotations
-from typing import Union, Type, Optional, Generic, TypeVar
+from typing import Generic
 from unittest import TestCase
 from unittest.mock import Mock
 
 from annotated_types import T
 from pydantic import BaseModel, ConfigDict
 
-from langunits.LangUnit import LangUnitInfo
 from models.ModelBase import GenResponse, GenRequest
 from prompting.Prompt import Prompt
 from prompting.decorators.prompt_decorator_base import PromptDecoratorBase
+from prompting.repo.prompt_repository_base import PromptRepositoryBase
 
 
 class PromptingBase(ABC, Generic[T]):
@@ -42,15 +42,12 @@ class PromptingBase(ABC, Generic[T]):
     # endregion
 
     @abstractmethod
-    def create_default_instance(self, lang_unit_info: LangUnitInfo) -> T:
-        """
-        Creates a default prompt for this prompting class.
-        :return: str
-        """
+    def _generate(self, req: GenRequest) -> GenResponse:
         pass
 
     @abstractmethod
-    def _generate(self, req: GenRequest) -> GenResponse:
+    def create_default_instance(self, repo: PromptRepositoryBase, lang_unit_name: str | None = None) -> T:
+        """Every prompting class should provide it's factory method to create a default instance with the right prompts"""
         pass
 
     @staticmethod
@@ -66,10 +63,10 @@ class PromptingBase(ABC, Generic[T]):
             return p
         import copy
 
-        pNew: Prompt = copy.deepcopy(p)
+        p_new: Prompt = copy.deepcopy(p)
         for decorator in prompt_decorators:
-            decorator.decorate(pNew)
-        return pNew
+            decorator.decorate(p_new)
+        return p_new
 
 
 class PromptingBaseTests(TestCase):
@@ -77,8 +74,8 @@ class PromptingBaseTests(TestCase):
     def test_apply_decorators__no_decorators_donothing(self):
         p = Prompt("Hello prompt!")
         decorators: list[PromptDecoratorBase] = []
-        pNew = PromptingBase.apply_decorators(p, decorators)
-        self.assertEqual(p, pNew, "Applying no decorators should return the same prompt.")
+        p_new = PromptingBase.apply_decorators(p, decorators)
+        self.assertEqual(p, p_new, "Applying no decorators should return the same prompt.")
 
     def test_apply_decorators__multiple_decorators__apply(self):
         p = Prompt("Hello prompt!")
@@ -95,9 +92,9 @@ class PromptingBaseTests(TestCase):
         fake2 = Mock(spec=PromptDecoratorBase)
         fake2.decorate.side_effect = fake2_func
 
-        pNew = PromptingBase.apply_decorators(p, [fake1, fake2])
+        p_new = PromptingBase.apply_decorators(p, [fake1, fake2])
 
-        self.assertEqual("Prefix - Hello prompt! - Postfix", pNew.text)
+        self.assertEqual("Prefix - Hello prompt! - Postfix", p_new.text)
 
 
 class PromptingInfo(BaseModel):

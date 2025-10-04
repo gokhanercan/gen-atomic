@@ -3,6 +3,7 @@ from typing import Type
 
 from pydantic import BaseModel, ConfigDict
 from prompting.Prompt import Prompt
+from prompting.repo.prompt_repository_base import PromptRepositoryBase
 
 
 class PromptDecoratorBase:
@@ -45,6 +46,17 @@ class PromptDecoratorBase:
     def decorate_key(self, key: str):
         """Decorates the key for the prompt. Decorators should modify the key to reflect their changes."""
         pass
+
+    def create_default_instance(
+        self, repo: PromptRepositoryBase, lang_unit_name: str | None = None
+    ) -> "PromptDecoratorBase":
+        """
+        Factory: Creates a default instance of the decorator using the repository. Override this method in subclasses if needed.
+        :param repo:
+        :param lang_unit_name:
+        :return:
+        """
+        return self.__class__()
 
 
 class PromptDecoratorInfo(BaseModel):

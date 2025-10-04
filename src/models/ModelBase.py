@@ -1,7 +1,6 @@
 import copy
 from abc import ABC, abstractmethod, ABCMeta
 from dataclasses import field
-
 from langunits.LangUnit import LangUnitInfo
 from utility import StringHelper
 from data.Dataset import *
@@ -9,7 +8,7 @@ from data.Dataset import *
 
 class BaselineModel(ABC):
     """
-    This is a marker-type to indicate fake/stub/ummy baseline models.
+    This is a marker-type to indicate fake/stub/dummy baseline models.
     """
 
     pass
@@ -87,10 +86,36 @@ class ModelMeta:
             return False  # We can't define baseline model by providers
 
 
+@dataclass
+class GenRequest:
+    lang_unit_info: LangUnitInfo
+    description: str
+    gen_model: any  # The model which is responsible for generation. Managers and Evaluators will be different.
+    final_prompt: str | None
+
+    def clone(self) -> "GenRequest":
+        """
+        Creates the deep copy of this request.
+        :return:
+        """
+        return copy.deepcopy(self)
+
+    def clone_to_final_prompt(self, final_prompt: str) -> "GenRequest":
+        c = self.clone()
+        c.final_prompt = final_prompt
+        return c
+
+
+@dataclass
+class GenResponse:
+    lang_unit_info: LangUnitInfo
+    raw_generated: str
+
+
 class ModelBase(ABC):
-    def __init__(self, modelMeta: ModelMeta | None = None) -> None:
+    def __init__(self, model_meta: ModelMeta | None = None) -> None:
         super().__init__()
-        self.ModelMeta: ModelMeta | None = modelMeta  # TODO: Index sets it!
+        self.ModelMeta: ModelMeta | None = model_meta  # TODO: Index sets it!
 
     # region Names and Identities
     def Name(self) -> str:
@@ -99,6 +124,7 @@ class ModelBase(ABC):
     def PlainName(self) -> str:
         return self.Name().replace("Model", "").replace("Provider", "")
 
+    # TODO: Convert to @property
     def ProviderName(self) -> str:
         return "NoProvider"
 
@@ -114,42 +140,20 @@ class ModelBase(ABC):
     def __str__(self) -> str:
         return f"M[{self.Key()}]"
 
+    @deprecated("Use Key/key instead.")
     def GetModelConf(self) -> ModelInfo:
         return ModelInfo(self.PlainName(), self.ProviderName(), self.ProviderAbbreviation())
 
     # endregion
 
     def generate(self, req: "GenRequest") -> "GenResponse":
+        if not req.final_prompt:
+            raise ValueError(
+                "Final prompt must be calculated in the request before generating. Check your prompting implementation."
+            )
         res: GenResponse = self._generate_impl(req)
         return res
 
     @abstractmethod
     def _generate_impl(self, req: "GenRequest") -> "GenResponse":
         pass
-
-
-@dataclass
-class GenRequest:
-    lang_unit_info: LangUnitInfo
-    description: str
-    gen_model: ModelBase  # The model which is responsible for generation. Managers and Evaluators will be different.
-    final_prompt: str | None
-
-    def clone(self):
-        """
-        Creates the deep copy of this request.
-        :return:
-        """
-        c = copy.deepcopy(self)
-        return c
-
-    def clone_to_final_prompt(self, final_prompt: str) -> "GenRequest":
-        c = self.clone()
-        c.final_prompt = final_prompt
-        return c
-
-
-@dataclass
-class GenResponse:
-    lang_unit_info: LangUnitInfo
-    raw_generated: str

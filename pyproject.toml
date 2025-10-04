@@ -1,5 +1,5 @@
 [tool.black]
-line-length = 120
+line-length = 130
 target-version = ['py311', 'py312']
 
 [tool.pytest.ini_options]

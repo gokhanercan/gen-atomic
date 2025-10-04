@@ -11,7 +11,7 @@
 ## What is gen-atomic?
 Gen-atomic is an LLM-based code generation and evaluation framework that aims to support a wide range of atomic language units (e.g., C#, Python, SQL, Regex, React, YAML, D2Lang), from compiled code to semi-structured markups. It allows developers to easily create an evaluation framework for a specific language or framework without needing deep knowledge of LLM concepts such as RAG, prompting, or benchmarking.
 
-It also serves as a runtime library that enables developers to generate code blocks using the best available model for a given language or framework. It collects data from offline experiments to maximize runtime performance by determining which models to use and how to ensemble them for a particular task, based on defined cost, time, and performance goals.
+It also serves as a runtime library that enables developers to generate code blocks using the best available model configurations for a given language or framework. It collects data from offline experiments to maximize runtime performance by determining which models to use and how to ensemble them for a particular task, based on defined cost, time, and performance goals.
 
 The ultimate client usage will be as follows: 
 ```

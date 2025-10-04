@@ -15,10 +15,6 @@ class ModelFilters:
 class ModelFactory(object):
     def __init__(self) -> None:
         super().__init__()
-        # self.StandaloneModelsMeta: dict[str, StandaloneModelMeta] = self._DiscoverStandaloneModels()  # Name|Meta
-        # self.ModelProvidersMeta: dict[str, ModelProviderMeta] = self._DiscoverModelProviders()  # Name|Meta
-        # # Model Auto Key Indexing via instances
-        # self.ModelIndex: dict[str, ModelMeta] = self._BuildModelIndex()  # Key|Meta
 
         self._standalone_meta: dict[str, StandaloneModelMeta] | None = None
         self._provider_meta: dict[str, ModelProviderMeta] | None = None

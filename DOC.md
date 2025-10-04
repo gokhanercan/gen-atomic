@@ -42,11 +42,13 @@ Here are some example schema explanations:
 ### Types of Plugins
 
 
-| PluginType        | Base Type         | Factory         | Example(s)          | Example Key | Desc. |
-| ------------------- | ------------------- | ----------------- | --------------------- | ------------- | ------- |
-| **Model**         | ModelBase         | ModelFactory    | RandomModel         | np-random   |       |
-| **ModelProvider** | ModelProviderBase | ModelFactory    | OllamaModelProvider | ol          |       |
-| **LangUnit**      | LangUnit          | LangUnitFactory | RegexVal, SqlSelect | _n/a_       |       |
+| PluginType          | Base Type           | Factory         | Example(s)                 | Example Static Key | Desc. |
+|---------------------|---------------------| ----------------- |----------------------------|--------------------| ------- |
+| **Model**           | ModelBase           | ModelFactory    | RandomModel                | ol-llama3          |       |
+| **ModelProvider**   | ModelProviderBase   | ModelFactory    | OllamaModelProvider        | ol, np             |       |
+| **LangUnit**        | LangUnit            | LangUnitFactory | RegexVal, SqlSelect        | LU[RegexVal]       |       |
+| **Prompting**       | PromptingBase       | PromptFactory   | DirectPrompting            | direct             |       |
+| **PromptDecorator** | PromptDecoratorBase | PromptFactory   | Emotion, HiddenZeroShotCOT | emo, hcot0         |       |
 
 (*) np means NoProvider. ModelProviders are inherited from ModelBase.
 
