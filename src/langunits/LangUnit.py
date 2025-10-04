@@ -13,14 +13,14 @@ class UnitType(Enum):
 
 @dataclass
 class LangUnitMeta:
-    Name: str
-    Type: ABCMeta
+    name: str
+    type: ABCMeta
 
 
 @dataclass
 class LangUnitInfo:
-    Name: str
-    PromptText: str  # This is default text. TODO: rename
+    name: str
+    prompt_text: str  # This is default text. TODO: rename
 
 
 @dataclass
@@ -46,21 +46,21 @@ class LangUnit(ABC):
         pass
 
     @abstractmethod
-    def PromptText(self):
+    def prompt_text(self):
         pass
 
     @abstractmethod
-    def GetUnitType(self) -> UnitType:
+    def get_unit_type(self) -> UnitType:
         pass
 
-    def Name(self) -> str:
+    def name(self) -> str:
         return self.__class__.__name__
 
-    def CreateInfo(self):
-        return LangUnitInfo(self.Name(), self.PromptText())
+    def create_info(self):
+        return LangUnitInfo(self.name(), self.prompt_text())
 
     def __str__(self) -> str:
-        return f"LU[{self.Name()}]"
+        return f"LU[{self.name()}]"
 
     def __repr__(self) -> str:
         return self.__str__()

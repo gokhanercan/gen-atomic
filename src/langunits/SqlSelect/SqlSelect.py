@@ -10,10 +10,10 @@ class SqlSelect(LangUnit):
     def __init__(self) -> None:
         super().__init__()
 
-    def PromptText(self):
+    def prompt_text(self):
         return "SQL select query"
 
-    def GetUnitType(self) -> UnitType:
+    def get_unit_type(self) -> UnitType:
         return UnitType.Query
 
     # region Internal Impl
@@ -90,7 +90,7 @@ class SqlSelect(LangUnit):
 
     def run_test(self, eval_req: EvalRequest, correct_case: str) -> EvalResponse:
         # test oracle
-        sql_pattern = rf"```{eval_req.lang_unit_info.Name}(.*?)```"
+        sql_pattern = rf"```{eval_req.lang_unit_info.name}(.*?)```"
         import re
 
         match = re.search(sql_pattern, eval_req.generated, re.DOTALL)  # re.DOTALL allows matching newlines
@@ -101,18 +101,18 @@ class SqlSelect(LangUnit):
             # print(f"Extracted {langDesc} pattern: {Fore.CYAN}{extracted_sql}{Fore.RESET}")
             answer = extracted_sql.strip()
         else:
-            print(f"Couldn't find {eval_req.lang_unit_info.Name} pattern between ```")
+            print(f"Couldn't find {eval_req.lang_unit_info.name} pattern between ```")
 
     @deprecated
     def RunTest(self, code: str, correctCase: str, unit: Unit) -> bool:
         import sqlite3
 
         try:
-            schema, column_names, column_type_dict, table_name = self.createSchema(unit.Context.Schema)
-            result = self.createData(unit.Context.Data, column_names, column_type_dict)
+            schema, column_names, column_type_dict, table_name = self.createSchema(unit.context.schema)
+            result = self.createData(unit.context.data, column_names, column_type_dict)
         except Exception as e:
             raise RuntimeError(
-                f"\033[91mError in creating schema or data for the case: {e}. Check the dataset schema and data format.\033[0m\nContent.Schema: {unit.Context.Schema}.from UnitName: {unit.Name}.\nContent.Data: {unit.Context.Data} from UnitName: {unit.Name}"
+                f"\033[91mError in creating schema or data for the case: {e}. Check the dataset schema and data format.\033[0m\nContent.Schema: {unit.context.schema}.from UnitName: {unit.name}.\nContent.Data: {unit.context.data} from UnitName: {unit.name}"
             )
 
         try:
@@ -139,13 +139,13 @@ class SqlSelect(LangUnit):
             return False
 
         # EVAL
-        passCount: int = 0
-        for c in unit.Constraints:
-            name, value = c.Criteria.name, c.Criteria.value
+        pass_count: int = 0
+        for c in unit.constraints:
+            name, value = c.criteria.name, c.criteria.value
             if name == "data-count":
                 datacount: int = 0 if resultset is None else len(resultset)
                 passed: bool = datacount == int(value)
                 if passed:
-                    passCount = passCount + 1
+                    pass_count = pass_count + 1
 
-        return passCount == len(unit.Constraints)
+        return pass_count == len(unit.constraints)
