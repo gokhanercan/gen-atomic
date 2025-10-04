@@ -185,7 +185,7 @@ class ExperimentFactoryTests(TestCase):
             "RegexVal", prompt_repo=self._prompt_repo, default_prompting=DirectPrompting("direct")
         ).create_single_model_experiment("np.stub")
 
-        self.assertEqual(exp.LangUnit.Name(), "RegexVal")
+        self.assertEqual(exp.lang_unit.name(), "RegexVal")
         self.assertIsNotNone(exp.get_model_by_key("np.stub"))
         self.assertEqual(StubModel, type(exp.get_model_by_key("np.stub")))
         self.assertEqual(1, exp.model_configs.__len__())
@@ -196,7 +196,7 @@ class ExperimentFactoryTests(TestCase):
             "RegexVal", prompt_repo=self._prompt_repo, default_prompting=DirectPrompting("direct")
         ).create_provider_experiment("np")
 
-        self.assertEqual(exp.LangUnit.Name(), "RegexVal")
+        self.assertEqual(exp.lang_unit.name(), "RegexVal")
         self.assertIsNotNone(exp.get_model_by_key("np.stub"))
         self.assertEqual(StubModel, type(exp.get_model_by_key("np.stub")))
         self.assertEqual(2, exp.model_configs.__len__())  # stub and random
@@ -208,15 +208,15 @@ if __name__ == "__main__":
     lang_unit_name: str = "SqlSelect"
     repo: PromptRepositoryBase = InMemoryPromptRepository()
     e: Experiment = Experiment(
-        LangUnitFactory().Create(lang_unit_name),
+        LangUnitFactory().create(lang_unit_name),
         ModelConfigurations(
             [
                 ModelConfiguration(
-                    ModelFactory().CreateModelByKey("np.stub"),
+                    ModelFactory().create_model_by_key("np.stub"),
                     PromptingFactory(repo).create_default(lang_unit_name),
                 ),
                 ModelConfiguration(
-                    ModelFactory().CreateModelByKey("np.random"),
+                    ModelFactory().create_model_by_key("np.random"),
                     PromptingFactory(repo).create_default(lang_unit_name),
                 ),
             ]
