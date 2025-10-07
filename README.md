@@ -78,6 +78,14 @@ or
 .\pytest.sh
 ```
 
+### Test Count
+
+The repository contains **24 test cases** across 8 test files. For a detailed breakdown, see [TEST_COUNT.md](TEST_COUNT.md) or run:
+
+```
+python count_tests.py
+```
+
 # Key Dependencies
 
 Python 3.8+, Ollama
