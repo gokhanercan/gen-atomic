@@ -9,12 +9,37 @@ st.title("All Models")
 # Initialize ModelFactory
 modelFactory = ModelFactory()
 
-# Get all models metadata from the model index
+# Try to get all models, but if providers fail, show only standalone models
+model_index = {}
+provider_error = None
+
 try:
     model_index = modelFactory.model_index
 except Exception as e:
-    st.error(f"Error loading models: {e}")
-    st.info("Some model providers may not be available. Make sure all required services are running.")
+    provider_error = str(e)
+    # If full index fails, try to get at least standalone models
+    st.warning(f"Could not load provider-based models: {e}")
+    st.info("Showing standalone models only. Some model providers may not be available.")
+    
+    # Build a simplified index with just standalone models
+    for name, meta in modelFactory.standalone_models_meta.items():
+        try:
+            model = modelFactory.create_model(name)
+            key = model.key()
+            from models.ModelBase import ModelMeta
+            model_meta = ModelMeta(
+                name=name,
+                plain_name=model.plain_name(),
+                key=key,
+                standalone_model_meta=meta,
+                model_provider_meta=None,
+            )
+            model_index[key] = model_meta
+        except Exception as model_error:
+            st.warning(f"Could not load model {name}: {model_error}")
+
+if not model_index:
+    st.error("No models could be loaded.")
     st.stop()
 
 # Convert model metadata to DataFrame
